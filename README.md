@@ -1,5 +1,11 @@
-"Hello World" example using Node.js, Express.js and deploying on Heroku
+# PES-IntegrApp
+Projecte d'Enginyeria de Software
 
-Author: Daniel Scocco
-Email: danielscocco@gmail.com
-Site: https://www.botware.com.br
+## Integrants de l'equip
+* Daniel Angel Pérez
+* Sergi Aguilar
+* Manel Alexandre
+* Laura Brull
+* Alex Huang Feng
+* Roger López
+* Arnau Orriols
