@@ -22,6 +22,10 @@ db_tools.DBConnectMongoose()
         app.use(bodyparser.urlencoded({ extended: true }));
         app.use(bodyparser.json({ limit: '10mb' }));
 
+        app.get('/', function (req, res) {
+            res.send("IntegrApp Back-End Deployed!");
+        });
+        
         routes.assignRoutes(app);
 
         app.listen(process.env.PORT || 8080);
