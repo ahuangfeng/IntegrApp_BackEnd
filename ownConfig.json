@@ -1,0 +1,7 @@
+{
+  "db_user" : {
+    "user": "localhost",
+    "password": 27017,
+    "name": "test"
+  }
+}
