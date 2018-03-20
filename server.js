@@ -5,27 +5,34 @@
  */
 'use strict';
 
-var express = require('express');
-var bodyparser = require('body-parser');
-
-var db_tools = require('./tools/db_tools');
+// packages
+var express     = require('express');
+var bodyparser  = require('body-parser');
+var db_tools    = require('./tools/db_tools');
+var morgan      = require('morgan');
+var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config      = require('./config.js'); // get our config file
 
 var app = express();
+// use morgan to log requests to the console
+app.use(morgan('dev'));
 
+app.set('superSecret', config.secret); // secret variable
+
+// configure app to use bodyParser()
+// this will let us get the data from a POST
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.json({ limit: '10mb' }));
 
 db_tools.DBConnectMongoose()
     .then(() => {
         var routes = require('./routes/routes');
 
-        // configure app to use bodyParser()
-        // this will let us get the data from a POST
-        app.use(bodyparser.urlencoded({ extended: true }));
-        app.use(bodyparser.json({ limit: '10mb' }));
 
         app.get('/', function (req, res) {
             res.send("IntegrApp Back-End Deployed!");
         });
-        
+
         routes.assignRoutes(app);
 
         app.listen(process.env.PORT || 8080);

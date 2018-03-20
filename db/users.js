@@ -10,18 +10,18 @@ var db = db_tools.getDBConexion();
 
 // Create a Mongoose schema
 var UserSchema = new mongoose.Schema({
-    surname: String,
-    lastname: String,
-    dni: String
+    username: String,
+    password: String,
+    admin: Boolean
 });
 
 // Register the schema
-var User = mongoose.model('user', UserSchema);
+var User = mongoose.model('User', UserSchema);
 
 exports.User = User;
-exports.saveUser = function(userData) {
+exports.saveUser = function (userData) {
     var user = new User(userData);
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         user.save()
             .then(user => {
                 console.log("User saved!");
@@ -31,5 +31,31 @@ exports.saveUser = function(userData) {
                 console.log("Error saving user: " + err);
                 reject(err);
             })
+    });
+}
+
+exports.findAllUsers = function () {
+    return new Promise(function (resolve, reject) {
+        User.find({}, function (err, users) {
+            if (err) {
+                console.log("Error finding:", err);
+                reject(err)
+            }
+            resolve(users);
+        });
     })
+}
+
+exports.findUserByName = function (name) {
+    return new Promise(function (resolve, reject) {
+        User.findOne({
+            username: name
+        }, function (err, user) {
+            if (err) {
+                console.log("Error finding user", name);
+                reject(err);
+            }
+            resolve(user);
+        });
+    });
 }

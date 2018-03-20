@@ -4,7 +4,7 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var config = require('../config.json');
+var config = require('../config.js');
 
 var db;
 
