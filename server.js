@@ -6,12 +6,12 @@
 'use strict';
 
 // packages
-var express     = require('express');
-var bodyparser  = require('body-parser');
-var db_tools    = require('./tools/db_tools');
-var morgan      = require('morgan');
-var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config      = require('./config.js'); // get our config file
+var express = require('express');
+var bodyparser = require('body-parser');
+var db_tools = require('./tools/db_tools');
+var morgan = require('morgan');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config.js'); // get our config file
 
 var app = express();
 // use morgan to log requests to the console
@@ -28,16 +28,15 @@ db_tools.DBConnectMongoose()
     .then(() => {
         var routes = require('./routes/routes');
 
-
         app.get('/', function (req, res) {
             res.send("IntegrApp Back-End Deployed!");
         });
 
         routes.assignRoutes(app);
+        var port = process.env.PORT || 8080;
+        app.listen(port);
 
-        app.listen(process.env.PORT || 8080);
-
-        console.log('Server listening on port 8080');
+        console.log('Server listening on port '+port);
     })
     .catch(err => {
         console.log('Error: ' + err)
