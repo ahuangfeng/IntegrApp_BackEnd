@@ -8,6 +8,31 @@ var tokenMiddleware = require('../middleware/tokenVerification');
 // get an instance of the router for api routes
 var apiRoutes = express.Router();
 
+/**
+   * @swagger
+   * definitions:
+   *   Login:
+   *     required:
+   *       - username
+   *       - password
+   *     properties:
+   *       username:
+   *         type: string
+   *       password:
+   *         type: string
+   *       path:
+   *         type: string
+   */
+
+/**
+   * @swagger
+   * /:
+   *   get:
+   *     description: Returns the homepage
+   *     responses:
+   *       200:
+   *         description: hello world
+   */
 apiRoutes.post('/users', tokenMiddleware.tokenCheck, users.createUser);
 
 apiRoutes.get('/', function (req, res) {
@@ -16,6 +41,28 @@ apiRoutes.get('/', function (req, res) {
 
 apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     description: Login to the application
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: username
+ *         description: Username to use for login.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         description: User's password.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: login
+ */
 apiRoutes.post('/authenticate', users.authenticate);
 
 exports.assignRoutes = function (app) {

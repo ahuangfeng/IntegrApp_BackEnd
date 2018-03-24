@@ -27,10 +27,13 @@ app.use(bodyparser.json({ limit: '10mb' }));
 db_tools.DBConnectMongoose()
     .then(() => {
         var routes = require('./routes/routes');
+        var swagger = require('./swagger/swagger');
 
         app.get('/', function (req, res) {
             res.send("IntegrApp Back-End Deployed!");
         });
+
+        swagger.swaggerInit(app);
 
         routes.assignRoutes(app);
         var port = process.env.PORT || 8080;
