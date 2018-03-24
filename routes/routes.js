@@ -11,7 +11,7 @@ var apiRoutes = express.Router();
 /**
    * @swagger
    * definitions:
-   *   Login:
+   *   User:
    *     required:
    *       - username
    *       - password
@@ -24,6 +24,9 @@ var apiRoutes = express.Router();
    *         type: string
    */
 
+
+apiRoutes.post('/users', tokenMiddleware.tokenCheck, users.createUser);
+
 /**
    * @swagger
    * /:
@@ -31,10 +34,18 @@ var apiRoutes = express.Router();
    *     description: Returns the homepage
    *     responses:
    *       200:
-   *         description: hello world
+   *         description: IntegrApp Back-End Deployed!
    */
-apiRoutes.post('/users', tokenMiddleware.tokenCheck, users.createUser);
 
+/**
+   * @swagger
+   * /api:
+   *   get:
+   *     description: Returns the homepage
+   *     responses:
+   *       200:
+   *         description: IntegrApp API Deployed!
+   */
 apiRoutes.get('/', function (req, res) {
   res.send("IntegrApp API Deployed!");
 });
@@ -45,7 +56,7 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
  * @swagger
  * /login:
  *   post:
- *     description: Login to the application
+ *     description: Login to the application (docs no actualizados!)
  *     produces:
  *       - application/json
  *     parameters:
@@ -63,7 +74,7 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
  *       200:
  *         description: login
  */
-apiRoutes.post('/authenticate', users.authenticate);
+apiRoutes.post('/login', users.authenticate);
 
 exports.assignRoutes = function (app) {
   app.use('/api', apiRoutes);
