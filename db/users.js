@@ -8,7 +8,21 @@ var mongoose = require('mongoose');
 // database connect
 var db = db_tools.getDBConexion();
 
-// Create a Mongoose schema
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *       admin:
+ *         type: Boolean
+ */
 var UserSchema = new mongoose.Schema({
     username: String,
     password: String,
