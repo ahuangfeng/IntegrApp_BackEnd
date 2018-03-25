@@ -13,7 +13,8 @@ var morgan = require('morgan');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config.js'); // get our config file
 
-var app = express();
+// module.exports para que sea visible por todos los lados
+var app = module.exports = express();
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
@@ -33,7 +34,7 @@ db_tools.DBConnectMongoose()
         });
 
         swagger.swaggerInit(app);
-
+        
         routes.assignRoutes(app);
         var port = process.env.PORT || 8080;
         app.listen(port);

@@ -49,4 +49,15 @@
  *         type: string
  */
 
+/**
+ * @swagger
+ * definitions:
+ *   LoginBody:
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ */
+
 
