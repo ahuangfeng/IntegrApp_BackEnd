@@ -6,14 +6,13 @@ var jwt = require('jsonwebtoken');
 var config = require('../config.js'); // get our config file
 
 exports.createUser = function (req, res, next) {
+    console.log("Que pasa:", req.body);
     var userData = req.body;
 
-    if (!userData.username ||
-        !userData.password) {
+    if (verifyFields(userData)) {
         reject('Missing fields');
         return;
     }
-
     if (typeof userData.admin == undefined) return;
 
     usersDB.saveUser(userData)
@@ -21,7 +20,9 @@ exports.createUser = function (req, res, next) {
             res.send(user);
         })
         .catch(err => {
-            res.status(400).send(err);
+            console.log("error on saving userData:", err);
+            var response = {message: err.message};
+            res.status(400).send(response);
         });
 }
 
@@ -33,11 +34,11 @@ exports.getAllUsers = function (req, res, next) {
     });
 }
 
-exports.authenticate = function (req, res) {
+exports.login = function (req, res) {
     usersDB.findUserByName(req.body.username).then(user => {
-        if(!user){
-            res.json({success: false, message: "Authentication failed. User not found." })
-        }else if(user){
+        if (!user) {
+            res.json({ success: false, message: "Authentication failed. User not found." })
+        } else if (user) {
             if (user.password != req.body.password) {
                 res.json({ success: false, message: 'Authentication failed. Wrong password.' });
             } else {
@@ -63,5 +64,20 @@ exports.authenticate = function (req, res) {
         console.log("erro:", err);
         res.status(400).send(err);
     });
-        
+}
+
+verifyFields = function (userData) {
+    var validTypes = ["voluntary", "admin", "newComer", "association"];
+    if (!userData.username || !userData.password || !userData.type) {
+        return false;
+    }
+    if (validTypes.indexOf(userData.type) != -1) {
+        return false;
+    }
+    if(userData.type == "association"){
+        if(!userData.CIF){
+            return false;
+        }
+    }
+    return true;
 }

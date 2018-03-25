@@ -8,64 +8,71 @@ var tokenMiddleware = require('../middleware/tokenVerification');
 // get an instance of the router for api routes
 var apiRoutes = express.Router();
 
-/**
- * @swagger
- * tags:
- *   name: User
- *   description: Usuario del sistema
- */
 
-apiRoutes.post('/users', tokenMiddleware.tokenCheck, users.createUser);
+
 
 /**
  * @swagger
- * /:
- *   get:
- *     description: Returns the homepage
+ * /register:
+ *   post:
+ *     summary: Registra un nou usuari
+ *     tags: [User]
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/UserBody"
  *     responses:
  *       200:
- *         description: IntegrApp Back-End Deployed!
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/User"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
  */
+apiRoutes.post('/register', users.createUser);
 
-/**
- * @swagger
- * /api:
- *   get:
- *     description: Returns the homepage
- *     responses:
- *       200:
- *         description: IntegrApp API Deployed!
- */
 apiRoutes.get('/', function (req, res) {
   res.send("IntegrApp API Deployed!");
 });
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retorna tots els usuaris registrats
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: "#/definitions/User"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
 
-/**
-  * @swagger
-  * /login:
-  *   post:
-  *     tags: [User]
-  *     description: Login to the application (docs no actualizados!)
-  *     produces:
-  *       - application/json
-  *     parameters:
-  *       - name: username
-  *         description: Username to use for login.
-  *         in: formData
-  *         required: true
-  *         type: string
-  *       - name: password
-  *         description: User's password.
-  *         in: formData
-  *         required: true
-  *         type: string
-  *     responses:
-  *       200:
-  *         description: login
-  */
-apiRoutes.post('/login', users.authenticate);
+apiRoutes.post('/login', users.login);
 
 exports.assignRoutes = function (app) {
   app.use('/api', apiRoutes);
