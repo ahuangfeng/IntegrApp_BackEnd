@@ -6,7 +6,6 @@ var jwt = require('jsonwebtoken');
 var config = require('../config.js'); // get our config file
 
 exports.createUser = function (req, res, next) {
-    console.log("Que pasa:", req.body);
     var userData = req.body;
 
     if (verifyFields(userData)) {
@@ -21,7 +20,7 @@ exports.createUser = function (req, res, next) {
         })
         .catch(err => {
             console.log("error on saving userData:", err);
-            var response = {message: err.message};
+            var response = { message: err.message };
             res.status(400).send(response);
         });
 }
@@ -74,8 +73,8 @@ verifyFields = function (userData) {
     if (validTypes.indexOf(userData.type) != -1) {
         return false;
     }
-    if(userData.type == "association"){
-        if(!userData.CIF){
+    if (userData.type == "association") {
+        if (!userData.CIF) {
             return false;
         }
     }

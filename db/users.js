@@ -44,8 +44,8 @@ var UserSchema = new mongoose.Schema({
     type: String,
     CIF: {
         type: String,
-        required: function(){
-            if(this.type=="association") return true;
+        required: function () {
+            if (this.type == "association") return true;
             else return false;
         }
     },

@@ -18,7 +18,7 @@ var swaggerSpec = swaggerJSDoc(options);
 
 exports.swaggerInit = function (app) {
   console.log("Swagger initialized");
-  app.get('/api/api-docs.json', function(req, res) {
+  app.get('/api/api-docs.json', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
   });
