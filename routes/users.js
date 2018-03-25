@@ -8,11 +8,11 @@ var config = require('../config.js'); // get our config file
 exports.createUser = function (req, res, next) {
     var userData = req.body;
 
-    if (verifyFields(userData)) {
-        reject('Missing fields');
+    var verify = verifyFields(userData);
+    if (!verify.success) {
+        res.status(400).send({ message: verify.message });
         return;
     }
-    if (typeof userData.admin == undefined) return;
 
     usersDB.saveUser(userData)
         .then(user => {
@@ -68,15 +68,15 @@ exports.login = function (req, res) {
 verifyFields = function (userData) {
     var validTypes = ["voluntary", "admin", "newComer", "association"];
     if (!userData.username || !userData.password || !userData.type) {
-        return false;
+        return { success: false, message: "Faltan datos obligatorios: username, password, type" };
     }
-    if (validTypes.indexOf(userData.type) != -1) {
-        return false;
+    if (validTypes.indexOf(userData.type) == -1) {
+        return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
     }
     if (userData.type == "association") {
         if (!userData.CIF) {
-            return false;
+            return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
         }
     }
-    return true;
+    return { success: true };
 }

@@ -60,4 +60,17 @@
  *         type: string
  */
 
+ /**
+ * @swagger
+ * definitions:
+ *   LoginResponse:
+ *     properties:
+ *       success:
+ *         type: boolean
+ *       message:
+ *         type: string
+ *       token:
+ *         type: string
+ */
+
 

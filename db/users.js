@@ -49,7 +49,6 @@ var UserSchema = new mongoose.Schema({
             else return false;
         }
     },
-    admin: Boolean
 });
 
 // Register the schema

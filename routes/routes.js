@@ -88,7 +88,7 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/LoginResponse"
  *       400:
  *         description: Ha hagut un error amb la operació
  *         schema:

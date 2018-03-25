@@ -1,5 +1,5 @@
 module.exports = {
-  'secret': 'ilovescotchyscotch',
+  'secret': 'integrappforthewin',
   "db_config" : {
     "host": "ds157528.mlab.com",
     "port": 57528,
