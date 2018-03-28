@@ -8,7 +8,7 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
 let should = chai.should();
-var usersDB = require('../db/users');
+var usersDB = require('../users/usersDB');
 
 var username = "integrapp";
 var password = "integrappTest";
@@ -17,11 +17,6 @@ var token;
 chai.use(chaiHttp);
 //Our parent block
 describe('Users', () => {
-
-  // before((done) => {
-  //   if (app.listening) return done();
-  //   app.on('listening', function () { done(); });
-  // });
 
   before(function (done) {
     usersDB.User.remove({}, (err) => { });

@@ -33,7 +33,7 @@ app.use(bodyparser.json({ limit: '10mb' }));
 
 db_tools.DBConnectMongoose()
   .then(() => {
-    var routes = require('./routes/routes');
+    var users = require('./users');
     var swagger = require('./swagger/swagger');
     app.get('/', function (req, res) {
       res.send("IntegrApp Back-End Deployed!");
@@ -41,12 +41,12 @@ db_tools.DBConnectMongoose()
 
     swagger.swaggerInit(app);
 
-    routes.assignRoutes(app);
+    users.assignRoutes(app);
+
     var port = process.env.PORT || 8080;
     app.listen(port);
 
     console.log('Server listening on port ' + port);
-  })
-  .catch(err => {
+  }).catch(err => {
     console.log('Error: ' + err)
   });
