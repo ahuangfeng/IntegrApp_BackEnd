@@ -2,11 +2,11 @@
  * Created by siroramirez on 23/05/17.
  */
 
-var db_tools = require('../tools/db_tools');
+// var db_tools = require('../tools/db_tools');
 var mongoose = require('mongoose');
 
 // database connect
-var db = db_tools.getDBConexion();
+// var db = db_tools.getDBConexion();
 
 /**
  * @swagger
@@ -60,7 +60,6 @@ exports.saveUser = function (userData) {
     return new Promise(function (resolve, reject) {
         user.save()
             .then(user => {
-                console.log("User saved!");
                 resolve(user);
             })
             .catch(err => {
