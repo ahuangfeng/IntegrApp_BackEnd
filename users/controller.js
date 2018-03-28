@@ -1,7 +1,7 @@
 /**
  * Created by siroramirez on 23/05/17.
  */
-var usersDB = require('../db/users');
+var usersDB = require('./usersDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 

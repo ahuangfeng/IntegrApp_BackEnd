@@ -1,3 +1,6 @@
+
+var mongoose = require('mongoose');
+
 /**
  * @swagger
  * securityDefinitions:
@@ -72,5 +75,43 @@
  *       token:
  *         type: string
  */
+
+ /**
+ * @swagger
+ * definitions:
+ *   User:
+ *     required:
+ *       - username
+ *       - password
+ *       - type
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *       type:
+ *         type: string
+ *         enum: [voluntary, admin, newComer, association]
+ *       rate:
+ *         $ref: "#/definitions/UserRate"
+ *       admin:
+ *         type: boolean
+ *       CIF:
+ *         type: string
+ */
+var UserSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  type: String,
+  CIF: {
+      type: String,
+      required: function () {
+          if (this.type == "association") return true;
+          else return false;
+      }
+  },
+});
+
+exports.UserSchema = UserSchema;
 
 

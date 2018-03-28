@@ -1,7 +1,7 @@
 /**
  * Created by siroramirez on 23/05/17.
  */
-var users = require('./users');
+var controller = require('./controller');
 var express = require('express');
 var tokenMiddleware = require('../middleware/tokenVerification');
 
@@ -33,7 +33,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.post('/register', users.createUser);
+apiRoutes.post('/register', controller.createUser);
 
 apiRoutes.get('/', function (req, res) {
   res.send("IntegrApp API Deployed!");
@@ -67,7 +67,7 @@ apiRoutes.get('/', function (req, res) {
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
+apiRoutes.get('/users', tokenMiddleware.tokenCheck, controller.getAllUsers);
 
 /**
  * @swagger
@@ -94,8 +94,6 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, users.getAllUsers);
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.post('/login', users.login);
+apiRoutes.post('/login', controller.login);
 
-exports.assignRoutes = function (app) {
-  app.use('/api', apiRoutes);
-}
+exports.apiRoutes = apiRoutes;
