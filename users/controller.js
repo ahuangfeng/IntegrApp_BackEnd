@@ -1,5 +1,5 @@
 /**
- * Created by siroramirez on 23/05/17.
+ * Controller of users
  */
 var usersDB = require('./usersDB');
 var jwt = require('jsonwebtoken');

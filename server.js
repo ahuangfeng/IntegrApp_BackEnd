@@ -35,8 +35,13 @@ db_tools.DBConnectMongoose()
   .then(() => {
     var users = require('./users');
     var swagger = require('./swagger/swagger');
+    
     app.get('/', function (req, res) {
       res.send("IntegrApp Back-End Deployed!");
+    });
+
+    app.get('/api', function (req, res) {
+      res.send("IntegrApp API Deployed!");
     });
 
     swagger.swaggerInit(app);

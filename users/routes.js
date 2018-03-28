@@ -35,10 +35,6 @@ var apiRoutes = express.Router();
  */
 apiRoutes.post('/register', controller.createUser);
 
-apiRoutes.get('/', function (req, res) {
-  res.send("IntegrApp API Deployed!");
-});
-
 /**
  * @swagger
  * /users:
