@@ -4,7 +4,8 @@
   "description": "Back-end of IntegrApp",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 10000",
+    "prestart": "mocha --timeout 10000 --exit",
+    "test": "mocha --timeout 10000 --exit",
     "start": "node server.js"
   },
   "repository": {
@@ -19,7 +20,7 @@
   "homepage": "https://github.com/ahuangfeng/IntegrApp_BackEnd#readme",
   "dependencies": {
     "body-parser": "1.18.2",
-    "config": "^1.30.0",
+    "config": "1.30.0",
     "express": "4.16.3",
     "jsonwebtoken": "8.2.0",
     "mongoose": "5.0.9",

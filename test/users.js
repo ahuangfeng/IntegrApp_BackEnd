@@ -32,9 +32,7 @@ describe('Users', () => {
     }).then(response => {
       response.should.be.an('object');
       done();
-    }).catch(err => {
-
-    });
+    }).catch(err => {});
 
   });
 
