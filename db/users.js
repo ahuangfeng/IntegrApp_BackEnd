@@ -8,11 +8,47 @@ var mongoose = require('mongoose');
 // database connect
 var db = db_tools.getDBConexion();
 
-// Create a Mongoose schema
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: Usuario del sistema
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     required:
+ *       - username
+ *       - password
+ *       - type
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *       type:
+ *         type: string
+ *         enum: [voluntary, admin, newComer, association]
+ *       rate:
+ *         $ref: "#/definitions/UserRate"
+ *       admin:
+ *         type: boolean
+ *       CIF:
+ *         type: string
+ */
 var UserSchema = new mongoose.Schema({
     username: String,
     password: String,
-    admin: Boolean
+    type: String,
+    CIF: {
+        type: String,
+        required: function () {
+            if (this.type == "association") return true;
+            else return false;
+        }
+    },
 });
 
 // Register the schema

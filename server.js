@@ -13,7 +13,8 @@ var morgan = require('morgan');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config.js'); // get our config file
 
-var app = express();
+// module.exports para que sea visible por todos los lados
+var app = module.exports = express();
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
@@ -27,16 +28,18 @@ app.use(bodyparser.json({ limit: '10mb' }));
 db_tools.DBConnectMongoose()
     .then(() => {
         var routes = require('./routes/routes');
-
+        var swagger = require('./swagger/swagger');
         app.get('/', function (req, res) {
             res.send("IntegrApp Back-End Deployed!");
         });
 
+        swagger.swaggerInit(app);
+        
         routes.assignRoutes(app);
         var port = process.env.PORT || 8080;
         app.listen(port);
 
-        console.log('Server listening on port '+port);
+        console.log('Server listening on port ' + port);
     })
     .catch(err => {
         console.log('Error: ' + err)
