@@ -4,7 +4,7 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var config = require('../config.js');
+var config = require('config');
 
 var db;
 
@@ -30,9 +30,9 @@ exports.DBConnectMongoose = function () {
 
 exports.getDBConexion = function () {
   if (db) {
+    console.log("Getting db");
     return db;
   }
-
   console.log('There is no mongo connection');
   return null;
 }

@@ -11,12 +11,18 @@ var bodyparser = require('body-parser');
 var db_tools = require('./tools/db_tools');
 var morgan = require('morgan');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('./config.js'); // get our config file
+var config = require('config'); // get our config file
 
 // module.exports para que sea visible por todos los lados
 var app = module.exports = express();
 // use morgan to log requests to the console
-app.use(morgan('dev'));
+
+
+if (config.util.getEnv('NODE_ENV') !== 'test') {
+  app.use(morgan('dev'));
+}
+
+// app.use(morgan('dev'));
 
 app.set('superSecret', config.secret); // secret variable
 
@@ -26,21 +32,21 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: '10mb' }));
 
 db_tools.DBConnectMongoose()
-    .then(() => {
-        var routes = require('./routes/routes');
-        var swagger = require('./swagger/swagger');
-        app.get('/', function (req, res) {
-            res.send("IntegrApp Back-End Deployed!");
-        });
-
-        swagger.swaggerInit(app);
-        
-        routes.assignRoutes(app);
-        var port = process.env.PORT || 8080;
-        app.listen(port);
-
-        console.log('Server listening on port ' + port);
-    })
-    .catch(err => {
-        console.log('Error: ' + err)
+  .then(() => {
+    var routes = require('./routes/routes');
+    var swagger = require('./swagger/swagger');
+    app.get('/', function (req, res) {
+      res.send("IntegrApp Back-End Deployed!");
     });
+
+    swagger.swaggerInit(app);
+
+    routes.assignRoutes(app);
+    var port = process.env.PORT || 8080;
+    app.listen(port);
+
+    console.log('Server listening on port ' + port);
+  })
+  .catch(err => {
+    console.log('Error: ' + err)
+  });

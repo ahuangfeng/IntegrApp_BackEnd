@@ -4,7 +4,7 @@
   "description": "Back-end of IntegrApp",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 10000",
     "start": "node server.js"
   },
   "repository": {
@@ -19,15 +19,21 @@
   "homepage": "https://github.com/ahuangfeng/IntegrApp_BackEnd#readme",
   "dependencies": {
     "body-parser": "1.18.2",
+    "config": "^1.30.0",
     "express": "4.16.3",
     "jsonwebtoken": "8.2.0",
     "mongoose": "5.0.9",
     "morgan": "1.9.0",
-    "swagger-jsdoc": "^1.9.7",
-    "swagger-ui-express": "^3.0.5"
+    "swagger-jsdoc": "1.9.7",
+    "swagger-ui-express": "3.0.5"
   },
   "engines": {
     "node": "6.13.x",
     "npm": "3.10.x"
+  },
+  "devDependencies": {
+    "chai": "4.1.2",
+    "chai-http": "4.0.0",
+    "mocha": "5.0.5"
   }
 }
