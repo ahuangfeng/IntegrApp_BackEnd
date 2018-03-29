@@ -105,7 +105,7 @@ describe('GET /forum', () => {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         res.should.have.status(200);
-        res.should.be.an('array');
+        res.body.should.be.an('array');
         done();
       });
   });
@@ -117,8 +117,8 @@ describe('GET /forum', () => {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         res.should.have.status(400);
-        res.should.be.an('object');
-        res.should.have.property("message");
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
         done();
       });
   });
@@ -130,7 +130,7 @@ describe('GET /forum', () => {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         res.should.have.status(200);
-        res.should.be.an('array');
+        res.body.should.be.an('array');
         //TODO: test that all types are entertainment
         done();
       });
@@ -143,7 +143,7 @@ describe('GET /forum', () => {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         res.should.have.status(200);
-        res.should.be.an('array');
+        res.body.should.be.an('array');
         //TODO: test that all types are entertainment
         done();
       });

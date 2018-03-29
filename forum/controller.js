@@ -18,12 +18,21 @@ exports.createForum = function (req, res, next) {
     }).catch(err => {
       res.status(400).json({ message: err.message })
     });
-
-  // notImplemented(req, res, next);
 }
 
 exports.getForums = function (req, res, next) {
-  notImplemented(req, res, next);
+  var types = req.query.type;
+  var typesToGet = [];
+  if(types != undefined){
+    typesToGet = types.split(',');
+    typesToGet = typesToGet.filter(Boolean);
+  }
+  forumDB.getForums(typesToGet).then(forums => {
+    res.send(forums);
+  }).catch(err => {
+    res.status(400).json({ message: err.message});
+  })
+  // notImplemented(req, res, next);
 }
 
 notImplemented = function (req, res, next) {
