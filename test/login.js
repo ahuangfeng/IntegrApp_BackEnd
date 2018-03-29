@@ -32,7 +32,7 @@ describe('Login', () => {
 
   });
 
-  describe('/login', () => {
+  describe('POST /login', () => {
     it('should not login with a invalid user session', function (done) {
       chai.request(server)
         .post('/api/login')
@@ -44,9 +44,7 @@ describe('Login', () => {
           done();
         });
     });
-  });
 
-  describe('/login', () => {
     it('should login with a valid user session', function (done) {
       chai.request(server)
         .post('/api/login')
@@ -63,5 +61,6 @@ describe('Login', () => {
         });
     });
   });
+
 
 });
