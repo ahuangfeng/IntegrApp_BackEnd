@@ -18,6 +18,7 @@
  *         type: string
  *       type:
  *         type: string
+ *         enum: [documentation, entertainment, language, various]
  *       userId:
  *         type: string
  *       rate:
@@ -40,7 +41,7 @@
  *         type: string
  *       type:
  *         type: string
- *         enum: [voluntary, admin, newComer, association]
+ *         enum: [documentation, entertainment, language, various]
  *       userId:
  *         type: string
  */
