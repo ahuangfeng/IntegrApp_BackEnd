@@ -79,6 +79,17 @@ var mongoose = require('mongoose');
  /**
  * @swagger
  * definitions:
+ *   LoginFailed:
+ *     properties:
+ *       success:
+ *         type: boolean
+ *       message:
+ *         type: string
+ */
+
+ /**
+ * @swagger
+ * definitions:
  *   User:
  *     required:
  *       - username

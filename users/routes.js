@@ -85,10 +85,14 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, controller.getAllUsers);
  *         description: Operació executada amb éxit
  *         schema:
  *           $ref: "#/definitions/LoginResponse"
- *       400:
- *         description: Ha hagut un error amb la operació
+ *       401:
+ *         description: Login sense éxit
  *         schema:
- *           $ref: "#/definitions/Error"
+ *           $ref: "#/definitions/LoginFailed"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.post('/login', controller.login);
 
