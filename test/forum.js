@@ -9,13 +9,13 @@ let chaiHttp = require('chai-http');
 let server = require('../server');
 let should = chai.should();
 let expect = chai.expect;
-var usersDB = require('../users/usersDB');
+var forumDB = require('../forum/forumDB');
 var configTest = require('./configTest');
 
 chai.use(chaiHttp);
 
 describe('POST /forum', () => {
-  
+
   it('it should create a forum from valid data', function (done) {
     chai.request(server)
       .post('/api/forum')
@@ -96,9 +96,39 @@ describe('GET /forum', () => {
 
   before(function (done) {
     //TODO: should create different types of forum to test
+    forumDB.Forum.remove({}, (err) => { });
+    var forumData = [];
+    forumData.push({
+      title: "Title1", description: "Description1", createdAt: new Date().toISOString(),
+      type: "documentation", userId: configTest.userId, rate: 0
+    });
+    forumData.push({
+      title: "Title2", description: "Description2", createdAt: new Date().toISOString(),
+      type: "entertainment", userId: configTest.userId, rate: 0
+    });
+    forumData.push({
+      title: "Title3", description: "Description3", createdAt: new Date().toISOString(),
+      type: "language", userId: configTest.userId, rate: 0
+    });
+    forumData.push({
+      title: "Title4", description: "Description4", createdAt: new Date().toISOString(),
+      type: "various", userId: configTest.userId, rate: 0
+    });
+    forumData.push({
+      title: "Title5", description: "Description5", createdAt: new Date().toISOString(),
+      type: "entertainment", userId: configTest.userId, rate: 0
+    });
+    forumData.forEach(forum => {
+      forumDB.saveForum(forum).then(response => {
+        response.should.be.an("object");
+        expect(response.title, forum.title);
+      }).catch(err => {
+        console.log("error on creating mock forums test", err);
+      });
+    });
     done();
   });
-  
+
   it('it should get all the forum', function (done) {
     chai.request(server)
       .get('/api/forum')
@@ -131,7 +161,9 @@ describe('GET /forum', () => {
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
-        //TODO: test that all types are entertainment
+        res.body.forEach(element => {
+          expect(element.type, 'entertainment');
+        });
         done();
       });
   });
@@ -144,7 +176,7 @@ describe('GET /forum', () => {
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
-        //TODO: test that all types are entertainment
+        res.body.length.should.be.eql(3);
         done();
       });
   });
