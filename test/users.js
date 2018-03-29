@@ -93,12 +93,45 @@ describe('Users', () => {
         });
     });
 
+    it('it should not register a new user with existing username', (done) => {
+      chai.request(server)
+        .post('/api/register')
+        .send({
+          "username": "test1",
+          "password": "test1",
+          "type": "voluntary"
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.an('object');
+          res.body.should.have.property('message');
+          expect(res.body.message, "User already existing, choose another username.");
+          done();
+        });
+    });
+
     it('it should not register user with missing fields', (done) => {
       chai.request(server)
         .post('/api/register')
         .send({
           "username": "test2",
           "password": "test2"
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.an('object');
+          res.body.should.have.property('message');
+          done();
+        });
+    });
+
+    it('it should not register a new user with a wrong type', (done) => {
+      chai.request(server)
+        .post('/api/register')
+        .send({
+          "username": "test1",
+          "password": "test1",
+          "type": "wrongType"
         })
         .end((err, res) => {
           res.should.have.status(400);
