@@ -10,7 +10,7 @@ exports.createUser = function (req, res, next) {
 
   var verify = verifyFields(userData);
   if (!verify.success) {
-    res.status(400).send({ message: verify.message });
+    res.status(400).json({ message: verify.message });
     return;
   }
 
@@ -21,7 +21,7 @@ exports.createUser = function (req, res, next) {
     .catch(err => {
       console.log("error on saving userData:", err);
       var response = { message: err.message };
-      res.status(400).send(response);
+      res.status(400).json(response);
     });
 }
 

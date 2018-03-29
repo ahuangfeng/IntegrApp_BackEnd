@@ -33,8 +33,8 @@ describe('POST /forum', () => {
         res.body.should.have.property('description');
         res.body.should.have.property('type');
         res.body.should.have.property('userId');
-        res.body.should.have.property('valoration');
-        res.body.should.have.property('createdAd');
+        res.body.should.have.property('rate');
+        res.body.should.have.property('createdAt');
         done();
       });
   });
@@ -90,4 +90,63 @@ describe('POST /forum', () => {
         done();
       });
   });
+});
+
+describe('GET /forum', () => {
+
+  before(function (done) {
+    //TODO: should create different types of forum to test
+    done();
+  });
+  
+  it('it should get all the forum', function (done) {
+    chai.request(server)
+      .get('/api/forum')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.should.be.an('array');
+        done();
+      });
+  });
+
+  it('it should not get forums for a not valid type', function (done) {
+    chai.request(server)
+      .get('/api/forum')
+      .query({ type: 'notValid' })
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(400);
+        res.should.be.an('object');
+        res.should.have.property("message");
+        done();
+      });
+  });
+
+  it('it should get only the forum for type "entertainment"', function (done) {
+    chai.request(server)
+      .get('/api/forum')
+      .query({ type: 'entertainment' })
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.should.be.an('array');
+        //TODO: test that all types are entertainment
+        done();
+      });
+  });
+
+  it('it should get the forum for type "entertainment" AND "documentation"', function (done) {
+    chai.request(server)
+      .get('/api/forum')
+      .query({ type: 'entertainment,documentation' })
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.should.be.an('array');
+        //TODO: test that all types are entertainment
+        done();
+      });
+  });
+
 });

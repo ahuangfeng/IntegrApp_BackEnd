@@ -28,7 +28,7 @@ exports.saveUser = function (userData) {
         resolve(user);
       })
       .catch(err => {
-        console.log("Error saving user: " + err);
+        console.log("Error saving user: " + err.message);
         reject(err);
       })
   });
