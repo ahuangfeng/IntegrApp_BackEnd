@@ -95,7 +95,6 @@ describe('POST /forum', () => {
 describe('GET /forum', () => {
 
   before(function (done) {
-    //TODO: should create different types of forum to test
     forumDB.Forum.remove({}, (err) => { });
     var forumData = [];
     forumData.push({

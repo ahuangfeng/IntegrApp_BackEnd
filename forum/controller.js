@@ -4,6 +4,7 @@
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var forumDB = require('./forumDB');
+var userDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
   var verifyFields = verifyFieldCreation(req.body);
@@ -38,16 +39,22 @@ exports.getForums = function (req, res, next) {
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
-
+//TODO: FIXME: en la devolucion del parametro hay que verificar y tratar el promise!
 verifyFieldCreation = function (forumData) {
-  var validTypes = ["documentation", "entertainment", "language", "various"];
-  if (!forumData.title || !forumData.description || !forumData.type || !forumData.userId) {
-    return { success: false, message: "Faltan datos obligatorios: title, description, type, userId" };
-  }
-  if (validTypes.indexOf(forumData.type) == -1) {
-    return { success: false, message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" }
-  }
-  return { success: true };
+  return new Promise((resolve, reject) => {
+    var validTypes = ["documentation", "entertainment", "language", "various"];
+    if (!forumData.title || !forumData.description || !forumData.type || !forumData.userId) {
+      resolve({ success: false, message: "Faltan datos obligatorios: title, description, type, userId" });
+    }
+    if (validTypes.indexOf(forumData.type) == -1) {
+      resolve({ success: false, message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" });
+    }
+    userDB.findUserById(forumData.userId).then(res => {
+      resolve({success: true});
+    }).catch(err => {
+      resolve({success: false, message: "El usuario no existe."});
+    })
+  });
 }
 
 createForumDocument = function (forumData) {

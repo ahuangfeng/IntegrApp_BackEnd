@@ -59,3 +59,17 @@ exports.findUserByName = function (name) {
     });
   });
 }
+
+exports.findUserById = function (id) {
+  return new Promise(function (resolve, reject) {
+    User.findOne({
+      id: id
+    }, function (err, user) {
+      if (err) {
+        console.log("Error finding user", name);
+        reject(err);
+      }
+      resolve(user);
+    });
+  });
+}
