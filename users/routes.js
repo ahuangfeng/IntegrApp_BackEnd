@@ -96,4 +96,37 @@ apiRoutes.get('/users', tokenMiddleware.tokenCheck, controller.getAllUsers);
  */
 apiRoutes.post('/login', controller.login);
 
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     summary: Retorna un usuari a partir del seu username
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: username
+ *         in: query
+ *         type: string
+ *         description: username del usuari
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/User"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername);
+
 exports.apiRoutes = apiRoutes;

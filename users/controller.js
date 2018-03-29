@@ -33,13 +33,30 @@ exports.getAllUsers = function (req, res, next) {
   });
 }
 
+exports.getUserByUsername = function(req, res, next){
+  if(!req.query.username){
+    res.status(400).json({message: "Es necesita un username per a trobar un usuari."});
+  }else{
+    usersDB.findUserByName(req.query.username).then(user => {
+      if(!user) {
+        res.status(400).json({ message : "User not found in database"});
+      }else{
+        res.send(user);
+      }
+    }).catch(err => {
+      console.log("Error", err);
+      res.status(400).send(err);
+    });
+  }
+}
+
 exports.login = function (req, res) {
   usersDB.findUserByName(req.body.username).then(user => {
     if (!user) {
-      res.json({ success: false, message: "Authentication failed. User not found." })
+      res.status(401).json({ success: false, message: "Authentication failed. User not found." })
     } else if (user) {
       if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+        res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         // if user is found and password is right
         // create a token with only our given payload
@@ -60,7 +77,7 @@ exports.login = function (req, res) {
       }
     }
   }).catch(err => {
-    console.log("erro:", err);
+    console.log("error:", err);
     res.status(400).send(err);
   });
 }
