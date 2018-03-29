@@ -5,7 +5,6 @@ var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
 exports.createForum = function (req, res, next) {
-  // res.send("Hole forums!");
   notImplemented(req,res,next);
 }
 
