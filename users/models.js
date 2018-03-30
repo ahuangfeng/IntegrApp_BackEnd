@@ -105,8 +105,6 @@ var mongoose = require('mongoose');
  *         enum: [voluntary, admin, newComer, association]
  *       rate:
  *         $ref: "#/definitions/UserRate"
- *       admin:
- *         type: boolean
  *       CIF:
  *         type: string
  */

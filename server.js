@@ -34,6 +34,7 @@ app.use(bodyparser.json({ limit: '10mb' }));
 db_tools.DBConnectMongoose()
   .then(() => {
     var users = require('./users');
+    var forums = require('./forum');
     var swagger = require('./swagger/swagger');
     
     app.get('/', function (req, res) {
@@ -47,6 +48,7 @@ db_tools.DBConnectMongoose()
     swagger.swaggerInit(app);
 
     users.assignRoutes(app);
+    forums.assignRoutes(app);
 
     var port = process.env.PORT || 8080;
     app.listen(port);

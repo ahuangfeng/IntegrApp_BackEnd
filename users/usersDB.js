@@ -28,7 +28,7 @@ exports.saveUser = function (userData) {
         resolve(user);
       })
       .catch(err => {
-        console.log("Error saving user: " + err);
+        console.log("Error saving user: " + err.message);
         reject(err);
       })
   });
@@ -50,6 +50,20 @@ exports.findUserByName = function (name) {
   return new Promise(function (resolve, reject) {
     User.findOne({
       username: name
+    }, function (err, user) {
+      if (err) {
+        console.log("Error finding user", name);
+        reject(err);
+      }
+      resolve(user);
+    });
+  });
+}
+
+exports.findUserById = function (id) {
+  return new Promise(function (resolve, reject) {
+    User.findOne({
+      _id: id
     }, function (err, user) {
       if (err) {
         console.log("Error finding user", name);
