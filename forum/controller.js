@@ -30,13 +30,17 @@ exports.getForums = function (req, res, next) {
   if (types != undefined) {
     typesToGet = types.split(',');
     typesToGet = typesToGet.filter(Boolean);
+    var types = verifyType(typesToGet);
+    if (!types) {
+      res.status(400).json({ message: "Tipo no válido." });
+      return;
+    }
   }
   forumDB.getForums(typesToGet).then(forums => {
     res.send(forums);
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
-  // notImplemented(req, res, next);
 }
 
 notImplemented = function (req, res, next) {
@@ -73,4 +77,17 @@ createForumDocument = function (forumData) {
   forum['userId'] = forumData.userId;
   forum['rate'] = 0;
   return forum;
+}
+
+verifyType = function (typesToVerify) {
+  var validTypes = ["documentation", "entertainment", "language", "various"];
+  var result = true;
+  if (typesToVerify.length > 0) {
+    typesToVerify.forEach(element => {
+      if (validTypes.indexOf(element) == -1){
+        result = false;
+      }
+    });
+  }
+  return result;
 }
