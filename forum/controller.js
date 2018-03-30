@@ -8,30 +8,33 @@ var userDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
   var verifyFields = verifyFieldCreation(req.body);
-  if (!verifyFields.success) {
-    res.status(400).json({ message: verifyFields.message });
-    return;
-  }
-  var forumDoc = createForumDocument(req.body);
-  forumDB.saveForum(forumDoc)
-    .then(forum => {
-      res.send(forum);
-    }).catch(err => {
-      res.status(400).json({ message: err.message })
-    });
+  verifyFields.then(verif => {
+
+    var forumDocument = createForumDocument(req.body);
+
+    forumDB.saveForum(forumDocument)
+      .then(forum => {
+        res.send(forum);
+      }).catch(err => {
+        res.status(400).json({ message: err.message })
+      });
+
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  });
 }
 
 exports.getForums = function (req, res, next) {
   var types = req.query.type;
   var typesToGet = [];
-  if(types != undefined){
+  if (types != undefined) {
     typesToGet = types.split(',');
     typesToGet = typesToGet.filter(Boolean);
   }
   forumDB.getForums(typesToGet).then(forums => {
     res.send(forums);
   }).catch(err => {
-    res.status(400).json({ message: err.message});
+    res.status(400).json({ message: err.message });
   })
   // notImplemented(req, res, next);
 }
@@ -39,20 +42,24 @@ exports.getForums = function (req, res, next) {
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
-//TODO: FIXME: en la devolucion del parametro hay que verificar y tratar el promise!
+
 verifyFieldCreation = function (forumData) {
   return new Promise((resolve, reject) => {
     var validTypes = ["documentation", "entertainment", "language", "various"];
     if (!forumData.title || !forumData.description || !forumData.type || !forumData.userId) {
-      resolve({ success: false, message: "Faltan datos obligatorios: title, description, type, userId" });
+      reject({ message: "Faltan datos obligatorios: title, description, type, userId" });
     }
     if (validTypes.indexOf(forumData.type) == -1) {
-      resolve({ success: false, message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" });
+      reject({ message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" });
     }
     userDB.findUserById(forumData.userId).then(res => {
-      resolve({success: true});
+      if (res == null) {
+        reject({ message: "El usuario no existe" });
+      } else {
+        resolve({ user: res });
+      }
     }).catch(err => {
-      resolve({success: false, message: "El usuario no existe."});
+      reject({ message: "Ha habido un error: " + err.message });
     })
   });
 }
