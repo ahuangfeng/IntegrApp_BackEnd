@@ -15,7 +15,7 @@ var configTest = require('./configTest');
 chai.use(chaiHttp);
 
 describe('POST /forum', () => {
-
+  
   it('it should create a forum from valid data', function (done) {
     chai.request(server)
       .post('/api/forum')
@@ -93,7 +93,6 @@ describe('POST /forum', () => {
 });
 
 describe('GET /forum', () => {
-
   before(function (done) {
     forumDB.Forum.remove({}, (err) => { });
     var forumData = [];
@@ -117,15 +116,35 @@ describe('GET /forum', () => {
       title: "Title5", description: "Description5", createdAt: new Date().toISOString(),
       type: "entertainment", userId: configTest.userId, rate: 0
     });
-    forumData.forEach(forum => {
-      forumDB.saveForum(forum).then(response => {
-        response.should.be.an("object");
-        expect(response.title, forum.title);
-      }).catch(err => {
-        console.log("error on creating mock forums test", err);
-      });
+    forumDB.saveForum(forumData[0]).then(response => {
+      response.should.be.an("object");
+      expect(response.title, forumData[0].title);
+      // console.log(1,response.type);
+      return forumDB.saveForum(forumData[1]);
+    }).then(response => {
+      response.should.be.an("object");
+      expect(response.title, forumData[1].title);
+      // console.log(2,response.type);
+      return forumDB.saveForum(forumData[2]);
+    }).then(response => {
+      response.should.be.an("object");
+      expect(response.title, forumData[2].title);
+      // console.log(3,response.type);
+      return forumDB.saveForum(forumData[3]);
+    }).then(response => {
+      response.should.be.an("object");
+      expect(response.title, forumData[3].title);
+      // console.log(4,response.type);
+      return forumDB.saveForum(forumData[4]);
+    }).then(response => {
+      response.should.be.an("object");
+      expect(response.title, forumData[4].title);
+      // console.log(5, response.type);
+      done();
+    })
+    .catch(err => {
+      console.log("error on creating mock forums test", err);
     });
-    done();
   });
 
   it('it should get all the forum', function (done) {
@@ -175,7 +194,17 @@ describe('GET /forum', () => {
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
-        res.body.length.should.be.eql(3);
+        // res.body.length.should.be.eql(3);
+        res.body.forEach(element => {
+          element.should.satisfy(function(forum){
+            if(forum.type == "entertainment" || forum.type == "documentation"){
+              return true;
+            }else{
+              return false;
+            }
+          });
+        });
+        // console.log("FOURM:", res.body);
         done();
       });
   });
