@@ -14,15 +14,23 @@ exports.createUser = function (req, res, next) {
     return;
   }
 
-  usersDB.saveUser(userData)
-    .then(user => {
-      res.send(user);
-    })
-    .catch(err => {
-      console.log("error on saving userData:", err);
-      var response = { message: err.message };
-      res.status(400).json(response);
-    });
+  usersDB.findUserByName(userData.username).then(found => {
+    if (found == null) {
+      usersDB.saveUser(userData)
+        .then(user => {
+          res.send(user);
+        })
+        .catch(err => {
+          console.log("error on saving userData:", err);
+          var response = { message: err.message };
+          res.status(400).json(response);
+        });
+    } else {
+      res.status(400).json({ message: "Este username ya existe." });
+    }
+  }).catch(err => {
+    res.status(400).json({ message: "Error en verificación de usuario duplicado: " + err.message });
+  });
 }
 
 exports.getAllUsers = function (req, res, next) {
@@ -33,14 +41,14 @@ exports.getAllUsers = function (req, res, next) {
   });
 }
 
-exports.getUserByUsername = function(req, res, next){
-  if(!req.query.username){
-    res.status(400).json({message: "Es necesita un username per a trobar un usuari."});
-  }else{
+exports.getUserByUsername = function (req, res, next) {
+  if (!req.query.username) {
+    res.status(400).json({ message: "Es necesita un username per a trobar un usuari." });
+  } else {
     usersDB.findUserByName(req.query.username).then(user => {
-      if(!user) {
-        res.status(400).json({ message : "User not found in database"});
-      }else{
+      if (!user) {
+        res.status(400).json({ message: "User not found in database" });
+      } else {
         res.send(user);
       }
     }).catch(err => {
@@ -58,17 +66,13 @@ exports.login = function (req, res) {
       if (user.password != req.body.password) {
         res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
-        // if user is found and password is right
-        // create a token with only our given payload
-        // we don't want to pass in the entire user since that has the password
         const payload = {
-          admin: user.admin
-        };
+          userID: user.id
+        }
         var token = jwt.sign(payload, config.secret, {
-          // expiresInMinutes: 1440 // expires in 24 hours
+          expiresIn: "24h" // expires in 24 hours
         });
 
-        // return the information including token as JSON
         res.json({
           success: true,
           message: 'Enjoy your token!',
