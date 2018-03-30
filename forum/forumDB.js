@@ -17,27 +17,27 @@ exports.saveForum = function (forumData) {
   });
 }
 
-exports.getForums = function(types){
-  return new Promise((resolve,reject) => {
-    if(!Array.isArray(types)){
-      var error = {message : "Types tiene que ser un array"};
+exports.getForums = function (types) {
+  return new Promise((resolve, reject) => {
+    if (!Array.isArray(types)) {
+      var error = { message: "Types tiene que ser un array" };
       reject(error);
     }
-    if(types.length > 0){
+    if (types.length > 0) {
       var typesQuery = [];
       types.forEach(element => {
-        typesQuery.push({type: element});
+        typesQuery.push({ type: element });
       });
-      Forum.find({$or:typesQuery}, (err, forums) => {
-        if(err){
+      Forum.find({ $or: typesQuery }, (err, forums) => {
+        if (err) {
           console.log("Error finding forums with this types", err);
           reject(err);
         }
         resolve(forums);
       });
-    }else{
+    } else {
       Forum.find({}, (err, forums) => {
-        if(err){
+        if (err) {
           console.log("Error finding all forums", err);
           reject(err);
         }
