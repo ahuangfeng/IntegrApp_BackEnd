@@ -62,14 +62,15 @@ exports.findUserByName = function (name) {
 
 exports.findUserById = function (id) {
   return new Promise(function (resolve, reject) {
-    User.findOne({
-      _id: id
-    }, function (err, user) {
-      if (err) {
-        console.log("Error finding user", name);
-        reject(err);
-      }
-      resolve(user);
-    });
+    if (id.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida
+      User.findById(id, function (err, user) {
+        if (err) {
+          reject(err);
+        }
+        resolve(user);
+      });
+    }else{
+      reject({message: "UserId no vàlido."})
+    }
   });
 }

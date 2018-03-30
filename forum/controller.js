@@ -16,7 +16,7 @@ exports.createForum = function (req, res, next) {
       .then(forum => {
         res.send(forum);
       }).catch(err => {
-        res.status(400).json({ message: err.message })
+        res.status(400).json({ message: "Ha habido un error en la creación del forum :" + err.message })
       });
 
   }).catch(err => {
@@ -84,7 +84,7 @@ verifyType = function (typesToVerify) {
   var result = true;
   if (typesToVerify.length > 0) {
     typesToVerify.forEach(element => {
-      if (validTypes.indexOf(element) == -1){
+      if (validTypes.indexOf(element) == -1) {
         result = false;
       }
     });
