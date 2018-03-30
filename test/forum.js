@@ -193,7 +193,7 @@ describe('GET /forum', () => {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         res.should.have.status(200);
-        res.body.should.be.an('array');
+        res.body.should.be.an('array'); //TODO: ver porque a veces no es igual a 3
         // res.body.length.should.be.eql(3);
         res.body.forEach(element => {
           element.should.satisfy(function(forum){
