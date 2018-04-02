@@ -35,6 +35,7 @@ db_tools.DBConnectMongoose()
   .then(() => {
     var users = require('./users');
     var forums = require('./forum');
+    var adverts = require('./advert');
     var swagger = require('./swagger/swagger');
     
     app.get('/', function (req, res) {
@@ -49,6 +50,7 @@ db_tools.DBConnectMongoose()
 
     users.assignRoutes(app);
     forums.assignRoutes(app);
+    adverts.assignRoutes(app);
 
     var port = process.env.PORT || 8080;
     app.listen(port);
