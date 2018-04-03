@@ -10,7 +10,7 @@ exports.createAdvert = function (req, res, next) {
   var verifyFields = verifyFieldCreation(req.body);
   verifyFields.then(verif => {
 
-    var advertDocument = createAdvertDocument(req.body);
+    var advertDocument = createAdvertDocument(req.body, verif);
 
     advertDB.saveAdvert(advertDocument)
       .then(advert => {
@@ -68,7 +68,7 @@ verifyFieldCreation = function (advertData) {
   });
 }
 
-createAdvertDocument = function (advertData) {
+createAdvertDocument = function (advertData, user) {
   var advert = {};
   advert['userId'] = advertData.userId;
   advert['createdAt'] = new Date().toISOString();
@@ -78,6 +78,7 @@ createAdvertDocument = function (advertData) {
   advert['description'] = advertData.description;
   advert['places'] = advertData.places;
   advert['premium'] = false;
+  advert['typeUser'] = user.user.type;
   advert['typeAdvert'] = advertData.typeAdvert;
   return advert;
 }
