@@ -77,7 +77,8 @@ createAdvertDocument = function (advertData, user) {
   advert['title'] = advertData.title;
   advert['description'] = advertData.description;
   advert['places'] = advertData.places;
-  advert['premium'] = false;
+  if(user.user.type == "association") advert['premium'] = true;
+  else advert['premium'] = false;
   advert['typeUser'] = user.user.type;
   advert['typeAdvert'] = advertData.typeAdvert;
   return advert;
