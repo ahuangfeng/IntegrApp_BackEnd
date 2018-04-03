@@ -4,7 +4,7 @@
   "description": "Back-end of IntegrApp",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --exit",
+    "test": "mocha --timeout 10000 --exit 'test/all.js'",
     "start": "node server.js"
   },
   "repository": {
