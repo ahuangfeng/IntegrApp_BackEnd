@@ -75,6 +75,7 @@ createAdvertDocument = function (advertData, user) {
   advert['date'] = advertData.date;
   advert['state'] = "opened";
   advert['title'] = advertData.title;
+  console.log(advertData.description);
   advert['description'] = advertData.description;
   advert['places'] = advertData.places;
   if(user.user.type == "association") advert['premium'] = true;

@@ -76,7 +76,7 @@ var AdvertSchema = new mongoose.Schema({
     default: 'opened'
   },
   title: String,
-  decription: String,
+  description: String,
   places: Number,
   premium: Boolean,
   typeUser: {
