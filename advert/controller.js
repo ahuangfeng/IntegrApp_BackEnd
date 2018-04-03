@@ -56,6 +56,19 @@ verifyFieldCreation = function (advertData) {
     if (validTypes.indexOf(advertData.typeAdvert) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
     }
+    if(advertData.places <= 0) {
+      reject({message: "places tiene que ser mayor que 0"});
+    }
+
+    var dateAux=Date.parse(advertData.date);
+    if(isNaN(dateAux)) {
+      reject({message: "date tiene que ser en formato MM/DD/YYYY o en formato isoString"});
+    }
+
+    var dataAct = new Date().getTime();
+    if(dateAux - dataAct < 0) {
+      reject({message: "Date tiene que ser posterior a la date actual"})
+    }
     userDB.findUserById(advertData.userId).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
@@ -75,7 +88,6 @@ createAdvertDocument = function (advertData, user) {
   advert['date'] = advertData.date;
   advert['state'] = "opened";
   advert['title'] = advertData.title;
-  console.log(advertData.description);
   advert['description'] = advertData.description;
   advert['places'] = advertData.places;
   if(user.user.type == "association") advert['premium'] = true;
