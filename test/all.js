@@ -41,5 +41,8 @@ describe('All tests', function() {
   describe('Forum', function() {
     require('./forum');
   });
+  describe('Advert', function(){
+    require('./advert');
+  });
 
 })

@@ -60,18 +60,18 @@ verifyFieldAdvert = function (advertData) {
       reject({message: "places tiene que ser mayor que 0"});
     }
 
-    var re = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;
+    var regex = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;
 
-    if(!re.test(advertData.date)) {
+    if(!regex.test(advertData.date)) {
       reject({message: "Date tiene que ser en formato DD-MM-YYYY hh:mm"});
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();
 
-    var dataAct = new Date().toLocaleString();
-    dataAct = new Date(dataAct).getTime();
+    var today = new Date().toLocaleString();
+    today = new Date(today).getTime();
     
-    if(dataAux - dataAct < 0) {
+    if(dataAux - today < 0) {
       reject({message: "Date tiene que ser posterior a la date actual"});
     }
     
