@@ -60,15 +60,21 @@ verifyFieldCreation = function (advertData) {
       reject({message: "places tiene que ser mayor que 0"});
     }
 
-    var dateAux=Date.parse(advertData.date);
-    if(isNaN(dateAux)) {
-      reject({message: "date tiene que ser en formato MM/DD/YYYY o en formato isoString"});
-    }
+    var re = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;
 
-    var dataAct = new Date().getTime();
-    if(dateAux - dataAct < 0) {
-      reject({message: "Date tiene que ser posterior a la date actual"})
+    if(!re.test(advertData.date)) {
+      reject({message: "Date tiene que ser en formato DD-MM-YYYY hh:mm"});
     }
+    var dataAux = new Date(advertData.date).toLocaleString();
+    dataAux = new Date(dataAux).getTime();
+
+    var dataAct = new Date().toLocaleString();
+    dataAct = new Date(dataAct).getTime();
+    
+    if(dataAux - dataAct < 0) {
+      reject({message: "Date tiene que ser posterior a la date actual"});
+    }
+    
     userDB.findUserById(advertData.userId).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
@@ -84,8 +90,8 @@ verifyFieldCreation = function (advertData) {
 createAdvertDocument = function (advertData, user) {
   var advert = {};
   advert['userId'] = advertData.userId;
-  advert['createdAt'] = new Date().toISOString();
-  advert['date'] = advertData.date;
+  advert['createdAt'] = new Date().toLocaleString();
+  advert['date'] = new Date(advertData.date).toLocaleString();
   advert['state'] = "opened";
   advert['title'] = advertData.title;
   advert['description'] = advertData.description;
