@@ -7,7 +7,7 @@ var forumDB = require('./forumDB');
 var userDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
-  var verifyFields = verifyFieldCreation(req.body);
+  var verifyFields = verifyFieldForum(req.body);
   verifyFields.then(verif => {
 
     var forumDocument = createForumDocument(req.body);
@@ -30,7 +30,7 @@ exports.getForums = function (req, res, next) {
   if (types != undefined) {
     typesToGet = types.split(',');
     typesToGet = typesToGet.filter(Boolean);
-    var types = verifyType(typesToGet);
+    var types = verifyTypeForum(typesToGet);
     if (!types) {
       res.status(400).json({ message: "Tipo no válido." });
       return;
@@ -47,7 +47,7 @@ notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFieldCreation = function (forumData) {
+verifyFieldForum = function (forumData) {
   return new Promise((resolve, reject) => {
     var validTypes = ["documentation", "entertainment", "language", "various"];
     if (!forumData.title || !forumData.description || !forumData.type || !forumData.userId) {
@@ -79,7 +79,7 @@ createForumDocument = function (forumData) {
   return forum;
 }
 
-verifyType = function (typesToVerify) {
+verifyTypeForum = function (typesToVerify) {
   var validTypes = ["documentation", "entertainment", "language", "various"];
   var result = true;
   if (typesToVerify.length > 0) {

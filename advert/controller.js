@@ -7,7 +7,7 @@ var advertDB = require('./advertDB');
 var userDB = require('../users/usersDB');
 
 exports.createAdvert = function (req, res, next) {
-  var verifyFields = verifyFieldCreation(req.body);
+  var verifyFields = verifyFieldAdvert(req.body);
   verifyFields.then(verif => {
 
     var advertDocument = createAdvertDocument(req.body, verif);
@@ -30,7 +30,7 @@ exports.getAdverts = function (req, res, next) {
   if (types != undefined) {
     typesToGet = types.split(',');
     typesToGet = typesToGet.filter(Boolean);
-    var types = verifyType(typesToGet);
+    var types = verifyTypeAdvert(typesToGet);
     if (!types) {
       res.status(400).json({ message: "Tipo no válido." });
       return;
@@ -47,7 +47,7 @@ notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFieldCreation = function (advertData) {
+verifyFieldAdvert = function (advertData) {
   return new Promise((resolve, reject) => {
     var validTypes = ["lookFor", "offer"];
     if (!advertData.userId || !advertData.date || !advertData.title || !advertData.description || !advertData.places || !advertData.typeAdvert) {
@@ -103,7 +103,7 @@ createAdvertDocument = function (advertData, user) {
   return advert;
 }
 
-verifyType = function (typesToVerify) {
+verifyTypeAdvert = function (typesToVerify) {
   var validTypes = ["lookFor", "offer"];
   var result = true;
   if (typesToVerify.length > 0) {
