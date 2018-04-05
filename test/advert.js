@@ -86,6 +86,7 @@ describe('GET /advert', () => {
     chai.request(server)
       .get('/api/advert')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
@@ -98,6 +99,7 @@ describe('GET /advert', () => {
     chai.request(server)
       .get('/api/advert')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .query({ type: 'lookFor' })
       .end(function (err, res) {
         res.should.have.status(200);
@@ -111,6 +113,7 @@ describe('GET /advert', () => {
     chai.request(server)
       .get('/api/advert')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .query({ type: 'offer' })
       .end(function (err, res) {
         res.should.have.status(200);
@@ -124,6 +127,7 @@ describe('GET /advert', () => {
     chai.request(server)
       .get('/api/advert')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .query({ type: 'offer,lookFor' })
       .end(function (err, res) {
         res.should.have.status(200);
