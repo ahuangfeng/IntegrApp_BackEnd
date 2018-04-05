@@ -44,12 +44,12 @@ exports.getAdverts = function (req, res, next) {
   })
 }
 
-exports.deleteAdvert = function(req, res, next) {
-  console.log("Function not implemented");
+exports.deleteAdvert = function (req, res, next) {
+  notImplemented(req, res, next);
 }
 
-exports.modifyStateAdvert = function(req, res, next) {
-  console.log("Function not implemented");
+exports.modifyStateAdvert = function (req, res, next) {
+  notImplemented(req, res, next);
 }
 
 notImplemented = function (req, res, next) {
@@ -65,25 +65,25 @@ verifyFieldAdvert = function (advertData, decoded) {
     if (validTypes.indexOf(advertData.typeAdvert) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
     }
-    if(advertData.places <= 0) {
-      reject({message: "places tiene que ser mayor que 0"});
+    if (advertData.places <= 0) {
+      reject({ message: "places tiene que ser mayor que 0" });
     }
 
     var regex = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;
 
-    if(!regex.test(advertData.date)) {
-      reject({message: "Date tiene que ser en formato DD-MM-YYYY hh:mm"});
+    if (!regex.test(advertData.date)) {
+      reject({ message: "Date tiene que ser en formato DD-MM-YYYY hh:mm" });
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();
 
     var today = new Date().toLocaleString();
     today = new Date(today).getTime();
-    
-    if(dataAux - today < 0) {
-      reject({message: "Date tiene que ser posterior a la date actual"});
+
+    if (dataAux - today < 0) {
+      reject({ message: "Date tiene que ser posterior a la date actual" });
     }
-    
+
     userDB.findUserById(decoded.userID).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
@@ -105,7 +105,7 @@ createAdvertDocument = function (advertData, user, decoded) {
   advert['title'] = advertData.title;
   advert['description'] = advertData.description;
   advert['places'] = advertData.places;
-  if(user.user.type == "association") advert['premium'] = true;
+  if (user.user.type == "association") advert['premium'] = true;
   else advert['premium'] = false;
   advert['typeUser'] = user.user.type;
   advert['typeAdvert'] = advertData.typeAdvert;

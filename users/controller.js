@@ -87,12 +87,16 @@ exports.login = function (req, res) {
   });
 }
 
-exports.deleteUser = function(req, res, next) {
-  console.log("Funció no implementada");
+exports.deleteUser = function (req, res, next) {
+  notImplemented(req, res, next);
 }
 
-exports.modifyUser = function(req, res, next) {
-  console.log("Funció no implementada");
+exports.modifyUser = function (req, res, next) {
+  notImplemented(req, res, next);
+}
+
+notImplemented = function (req, res, next) {
+  res.status(501).json({ message: "Function not implemented" });
 }
 
 verifyFields = function (userData) {

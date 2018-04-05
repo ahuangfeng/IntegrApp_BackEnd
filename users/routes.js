@@ -161,7 +161,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteUser);
+apiRoutes.delete('/user', tokenMiddleware.tokenCheck, controller.deleteUser);
 
 
 /**
@@ -195,6 +195,6 @@ apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteUser);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.put('/advert', tokenMiddleware.tokenCheck, controller.modifyUser);
+apiRoutes.put('/user', tokenMiddleware.tokenCheck, controller.modifyUser);
 
 exports.apiRoutes = apiRoutes;
