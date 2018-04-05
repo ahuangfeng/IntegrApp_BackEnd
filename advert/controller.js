@@ -44,6 +44,14 @@ exports.getAdverts = function (req, res, next) {
   })
 }
 
+exports.deleteAdvert = function(req, res, next) {
+  console.log("Function not implemented");
+}
+
+exports.modifyStateAdvert = function(req, res, next) {
+  console.log("Function not implemented");
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }

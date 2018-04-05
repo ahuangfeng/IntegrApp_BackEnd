@@ -72,4 +72,60 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
  */
 apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
 
+
+/**
+ * @swagger
+ * /advert:
+ *   delete:
+ *     summary: Esborrat d'un anunci
+ *     tags: [Advert]
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/AdvertBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Advert"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
+apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert);
+
+
+/**
+ * @swagger
+ * /advert:
+ *   patch:
+ *     summary: Modificació de l'estat d'un anunci
+ *     tags: [Advert]
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/AdvertBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Advert"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
+apiRoutes.patch('/advert', tokenMiddleware.tokenCheck, controller.modifyStateAdvert);
+
 exports.apiRoutes = apiRoutes;
