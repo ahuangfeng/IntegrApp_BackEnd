@@ -7,10 +7,11 @@ var advertDB = require('./advertDB');
 var userDB = require('../users/usersDB');
 
 exports.createAdvert = function (req, res, next) {
-  var verifyFields = verifyFieldAdvert(req.body);
+  console.log(req.decoded.userID);
+  var verifyFields = verifyFieldAdvert(req.body, req.decoded);
   verifyFields.then(verif => {
 
-    var advertDocument = createAdvertDocument(req.body, verif);
+    var advertDocument = createAdvertDocument(req.body, verif, req.decoded);
 
     advertDB.saveAdvert(advertDocument)
       .then(advert => {
@@ -47,11 +48,11 @@ notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFieldAdvert = function (advertData) {
+verifyFieldAdvert = function (advertData, decoded) {
   return new Promise((resolve, reject) => {
     var validTypes = ["lookFor", "offer"];
-    if (!advertData.userId || !advertData.date || !advertData.title || !advertData.description || !advertData.places || !advertData.typeAdvert) {
-      reject({ message: "Faltan datos obligatorios: userId, date, title, description, places, typeAdvert" });
+    if (!advertData.date || !advertData.title || !advertData.description || !advertData.places || !advertData.typeAdvert) {
+      reject({ message: "Faltan datos obligatorios: date, title, description, places, typeAdvert" });
     }
     if (validTypes.indexOf(advertData.typeAdvert) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
@@ -75,7 +76,7 @@ verifyFieldAdvert = function (advertData) {
       reject({message: "Date tiene que ser posterior a la date actual"});
     }
     
-    userDB.findUserById(advertData.userId).then(res => {
+    userDB.findUserById(decoded.userID).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
       } else {
@@ -87,9 +88,9 @@ verifyFieldAdvert = function (advertData) {
   });
 }
 
-createAdvertDocument = function (advertData, user) {
+createAdvertDocument = function (advertData, user, decoded) {
   var advert = {};
-  advert['userId'] = advertData.userId;
+  advert['userId'] = decoded.userID;
   advert['createdAt'] = new Date().toLocaleString();
   advert['date'] = new Date(advertData.date).toLocaleString();
   advert['state'] = "opened";

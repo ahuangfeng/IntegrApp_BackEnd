@@ -37,7 +37,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.post('/advert', controller.createAdvert);
+apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
 
 
 /**
@@ -70,6 +70,6 @@ apiRoutes.post('/advert', controller.createAdvert);
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.get('/advert', controller.getAdverts);
+apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
 
 exports.apiRoutes = apiRoutes;
