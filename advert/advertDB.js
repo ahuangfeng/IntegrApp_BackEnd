@@ -26,7 +26,7 @@ exports.getAdvert = function (types) {
     if (types.length > 0) {
       var typesQuery = [];
       types.forEach(element => {
-        typesQuery.push({ type: element });
+        typesQuery.push({ typeAdvert: element });
       });
       Advert.find({ $or: typesQuery }, (err, advert) => {
         if (err) {
