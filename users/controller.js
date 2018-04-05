@@ -86,6 +86,14 @@ exports.login = function (req, res) {
   });
 }
 
+exports.deleteUser = function(req, res, next) {
+  console.log("Funció no implementada");
+}
+
+exports.modifyUser = function(req, res, next) {
+  console.log("Funció no implementada");
+}
+
 verifyFields = function (userData) {
   var validTypes = ["voluntary", "admin", "newComer", "association"];
   if (!userData.username || !userData.password || !userData.type) {

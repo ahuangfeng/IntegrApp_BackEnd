@@ -129,4 +129,72 @@ apiRoutes.post('/login', controller.login);
  */
 apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername);
 
+
+/**
+ * @swagger
+ * /user:
+ *   delete:
+ *     summary: Esborra un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: username
+ *         in: query
+ *         type: string
+ *         description: username del usuari
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/User"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteUser);
+
+
+/**
+ * @swagger
+ * /user:
+ *   put:
+ *     summary: Modificació d'un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: username
+ *         in: query
+ *         type: string
+ *         description: username del usuari
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/User"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/advert', tokenMiddleware.tokenCheck, controller.modifyUser);
+
 exports.apiRoutes = apiRoutes;
