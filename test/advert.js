@@ -143,7 +143,7 @@ describe('POST /advert', () => {
   before(function (done) {
     advertDB.Advert.remove({}, (err) => { });
   });
-
+  //TODO: Per fer
 });
 
 
