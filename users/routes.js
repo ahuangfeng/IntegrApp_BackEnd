@@ -143,12 +143,10 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *     produces:
  *       - "application/json"
  *     parameters:
- *       - name: _id
+ *       - name: username
  *         in: query
  *         type: string
- *         description: id del usuari
- *         schema:
- *           $ref: "#/definitions/DeleteBody"
+ *         description: username del usuari
  *     responses:
  *       200:
  *         description: Operació executada amb éxit

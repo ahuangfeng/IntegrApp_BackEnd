@@ -34,9 +34,9 @@ exports.saveUser = function (userData) {
   });
 }
 
-exports.deleteUser = function(_id) {
+exports.deleteUser = function(username) {
   return new Promise(function(resolve, reject) {
-    User.deleteOne({_id: _id}, function(err){
+    User.deleteOne({username: username}, function(err){
       if(!err) {
         resolve("Deleted");
       }
