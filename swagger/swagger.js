@@ -4,7 +4,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 var options = {
   swaggerDefinition: {
     info: {
-      title: 'IntegrApp BackEnd PES', // Title (required)
+      title: 'IntegrApp BackEnd', // Title (required)
       version: '1.0.0', // Version (required)
       description: 'BackEnd for IntegrApp platform'
     },
