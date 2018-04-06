@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 /**
  * @swagger
  * securityDefinitions:
- *   Advert:
+ *   advert:
  *     name: x-access-token
  *     type: apiKey
  *     in: header
