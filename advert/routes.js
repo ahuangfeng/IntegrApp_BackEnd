@@ -12,6 +12,13 @@ var apiRoutes = express.Router();
  *   description: Anuncis de la aplicació
  */
 
+ /**
+ * @swagger
+ * tags:
+ *   name: Not Implemented
+ *   description: Funció no implementada encara
+ */
+
 /**
  * @swagger
  * /advert:
@@ -90,7 +97,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  * /advert:
  *   delete:
  *     summary: Esborrat d'un anunci
- *     tags: [Advert]
+ *     tags: ['Not Implemented']
  *     security:
  *       - advert: []
  *     consumes:
@@ -124,7 +131,7 @@ apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert)
  * /advert:
  *   patch:
  *     summary: Modificació de l'estat d'un anunci
- *     tags: [Advert]
+ *     tags: [Not Implemented]
  *     security:
  *       - advert: []
  *     consumes:

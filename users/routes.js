@@ -135,7 +135,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  * /user:
  *   delete:
  *     summary: Esborra un usuari
- *     tags: [User]
+ *     tags: [Not Implemented]
  *     security:
  *       - user: []
  *     consumes:
@@ -169,7 +169,7 @@ apiRoutes.delete('/user', tokenMiddleware.tokenCheck, controller.deleteUser);
  * /user:
  *   put:
  *     summary: Modificació d'un usuari
- *     tags: [User]
+ *     tags: [Not Implemented]
  *     security:
  *       - user: []
  *     consumes:
