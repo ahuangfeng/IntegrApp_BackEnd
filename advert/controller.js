@@ -44,8 +44,8 @@ exports.getAdverts = function (req, res, next) {
 }
 
 exports.deleteAdvert = function (req, res, next) {
-  var idAdvert = req.body.idAdvert;
-  advertDB.findAdvertById(idAdvert).then(advert=> {
+  var _id = req.body._id;
+  advertDB.findAdvertById(_id).then(advert=> {
     advertDB.deleteAdvert(advert).then(deleted=> {
       res.send(deleted);
     }).catch(err=> {

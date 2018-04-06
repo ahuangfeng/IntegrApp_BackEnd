@@ -105,9 +105,10 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *     produces:
  *       - "application/json"
  *     parameters: 
- *       - name: idAdvert
+ *       - name: body
  *         in: body
- *         type: string
+ *         schema:
+ *           $ref: "#/definitions/DeleteBody"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit

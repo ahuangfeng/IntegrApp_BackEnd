@@ -21,6 +21,15 @@ var mongoose = require('mongoose');
  */
 
 /**
+ * @swagger
+ * definitions:
+ *   DeleteBody:
+ *     properties:
+ *       _id:
+ *         type: string
+ */
+
+/**
 * @swagger
 * definitions:
 *   Advert:
