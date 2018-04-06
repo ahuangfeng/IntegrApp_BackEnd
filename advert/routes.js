@@ -50,6 +50,8 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
  *   get:
  *     summary: Retorna els anuncis
  *     tags: [Advert]
+ *     security:
+ *       - advert[]
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -87,6 +89,8 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *   delete:
  *     summary: Esborrat d'un anunci
  *     tags: [Advert]
+ *     security:
+ *       - advert[]
  *     consumes:
  *       - "application/json"
  *     produces:

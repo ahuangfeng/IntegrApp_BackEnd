@@ -25,7 +25,6 @@ var mongoose = require('mongoose');
 * definitions:
 *   Advert:
 *     required:
-*       - userId
 *       - date
 *       - title
 *       - description
@@ -64,7 +63,6 @@ var mongoose = require('mongoose');
 * definitions:
 *   AdvertBody:
 *     required:
-*       - userId
 *       - date
 *       - title
 *       - description
