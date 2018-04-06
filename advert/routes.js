@@ -111,7 +111,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
- *      403:
+ *       403:
  *         description: Falta incloure el token
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
@@ -144,8 +144,8 @@ apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert)
  *       400:
  *         description: Error
  *         schema:
- *           $ref: "#/definitions/Error"
- *      403:
+ *           $ref: "#/definitions/Error" 
+ *       403:
  *         description: Falta incloure el token
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
