@@ -122,7 +122,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.post('/deleteAdvert', controller.deleteAdvert);
+apiRoutes.post('/deleteAdvert',  tokenMiddleware.tokenCheck, controller.deleteAdvert);
 
 
 /**
