@@ -87,8 +87,8 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
 
 /**
  * @swagger
- * /advert:
- *   delete:
+ * /deleteAdvert:
+ *   post:
  *     summary: Esborrat d'un anunci
  *     tags: [Advert]
  *     security:
@@ -98,10 +98,9 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *     produces:
  *       - "application/json"
  *     parameters: 
- *       - name: body
+ *       - name: idAdvert
  *         in: body
- *         schema:
- *           $ref: "#/definitions/AdvertBody"
+ *         type: string
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
@@ -116,7 +115,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert);
+apiRoutes.post('/deleteAdvert', controller.deleteAdvert);
 
 
 /**

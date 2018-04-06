@@ -7,7 +7,6 @@ var advertDB = require('./advertDB');
 var userDB = require('../users/usersDB');
 
 exports.createAdvert = function (req, res, next) {
-  console.log(req.decoded.userID);
   var verifyFields = verifyFieldAdvert(req.body, req.decoded);
   verifyFields.then(verif => {
 
@@ -45,7 +44,16 @@ exports.getAdverts = function (req, res, next) {
 }
 
 exports.deleteAdvert = function (req, res, next) {
-  notImplemented(req, res, next);
+  var idAdvert = req.body.idAdvert;
+  advertDB.findAdvertById(idAdvert).then(advert=> {
+    advertDB.deleteAdvert(advert).then(deleted=> {
+      res.send(deleted);
+    }).catch(err=> {
+      res.status(400).json({message: err.message});
+    })
+  }).catch(err=> {
+    res.status(400).json({ message: err.message});
+  })
 }
 
 exports.modifyStateAdvert = function (req, res, next) {

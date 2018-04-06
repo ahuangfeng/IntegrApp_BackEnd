@@ -17,6 +17,33 @@ exports.saveAdvert = function (advertData) {
   });
 }
 
+exports.deleteAdvert = function(advert) {
+  return new Promise(function(resolve, reject) {
+    Advert.remove({_id: advert._id}, function(err){
+      if(!err) {
+        resolve("Deleted");
+      }
+      else {
+        reject("Error deleting");
+      }
+    });
+  });
+}
+
+exports.findAdvertById = function (idAdvert) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOne({
+      _id: idAdvert
+    }, function (err, advert) {
+      if (err) {
+        console.log("Error finding advert", idAdvert);
+        reject(err);
+      }
+      resolve(advert);
+    });
+  });
+}
+
 exports.getAdvert = function (types) {
   return new Promise((resolve, reject) => {
     if (!Array.isArray(types)) {
