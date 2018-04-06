@@ -97,7 +97,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  * /deleteAdvert:
  *   post:
  *     summary: Esborrat d'un anunci
- *     tags: ['Not Implemented']
+ *     tags: [Advert]
  *     security:
  *       - advert: []
  *     consumes:
