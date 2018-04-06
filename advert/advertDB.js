@@ -17,9 +17,9 @@ exports.saveAdvert = function (advertData) {
   });
 }
 
-exports.deleteAdvert = function(advert) {
+exports.deleteAdvert = function(_id) {
   return new Promise(function(resolve, reject) {
-    Advert.remove({_id: advert._id}, function(err){
+    Advert.deleteOne({_id: _id}, function(err){
       if(!err) {
         resolve("Deleted");
       }

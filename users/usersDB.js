@@ -34,6 +34,19 @@ exports.saveUser = function (userData) {
   });
 }
 
+exports.deleteUser = function(_id) {
+  return new Promise(function(resolve, reject) {
+    User.deleteOne({_id: _id}, function(err){
+      if(!err) {
+        resolve("Deleted");
+      }
+      else {
+        reject("Error deleting");
+      }
+    });
+  });
+}
+
 exports.findAllUsers = function () {
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {

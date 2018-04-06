@@ -44,15 +44,14 @@ exports.getAdverts = function (req, res, next) {
 }
 
 exports.deleteAdvert = function (req, res, next) {
-  var _id = req.body._id;
-  advertDB.findAdvertById(_id).then(advert=> {
-    advertDB.deleteAdvert(advert).then(deleted=> {
+  advertDB.findAdvertById(req.query._id).then(advert=> {
+    advertDB.deleteAdvert(advert._id).then(deleted=> {
       res.send(deleted);
     }).catch(err=> {
-      res.status(400).json({message: err.message});
+      res.status(400).json({ message: err.message });
     })
   }).catch(err=> {
-    res.status(400).json({ message: err.message});
+    res.status(400).json({ message: err.message });
   })
 }
 

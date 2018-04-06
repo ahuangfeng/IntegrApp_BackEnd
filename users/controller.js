@@ -88,7 +88,15 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  notImplemented(req, res, next);
+  usersDB.findUserById(req.query._id).then(user=> {
+    usersDB.deleteUser(user._id).then(deleted=> {
+      res.send(deleted);
+    }).catch(err=> {
+      res.status(400).json({ message: err.message });
+    })
+  }).catch(err=> {
+    res.status(400).json({ message: err.message });
+  })
 }
 
 exports.modifyUser = function (req, res, next) {

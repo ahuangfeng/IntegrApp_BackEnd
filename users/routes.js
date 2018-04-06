@@ -135,18 +135,20 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  * /user:
  *   delete:
  *     summary: Esborra un usuari
- *     tags: [Not Implemented]
+ *     tags: [User]
  *     security:
  *       - user: []
  *     consumes:
  *       - "application/json"
- *     parameters:
- *       - name: username
- *         in: query
- *         type: string
- *         description: username del usuari
  *     produces:
  *       - "application/json"
+ *     parameters:
+ *       - name: _id
+ *         in: query
+ *         type: string
+ *         description: id del usuari
+ *         schema:
+ *           $ref: "#/definitions/DeleteBody"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
