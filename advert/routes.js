@@ -36,6 +36,10 @@ var apiRoutes = express.Router();
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
  */
 apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
 
@@ -69,6 +73,10 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
  */
 apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
 
@@ -97,6 +105,10 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *      403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
  */
 apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert);
 
@@ -125,6 +137,10 @@ apiRoutes.delete('/advert', tokenMiddleware.tokenCheck, controller.deleteAdvert)
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *      403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
  */
 apiRoutes.patch('/advert', tokenMiddleware.tokenCheck, controller.modifyStateAdvert);
 
