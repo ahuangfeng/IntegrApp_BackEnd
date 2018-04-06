@@ -1,13 +1,5 @@
-/**
- * Created by siroramirez on 23/05/17.
- */
-
-// var db_tools = require('../tools/db_tools');
 var mongoose = require('mongoose');
 var models = require('./models');
-
-// database connect
-// var db = db_tools.getDBConexion();
 
 /**
  * @swagger

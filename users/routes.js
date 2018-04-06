@@ -1,6 +1,4 @@
-/**
- * Created by siroramirez on 23/05/17.
- */
+"use strict";
 var controller = require('./controller');
 var express = require('express');
 var tokenMiddleware = require('../middleware/tokenVerification');

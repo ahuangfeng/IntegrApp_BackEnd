@@ -1,5 +1,5 @@
 /**
- * Created by siroramirez on 23/05/17.
+ * Created by integrapp Team
  *
  * Based on SPAM Server dvicente@solidear.es on 09/06/2016
  */
@@ -38,7 +38,7 @@ db_tools.DBConnectMongoose()
     var forums = require('./forum');
     var adverts = require('./advert');
     var swagger = require('./swagger/swagger');
-    
+
     app.use('/', express.static(__dirname + '/mainPage'));
 
     app.get('/api', function (req, res) {
