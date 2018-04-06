@@ -12,6 +12,7 @@ var db_tools = require('./tools/db_tools');
 var morgan = require('morgan');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('config'); // get our config file
+var path = require('path');
 
 // module.exports para que sea visible por todos los lados
 var app = module.exports = express();
@@ -38,9 +39,7 @@ db_tools.DBConnectMongoose()
     var adverts = require('./advert');
     var swagger = require('./swagger/swagger');
     
-    app.get('/', function (req, res) {
-      res.send("IntegrApp Back-End Deployed!");
-    });
+    app.use('/', express.static(__dirname + '/mainPage'));
 
     app.get('/api', function (req, res) {
       res.send("IntegrApp API Deployed!");

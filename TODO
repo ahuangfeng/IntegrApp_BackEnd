@@ -1,0 +1,17 @@
+Test:
+POST /register --> fet
+GET /users --> fet
+POST /Login --> fet
+GET /user --> fet
+DELETE /user
+GET /forum --> fet
+POST /forum --> fet
+POST /advert
+GET /advert -->fet
+DELETE /advert
+
+Not implemented:
+PUT /user
+PATCH /advert
+
+Quitar userId de las request y usar token
