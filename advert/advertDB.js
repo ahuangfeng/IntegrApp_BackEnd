@@ -29,6 +29,21 @@ exports.deleteAdvert = function (id) {
   });
 }
 
+exports.modifyStateAdvert = function (id, state) {
+  if (state === "opened") state = "closed";
+  else state = "opened";
+
+  return new Promise(function (resolve, reject) {
+      Advert.updateOne({ _id : id}, {$set: { state : state} }, function (err) {       
+        if (!err) {
+          resolve("State of Advert modified");
+        } else {
+          reject("Error modifying state of advert");
+        }
+      });
+  });
+}
+
 exports.findAdvertById = function (idAdvert) {
   return new Promise(function (resolve, reject) {
     if (idAdvert.match(/^[0-9a-fA-F]{24}$/)) {

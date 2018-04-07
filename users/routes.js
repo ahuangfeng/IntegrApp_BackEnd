@@ -167,7 +167,7 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  * /user/{id}:
  *   put:
  *     summary: Modificació d'un usuari
- *     tags: [Not Implemented]
+ *     tags: [User]
  *     security:
  *       - user: []
  *     consumes:
@@ -198,6 +198,6 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.put('/user/:id', controller.modifyUser);
+apiRoutes.put('/user/:id', tokenMiddleware.tokenCheck, controller.modifyUser);
 
 exports.apiRoutes = apiRoutes;

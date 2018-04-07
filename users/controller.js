@@ -101,8 +101,23 @@ exports.deleteUser = function (req, res, next) {
 }
 
 exports.modifyUser = function (req, res, next) {
-  console.log("UserId to modify:" + req.params.id);
-  notImplemented(req, res, next);
+  var userData = req.body;
+
+  var verify = verifyFields(userData);
+  if (!verify.success) {
+    res.status(400).json({ message: verify.message });
+    return;
+  }
+
+  usersDB.findUserById(req.params.id).then(user => {
+    usersDB.modifyUser(user.id, userData).then(modifiedMessage => {
+      res.send({ message: modifiedMessage });
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    });
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  })
 }
 
 notImplemented = function (req, res, next) {

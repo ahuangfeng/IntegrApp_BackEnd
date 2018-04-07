@@ -56,7 +56,15 @@ exports.deleteAdvert = function (req, res, next) {
 }
 
 exports.modifyStateAdvert = function (req, res, next) {
-  notImplemented(req, res, next);
+  advertDB.findAdvertById(req.params.id).then(advert => {
+    advertDB.modifyStateAdvert(advert._id, advert.state).then(modified => {
+      res.send({ message: modified });
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    })
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  })
 }
 
 notImplemented = function (req, res, next) {

@@ -39,6 +39,19 @@ exports.deleteUser = function(id) {
   });
 }
 
+exports.modifyUser = function(id, content) {
+  return new Promise(function(resolve, reject) {
+    User.updateOne({_id : id}, {$set: { username : content.username, password : content.password,
+      type : content.type, CIF : content.CIF } }, function (err) {       
+        if (!err) {
+          resolve("User modified");
+        } else {
+          reject("Error modifying user");
+        }
+      });
+  });
+}
+
 exports.findAllUsers = function () {
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {
