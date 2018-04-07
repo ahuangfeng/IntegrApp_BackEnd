@@ -25,7 +25,6 @@ describe('POST /forum', () => {
         "title": "Title from forum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
         "type": "documentation",
-        "userId": configTest.userId
       })
       .end(function (err, res) {
         res.should.have.status(200);
@@ -48,7 +47,6 @@ describe('POST /forum', () => {
         "title": "Title from forum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
         "type": "documentation",
-        "userId": configTest.userId
       })
       .end(function (err, res) {
         res.should.have.status(403);
