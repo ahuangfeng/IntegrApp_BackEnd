@@ -52,6 +52,22 @@ var mongoose = require('mongoose');
  *         type: string
  */
 
+ /**
+ * @swagger
+ * definitions:
+ *   ModifUserBody:
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *       type:
+ *         type: string
+ *         enum: [voluntary, admin, newComer, association]
+ *       CIF:
+ *         type: string
+ */
+
 /**
  * @swagger
  * definitions:

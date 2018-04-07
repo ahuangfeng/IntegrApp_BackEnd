@@ -130,7 +130,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
 
 /**
  * @swagger
- * /user:
+ * /user/{id}:
  *   delete:
  *     summary: Esborra un usuari
  *     tags: [User]
@@ -141,11 +141,11 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *     produces:
  *       - "application/json"
  *     parameters:
- *      - name: id
- *        in: path
- *        type: string
- *        required: true
- *        description: Id de l'usuari que es vol eliminar
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'usuari que es vol eliminar
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
@@ -164,7 +164,7 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
 
 /**
  * @swagger
- * /user:
+ * /user/{id}:
  *   put:
  *     summary: Modificació d'un usuari
  *     tags: [Not Implemented]
@@ -173,10 +173,15 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  *     consumes:
  *       - "application/json"
  *     parameters:
- *       - name: username
- *         in: query
+ *       - name: id
+ *         in: path
  *         type: string
- *         description: username del usuari
+ *         required: true
+ *         description: Id de l'usuari que es vol modificar
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ModifUserBody"
  *     produces:
  *       - "application/json"
  *     responses:
@@ -193,6 +198,6 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.put('/user', tokenMiddleware.tokenCheck, controller.modifyUser);
+apiRoutes.put('/user/:id', controller.modifyUser);
 
 exports.apiRoutes = apiRoutes;

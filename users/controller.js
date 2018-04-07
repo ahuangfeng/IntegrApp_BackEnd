@@ -101,6 +101,7 @@ exports.deleteUser = function (req, res, next) {
 }
 
 exports.modifyUser = function (req, res, next) {
+  console.log("UserId to modify:" + req.params.id);
   notImplemented(req, res, next);
 }
 

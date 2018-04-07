@@ -31,7 +31,6 @@ exports.deleteUser = function(id) {
 
     User.deleteOne({_id: id}, function(err){
       if(!err) {
-        console.log("DELETED");
         resolve("User deleted");
       }else {
         reject("Se ha producido un error al eliminar usuario");
