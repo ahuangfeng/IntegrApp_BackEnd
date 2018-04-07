@@ -13,5 +13,3 @@ DELETE /advert
 Not implemented:
 PUT /user
 PATCH /advert
-
-Quitar userId de las request y usar token

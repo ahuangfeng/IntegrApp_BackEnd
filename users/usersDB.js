@@ -26,14 +26,15 @@ exports.saveUser = function (userData) {
   });
 }
 
-exports.deleteUser = function(username) {
+exports.deleteUser = function(id) {
   return new Promise(function(resolve, reject) {
-    User.deleteOne({username: username}, function(err){
+
+    User.deleteOne({_id: id}, function(err){
       if(!err) {
-        resolve("Deleted");
-      }
-      else {
-        reject("Error deleting");
+        console.log("DELETED");
+        resolve("User deleted");
+      }else {
+        reject("Se ha producido un error al eliminar usuario");
       }
     });
   });

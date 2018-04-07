@@ -88,13 +88,14 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  usersDB.findUserByName(req.query.username).then(user=> {
-    usersDB.deleteUser(user.username).then(deleted=> {
-      res.send(deleted);
-    }).catch(err=> {
+  usersDB.findUserById(req.params.id).then(user => {
+    //TODO: antes de eliminar, verificar datos asociados al usuario!
+    usersDB.deleteUser(user.id).then(deletedMessage => {
+      res.send({ message: deletedMessage });
+    }).catch(err => {
       res.status(400).json({ message: err.message });
-    })
-  }).catch(err=> {
+    });
+  }).catch(err => {
     res.status(400).json({ message: err.message });
   })
 }

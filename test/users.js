@@ -193,3 +193,58 @@ describe('GET /user by username', () => {
   });
 
 });
+
+
+describe('DELETE /user by username', () => {
+  it('it should GET the existing user', (done) => {
+    chai.request(server)
+      .get('/api/user')
+      .set('x-access-token', configTest.token)
+      .query({ username: 'test1' })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        expect(res.body.username, 'test1');
+        done();
+      });
+  });
+
+  it('it should get an error if no username provided', (done) => {
+    chai.request(server)
+      .get('/api/user')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        expect(res.body.message, 'Es necesita un username per a trobar un usuari.');
+        done();
+      });
+  });
+
+  it('it should get an error if user not found', (done) => {
+    chai.request(server)
+      .get('/api/user')
+      .set('x-access-token', configTest.token)
+      .query({ username: 'test3' })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        expect(res.body.username, 'User not found in database');
+        done();
+      });
+  });
+
+  it('it should get an error if no token provided', (done) => {
+    chai.request(server)
+      .get('/api/user')
+      .query({ username: 'test3' })
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('success');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+});

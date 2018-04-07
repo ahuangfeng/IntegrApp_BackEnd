@@ -141,15 +141,16 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *     produces:
  *       - "application/json"
  *     parameters:
- *       - name: username
- *         in: query
- *         type: string
- *         description: username del usuari
+ *      - name: id
+ *        in: path
+ *        type: string
+ *        required: true
+ *        description: Id de l'usuari que es vol eliminar
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/Error"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -159,8 +160,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.delete('/user', tokenMiddleware.tokenCheck, controller.deleteUser);
-
+apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
 
 /**
  * @swagger
