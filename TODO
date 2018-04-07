@@ -6,7 +6,7 @@ GET /user --> fet
 DELETE /user --> fet
 GET /forum --> fet
 POST /forum --> fet
-POST /advert
+POST /advert --> fet
 GET /advert -->fet
 DELETE /advert --> fet
 
