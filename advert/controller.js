@@ -66,14 +66,14 @@ notImplemented = function (req, res, next) {
 verifyFieldAdvert = function (advertData, decoded) {
   return new Promise((resolve, reject) => {
     var validTypes = ["lookFor", "offer"];
+    if (advertData.places <= 0) {
+      reject({ message: "places tiene que ser mayor que 0" });
+    }
     if (!advertData.date || !advertData.title || !advertData.description || !advertData.places || !advertData.typeAdvert) {
       reject({ message: "Faltan datos obligatorios: date, title, description, places, typeAdvert" });
     }
     if (validTypes.indexOf(advertData.typeAdvert) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
-    }
-    if (advertData.places <= 0) {
-      reject({ message: "places tiene que ser mayor que 0" });
     }
 
     var regex = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;

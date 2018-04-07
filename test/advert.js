@@ -163,8 +163,162 @@ describe('GET /advert', () => {
 describe('POST /advert', () => {
   before(function (done) {
     advertDB.Advert.remove({}, (err) => { });
+    done();
   });
-  //TODO: Per fer
+  
+  it('it should not create an advert without token', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-05-2018 13:20",
+        "title": "title1",
+        "description": "description",
+        "places": 2,
+        "typeAdvert": "lookFor"
+      })
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('success');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should create an advert with valid data (type=lookFor)', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-05-2018 13:20",
+        "title": "title1",
+        "description": "description",
+        "places": 2,
+        "typeAdvert": "lookFor"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('lookFor');
+        done();
+      });
+  });
+
+  it('it should create an advert with valid data (type=offer)', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-05-2018 13:20",
+        "title": "title1",
+        "description": "description",
+        "places": 2,
+        "typeAdvert": "offer"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('offer');
+        done();
+      });
+  });
+
+  it('it should not create an advert with invalid date', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "Hello!",
+        "title": "title1",
+        "description": "description",
+        "places": 2,
+        "typeAdvert": "lookFor"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        res.body.message.should.be.eql("Date tiene que ser en formato DD-MM-YYYY hh:mm");
+        done();
+      });
+  });
+
+  it('it should not create an advert with date before today', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-01-2018 13:20",
+        "title": "title2",
+        "description": "description1",
+        "places": 2,
+        "typeAdvert": "lookFor"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        res.body.message.should.be.eql("Date tiene que ser posterior a la date actual");
+        done();
+      });
+  });
+
+  it('it should not create an advert with 0 places', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-05-2018 13:20",
+        "title": "title2",
+        "description": "description1",
+        "places": 0,
+        "typeAdvert": "lookFor"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        res.body.message.should.be.eql("places tiene que ser mayor que 0");
+        done();
+      });
+  });
+
+  it('it should not create an advert with an invalid typeAdvert', (done) => {
+    chai.request(server)
+      .post('/api/advert/')
+      .send({
+        "date": "05-05-2018 13:20",
+        "title": "title2",
+        "description": "description1",
+        "places": 5,
+        "typeAdvert": "invalidOne"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        res.body.message.should.be.eql("type tiene que ser uno o varios de estos valores: [lookFor, offer]");
+        done();
+      });
+  });
 });
 
 describe('DELETE /advert/{id}', () => {
@@ -214,7 +368,7 @@ describe('DELETE /advert/{id}', () => {
       });
   });
 
-  it('it should delete a advert', (done) => {
+  it('it should delete an advert', (done) => {
     chai.request(server)
       .del('/api/advert/' + advertIds[0])
       .set('Accept', 'application/json')
