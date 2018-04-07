@@ -82,6 +82,19 @@ describe('GET /advert', () => {
     });
   });
 
+  it('it should not get any advert without token', function (done) {
+    chai.request(server)
+      .get('/api/advert')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('success');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
   it('it should get all the adverts without query', function (done) {
     chai.request(server)
       .get('/api/advert')
@@ -90,7 +103,7 @@ describe('GET /advert', () => {
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
-        res.body.length.should.be.eql(3);
+        expect(res.body.length,3);
         done();
       });
   });

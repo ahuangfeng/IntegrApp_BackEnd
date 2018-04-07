@@ -36,6 +36,7 @@ var apiRoutes = express.Router();
  *         in: body
  *         schema:
  *           $ref: "#/definitions/AdvertBody"
+ *         description: Fecha en formato DD-MM-YYYY hh:mm
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
