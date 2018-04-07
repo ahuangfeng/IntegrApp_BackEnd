@@ -3,12 +3,12 @@ POST /register --> fet
 GET /users --> fet
 POST /Login --> fet
 GET /user --> fet
-DELETE /user
+DELETE /user --> fet
 GET /forum --> fet
 POST /forum --> fet
 POST /advert
 GET /advert -->fet
-DELETE /advert
+DELETE /advert --> fet
 
 Not implemented:
 PUT /user

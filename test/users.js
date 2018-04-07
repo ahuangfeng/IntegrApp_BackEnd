@@ -245,7 +245,7 @@ describe('DELETE /user by id', () => {
     });
   });
 
-  it('it should not delete anything if there is no token the existing user', (done) => {
+  it('it should not delete anything if there is no token', (done) => {
     chai.request(server)
       .del('/api/user/'+userIds[0])
       .set('Accept', 'application/json')

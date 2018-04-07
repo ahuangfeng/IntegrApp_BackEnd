@@ -31,15 +31,19 @@ exports.deleteAdvert = function (id) {
 
 exports.findAdvertById = function (idAdvert) {
   return new Promise(function (resolve, reject) {
-    Advert.findOne({
-      _id: idAdvert
-    }, function (err, advert) {
-      if (err) {
-        console.log("Error finding advert", idAdvert);
-        reject(err);
-      }
-      resolve(advert);
-    });
+    if (idAdvert.match(/^[0-9a-fA-F]{24}$/)) {
+      Advert.findOne({
+        _id: idAdvert
+      }, function (err, advert) {
+        if (err) {
+          console.log("Error finding advert", idAdvert);
+          reject(err);
+        }
+        resolve(advert);
+      });
+    } else {
+      reject({ message: "AdvertId invalid" });
+    }
   });
 }
 

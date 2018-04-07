@@ -125,7 +125,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, advertController.getAdverts
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.delete('/advert/:id', advertController.deleteAdvert);
+apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.deleteAdvert);
 
 /**
  * @swagger
