@@ -17,14 +17,13 @@ exports.saveAdvert = function (advertData) {
   });
 }
 
-exports.deleteAdvert = function(_id) {
-  return new Promise(function(resolve, reject) {
-    Advert.deleteOne({_id: _id}, function(err){
-      if(!err) {
-        resolve("Deleted");
-      }
-      else {
-        reject("Error deleting");
+exports.deleteAdvert = function (id) {
+  return new Promise(function (resolve, reject) {
+    Advert.deleteOne({ _id: id }, function (err) {
+      if (!err) {
+        resolve("Advert deleted");
+      } else {
+        reject("Error deleting advert");
       }
     });
   });

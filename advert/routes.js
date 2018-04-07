@@ -1,5 +1,5 @@
 
-var controller = require('./controller');
+var advertController = require('./controller');
 var express = require('express');
 var tokenMiddleware = require('../middleware/tokenVerification');
 
@@ -12,12 +12,12 @@ var apiRoutes = express.Router();
  *   description: Anuncis de la aplicació
  */
 
- /**
- * @swagger
- * tags:
- *   name: Not Implemented
- *   description: Funció no implementada encara
- */
+/**
+* @swagger
+* tags:
+*   name: Not Implemented
+*   description: Funció no implementada encara
+*/
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
+apiRoutes.post('/advert', tokenMiddleware.tokenCheck, advertController.createAdvert);
 
 
 /**
@@ -89,12 +89,12 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
+apiRoutes.get('/advert', tokenMiddleware.tokenCheck, advertController.getAdverts);
 
 
 /**
  * @swagger
- * /advert:
+ * /advert/{id}:
  *   delete:
  *     summary: Esborrat d'un anunci
  *     tags: [Advert]
@@ -105,15 +105,16 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *     produces:
  *       - "application/json"
  *     parameters: 
- *       - name: _id
- *         in: query
+ *       - name: id
+ *         in: path
  *         type: string
- *         description: id del anunci
+ *         required: true
+ *         description: Id de l'anunci que es vol eliminar
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/Advert"
+ *           $ref: "#/definitions/Error"
  *       400:
  *         description: Error
  *         schema:
@@ -123,8 +124,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.delete('/advert',  tokenMiddleware.tokenCheck, controller.deleteAdvert);
-
+apiRoutes.delete('/advert/:id', advertController.deleteAdvert);
 
 /**
  * @swagger
@@ -157,6 +157,6 @@ apiRoutes.delete('/advert',  tokenMiddleware.tokenCheck, controller.deleteAdvert
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.patch('/advert', tokenMiddleware.tokenCheck, controller.modifyStateAdvert);
+apiRoutes.patch('/advert', tokenMiddleware.tokenCheck, advertController.modifyStateAdvert);
 
 exports.apiRoutes = apiRoutes;

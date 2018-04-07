@@ -44,13 +44,13 @@ exports.getAdverts = function (req, res, next) {
 }
 
 exports.deleteAdvert = function (req, res, next) {
-  advertDB.findAdvertById(req.query._id).then(advert=> {
-    advertDB.deleteAdvert(advert._id).then(deleted=> {
-      res.send(deleted);
-    }).catch(err=> {
+  advertDB.findAdvertById(req.params.id).then(advert => {
+    advertDB.deleteAdvert(advert._id).then(deleted => {
+      res.send({ message: deleted });
+    }).catch(err => {
       res.status(400).json({ message: err.message });
     })
-  }).catch(err=> {
+  }).catch(err => {
     res.status(400).json({ message: err.message });
   })
 }
