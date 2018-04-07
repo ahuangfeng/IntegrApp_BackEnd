@@ -7,10 +7,10 @@ var forumDB = require('./forumDB');
 var userDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
-  var verifyFields = verifyFieldForum(req.body);
+  var verifyFields = verifyFieldForum(req.body, req.decoded);
   verifyFields.then(verif => {
 
-    var forumDocument = createForumDocument(req.body);
+    var forumDocument = createForumDocument(req.body, req.decoded);
 
     forumDB.saveForum(forumDocument)
       .then(forum => {
@@ -47,16 +47,16 @@ notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFieldForum = function (forumData) {
+verifyFieldForum = function (forumData, decoded) {
   return new Promise((resolve, reject) => {
     var validTypes = ["documentation", "entertainment", "language", "various"];
-    if (!forumData.title || !forumData.description || !forumData.type || !forumData.userId) {
-      reject({ message: "Faltan datos obligatorios: title, description, type, userId" });
+    if (!forumData.title || !forumData.description || !forumData.type) {
+      reject({ message: "Faltan datos obligatorios: title, description, type" });
     }
     if (validTypes.indexOf(forumData.type) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" });
     }
-    userDB.findUserById(forumData.userId).then(res => {
+    userDB.findUserById(decoded.userID).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
       } else {
@@ -68,13 +68,13 @@ verifyFieldForum = function (forumData) {
   });
 }
 
-createForumDocument = function (forumData) {
+createForumDocument = function (forumData, decoded) {
   var forum = {};
   forum['title'] = forumData.title;
   forum['description'] = forumData.description;
   forum['createdAt'] = new Date().toLocaleString();
   forum['type'] = forumData.type;
-  forum['userId'] = forumData.userId;
+  forum['userId'] = decoded.userID;
   forum['rate'] = 0;
   return forum;
 }

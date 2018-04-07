@@ -69,8 +69,6 @@ var mongoose = require('mongoose');
 *       - places
 *       - typeAdvert
 *     properties:
-*       userId:
-*         type: string
 *       date:
 *         type: string
 *       title:

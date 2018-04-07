@@ -36,13 +36,17 @@ var apiRoutes = express.Router();
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/forum', controller.createForum);
+apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
 
 
 /**
  * @swagger
- * /forum:
+ * /forums:
  *   get:
  *     summary: Retorna els forums
  *     tags: [Forum]
@@ -69,7 +73,11 @@ apiRoutes.post('/forum', controller.createForum);
  *         description: Error
  *         schema:
  *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.get('/forum', controller.getForums);
+apiRoutes.get('/forums',tokenMiddleware.tokenCheck, controller.getForums);
 
 exports.apiRoutes = apiRoutes;

@@ -35,7 +35,6 @@ var mongoose = require('mongoose');
 *       - title
 *       - description
 *       - type
-*       - userId
 *     properties:
 *       title:
 *         type: string
@@ -44,8 +43,6 @@ var mongoose = require('mongoose');
 *       type:
 *         type: string
 *         enum: [documentation, entertainment, language, various]
-*       userId:
-*         type: string
 */
 
 var ForumSchema = new mongoose.Schema({

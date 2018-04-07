@@ -20,6 +20,7 @@ describe('POST /forum', () => {
     chai.request(server)
       .post('/api/forum')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .send({
         "title": "Title from forum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
@@ -39,23 +40,7 @@ describe('POST /forum', () => {
       });
   });
 
-  it('it should not create a forum from invalid data', function (done) {
-    chai.request(server)
-      .post('/api/forum')
-      .set('Accept', 'application/json')
-      .send({
-        "title": "Title from forum",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
-      })
-      .end(function (err, res) {
-        res.should.have.status(400);
-        res.should.be.an('object');
-        res.body.should.have.property('message');
-        done();
-      });
-  });
-
-  it('it should not create a forum from invalid userId', function (done) {
+  it('it should not create a forum without token', function (done) {
     chai.request(server)
       .post('/api/forum')
       .set('Accept', 'application/json')
@@ -63,7 +48,25 @@ describe('POST /forum', () => {
         "title": "Title from forum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
         "type": "documentation",
-        "userId": "InvalidId"
+        "userId": configTest.userId
+      })
+      .end(function (err, res) {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
+        res.body.should.have.property("success");
+        done();
+      });
+  });
+
+  it('it should not create a forum from invalid data', function (done) {
+    chai.request(server)
+      .post('/api/forum')
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "title": "Title from forum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
       })
       .end(function (err, res) {
         res.should.have.status(400);
@@ -77,6 +80,7 @@ describe('POST /forum', () => {
     chai.request(server)
       .post('/api/forum')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .send({
         "title": "Title from forum",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ex mauris. Integer pulvinar aliquam placerat. Morbi in mi nec augue condimentum gravida. Sed nulla turpis, luctus in vehicula id, posuere sed lectus. Sed odio nibh, condimentum tempor congue quis, tincidunt ut justo. Sed tincidunt cursus massa quis lobortis. ",
@@ -147,10 +151,24 @@ describe('GET /forum', () => {
     });
   });
 
+  it('it should not get all the forum if no token provided', function (done) {
+    chai.request(server)
+      .get('/api/forums')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
+        res.body.should.have.property("success");
+        done();
+      });
+  });
+
   it('it should get all the forum', function (done) {
     chai.request(server)
-      .get('/api/forum')
+      .get('/api/forums')
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
@@ -160,9 +178,10 @@ describe('GET /forum', () => {
 
   it('it should not get forums for a not valid type', function (done) {
     chai.request(server)
-      .get('/api/forum')
+      .get('/api/forums')
       .query({ type: 'notValid' })
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(400);
         res.body.should.be.an('object');
@@ -173,9 +192,10 @@ describe('GET /forum', () => {
 
   it('it should get only the forum for type "entertainment"', function (done) {
     chai.request(server)
-      .get('/api/forum')
+      .get('/api/forums')
       .query({ type: 'entertainment' })
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array');
@@ -188,9 +208,10 @@ describe('GET /forum', () => {
 
   it('it should get the forum for type "entertainment" AND "documentation"', function (done) {
     chai.request(server)
-      .get('/api/forum')
+      .get('/api/forums')
       .query({ type: 'entertainment,documentation' })
       .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(200);
         res.body.should.be.an('array'); //TODO: ver porque a veces no es igual a 3
