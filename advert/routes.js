@@ -26,7 +26,7 @@ var apiRoutes = express.Router();
  *     summary: Creació d'un anunci
  *     tags: [Advert]
  *     security:
- *       - advert: []
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -60,7 +60,7 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, controller.createAdvert);
  *     summary: Retorna els anuncis
  *     tags: [Advert]
  *     security:
- *       - advert: []
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -99,7 +99,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, controller.getAdverts);
  *     summary: Esborrat d'un anunci
  *     tags: [Advert]
  *     security:
- *       - advert: []
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -133,7 +133,7 @@ apiRoutes.delete('/advert',  tokenMiddleware.tokenCheck, controller.deleteAdvert
  *     summary: Modificació de l'estat d'un anunci
  *     tags: [Not Implemented]
  *     security:
- *       - advert: []
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
