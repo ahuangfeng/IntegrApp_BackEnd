@@ -69,8 +69,8 @@ exports.modifyStateAdvert = function (req, res, next) {
 
 exports.getAdvertsUser = function(req,res,next) {
   advertDB.findAdvertByIdUser(req.decoded.userID).then(adverts => {
-    if(!adverts || adverts < 1) {
-      res.status(400).json({ message: "User with no adverts in database"});
+    if(!adverts) {
+      res.status(400).json({ message: "Error with user"});
     } else {
       res.send(adverts);
     }
