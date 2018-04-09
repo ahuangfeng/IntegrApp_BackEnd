@@ -4,12 +4,13 @@ GET /users --> fet
 POST /Login --> fet
 GET /user --> fet
 DELETE /user --> fet
+PUT /user
 GET /forum --> fet
 POST /forum --> fet
 POST /advert --> fet
 GET /advert -->fet
 DELETE /advert --> fet
+PATCH /advert --> discutir si state per valor o segons el de la BD
+GET /advertUser --> mirar si array buit
 
 Not implemented:
-PUT /user
-PATCH /advert

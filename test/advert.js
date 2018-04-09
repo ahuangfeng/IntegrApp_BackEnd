@@ -491,10 +491,6 @@ describe('GET /advertsUser', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         expect(res.body.lenght,0);
-
-        // res.should.have.status(400);
-        // res.body.should.be.an('object');
-        // res.body.should.have.property('message');
         done();
       });
   });
@@ -560,6 +556,23 @@ describe('PATCH /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
+        expect(res.body.message, "State of Advert modified");
+        done();
+      });
+  });
+
+  it('it should modify the state of the advert', (done) => {
+    chai.request(server)
+      .patch('/api/advert/' + advertIds[1])
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({ "state": "opened" })
+      .end((err, res) => {
+        //TODO: por estado no? y que devuelva el advert mismo
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        expect(res.body.message, "State of Advert modified");
         done();
       });
   });
