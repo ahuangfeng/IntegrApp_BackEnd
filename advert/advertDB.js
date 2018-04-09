@@ -91,3 +91,15 @@ exports.getAdvert = function (types) {
     }
   })
 }
+
+exports.findAdvertByIdUser = function(name) {
+  return new Promise(function (resolve, reject) {
+    Advert.find({userId: name}, function(err, advert) {
+      if(err) {
+        console.log("Error finding advert", name);
+        reject(err);
+      }
+      resolve(advert);
+    });
+  });
+}

@@ -161,4 +161,34 @@ apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.dele
  */
 apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modifyStateAdvert);
 
+/**
+ * @swagger
+ * /advertsUser:
+ *   get:
+ *     summary: Retorna els anuncis del Usuari
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: "#/definitions/Advert"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
+ */
+apiRoutes.get('/advertsUser', tokenMiddleware.tokenCheck, advertController.getAdvertsUser);
+
 exports.apiRoutes = apiRoutes;

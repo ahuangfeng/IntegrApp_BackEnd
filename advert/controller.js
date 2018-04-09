@@ -67,6 +67,19 @@ exports.modifyStateAdvert = function (req, res, next) {
   })
 }
 
+exports.getAdvertsUser = function(req,res,next) {
+  advertDB.findAdvertByIdUser(req.decoded.userID).then(adverts => {
+    if(!adverts || adverts < 1) {
+      res.status(400).json({ message: "User with no adverts in database"});
+    } else {
+      res.send(adverts);
+    }
+  }).catch(err => {
+    console.log("Error", err);
+    res.status(400).send(err);
+  });
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
