@@ -240,14 +240,14 @@ describe('DELETE /user by id', () => {
       userIds.push(response.id);
       userIds.length.should.be.eql(3);
       done();
-    }).catch(err => { 
-      console.error("Error found in login tests",err);
+    }).catch(err => {
+      console.error("Error found in login tests", err);
     });
   });
 
   it('it should not delete anything if there is no token', (done) => {
     chai.request(server)
-      .del('/api/user/'+userIds[0])
+      .del('/api/user/' + userIds[0])
       .set('Accept', 'application/json')
       .end((err, res) => {
         res.should.have.status(403);
@@ -260,7 +260,7 @@ describe('DELETE /user by id', () => {
 
   it('it should delete a user', (done) => {
     chai.request(server)
-      .del('/api/user/'+userIds[0])
+      .del('/api/user/' + userIds[0])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
@@ -299,7 +299,7 @@ describe('DELETE /user by id', () => {
 
   it('it should delete a user', (done) => {
     chai.request(server)
-      .del('/api/user/'+userIds[1])
+      .del('/api/user/' + userIds[1])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
@@ -316,5 +316,115 @@ describe('DELETE /user by id', () => {
         });
       });
   });
+});
 
+describe('PUT /user', () => {
+
+  before(done => {
+    usersDB.saveUser({
+      "username": "provaNexistant",
+      "password": "provaN",
+      "type": "voluntary"
+    }).then(res => {
+      res.should.be.an('object');
+      expect(res.username, "provaNexistant");
+      done();
+    }).catch(err => {
+      console.log("Error: ", err);
+    });
+  })
+
+  it('it should not modify the user without a token', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .send({
+        "username": "Provaxxx",
+        "password": "xxxxxxx",
+        "type": "voluntary",
+        "CIF": "string"
+      })
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('success');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with invalid username', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "",
+        "password": "xxxxxxx",
+        "type": "voluntary",
+        "CIF": "string"
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with invalid data', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "alexhuang",
+        "password": "xxxxxxx",
+        "type": "association",
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+
+  it('it should modify the user with valid data', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "nuevoValido",
+        "password": "xxxxxxxfda",
+        "type": "voluntary"
+      })
+      .end((err, res) => { //TODO: solo tiene que modificar ciertas cosas!
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with existant username', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "provaNexistant",
+        "password": "xxxxxxx",
+        "type": "voluntary",
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+  
 });
