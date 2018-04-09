@@ -12,6 +12,15 @@ var mongoose = require('mongoose');
  */
 
 /**
+ * @swagger
+ * definitions:
+ *   Error:
+ *     properties:
+ *       message:
+ *         type: string
+ */
+
+/**
 * @swagger
 * definitions:
 *   Advert:
