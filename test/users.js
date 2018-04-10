@@ -50,7 +50,9 @@ describe('POST /register', () => {
       .send({
         "username": "test1",
         "password": "test1",
-        "type": "voluntary"
+        "type": "voluntary",
+        "name": "nomProva",
+        "email": "aa@fmaol.com"
       })
       .end((err, res) => {
         res.should.have.status(200);
@@ -69,7 +71,9 @@ describe('POST /register', () => {
       .send({
         "username": "test1",
         "password": "test1",
-        "type": "voluntary"
+        "type": "voluntary",
+        "name": "nomProva",
+        "email": "aa@fmaol.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
@@ -103,7 +107,9 @@ describe('POST /register', () => {
       .send({
         "username": "test1",
         "password": "test1",
-        "type": "wrongType"
+        "type": "wrongType",
+        "name": "nomProva",
+        "email": "aa@fmaol.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
@@ -120,7 +126,9 @@ describe('POST /register', () => {
       .send({
         "username": "test2",
         "password": "test2",
-        "type": "association"
+        "type": "association",
+        "name": "nomProva",
+        "email": "aa@fmaol.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
@@ -137,13 +145,35 @@ describe('POST /register', () => {
       .set('Accept', 'application/json')
       .send({
         "username": "test2",
-        "type": "association"
+        "type": "association",
+        "name": "nomProva",
+        "email": "aa@fmaol.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
         expect(res.body.message, "Faltan datos obligatorios: username, password, type");
+        done();
+      });
+  });
+
+  it('it should not register a user with a bad formatted email', (done) => {
+    chai.request(server)
+      .post('/api/register')
+      .set('Accept', 'application/json')
+      .send({
+        "username": "test2",
+        "password": "test2",
+        "type": "voluntary",
+        "name": "nomProva",
+        "email": "aa.com"
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        expect(res.body.message, "Email mal formado");
         done();
       });
   });
@@ -342,7 +372,9 @@ describe('PUT /user', () => {
         "username": "Provaxxx",
         "password": "xxxxxxx",
         "type": "voluntary",
-        "CIF": "string"
+        "CIF": "string",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
       })
       .end((err, res) => {
         res.should.have.status(403);
@@ -362,7 +394,9 @@ describe('PUT /user', () => {
         "username": "",
         "password": "xxxxxxx",
         "type": "voluntary",
-        "CIF": "string"
+        "CIF": "string",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
@@ -381,6 +415,8 @@ describe('PUT /user', () => {
         "username": "alexhuang",
         "password": "xxxxxxx",
         "type": "association",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
       })
       .end((err, res) => {
         res.should.have.status(400);
@@ -397,9 +433,11 @@ describe('PUT /user', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({
-        "username": "nuevoValido",
-        "password": "xxxxxxxfda",
-        "type": "voluntary"
+        "username": "NuevoValido",
+        "password": "test2",
+        "type": "voluntary",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
       })
       .end((err, res) => { //TODO: solo tiene que modificar ciertas cosas!
         res.should.have.status(200);
