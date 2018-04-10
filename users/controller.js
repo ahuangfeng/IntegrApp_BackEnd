@@ -129,6 +129,7 @@ exports.getUserInfo = function(req, res, next){
         res.status(400).json({ message: "User not found in database" });
       } else {
         user.password = undefined;
+        user.CIF = undefined;
         res.status(200).send(user);
       }
     }).catch(err => {

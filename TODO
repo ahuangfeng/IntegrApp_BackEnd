@@ -3,6 +3,7 @@ POST /register --> fet
 GET /users --> fet
 POST /Login --> fet
 GET /user --> fet
+GET /userInfo 
 DELETE /user --> fet
 PUT /user --> solo debe poder modificar ciertos aspectos! (fet pero hay que hablarlo)
 POST /forum --> fet
