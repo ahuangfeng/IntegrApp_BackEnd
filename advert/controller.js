@@ -97,16 +97,17 @@ verifyFieldAdvert = function (advertData, decoded) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
     }
 
-    var regex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]$/;
+    var regex = /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$/;
 
     if (!regex.test(advertData.date)) {
-      reject({ message: "Date tiene que ser en formato YYYY-MM-DD hh:mm" });
+      reject({ message: "Date tiene que ser en formato YYYY-MM-DD hh:mm:ss" });
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();
 
     var today = new Date().toLocaleString();
     today = new Date(today).getTime();
+
 
     if (dataAux - today < 0) {
       reject({ message: "Date tiene que ser posterior a la date actual" });
