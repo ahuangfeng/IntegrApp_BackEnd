@@ -126,8 +126,8 @@ notImplemented = function (req, res, next) {
 
 verifyFields = function (userData) {
   var validTypes = ["voluntary", "admin", "newComer", "association"];
-  if (!userData.username || !userData.password || !userData.type) {
-    return { success: false, message: "Faltan datos obligatorios: username, password, type" };
+  if (!userData.username || !userData.password || !userData.type || !userData.name) {
+    return { success: false, message: "Faltan datos obligatorios: username, password, type, name" };
   }
   if (validTypes.indexOf(userData.type) == -1) {
     return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
@@ -137,5 +137,12 @@ verifyFields = function (userData) {
       return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
     }
   }
+  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+  if(!(!userData.email)) {
+    if(!regex.test(userData.email)) {
+    return { success: false, message: "Email mal formado"};
+  }
+  }
+  
   return { success: true };
 }

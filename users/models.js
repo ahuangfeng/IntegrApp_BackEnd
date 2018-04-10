@@ -45,6 +45,12 @@ var mongoose = require('mongoose');
  *         type: string
  *       password:
  *         type: string
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phone:
+ *         type: number
  *       type:
  *         type: string
  *         enum: [voluntary, admin, newComer, association]
@@ -61,6 +67,12 @@ var mongoose = require('mongoose');
  *         type: string
  *       password:
  *         type: string
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phone:
+ *         type: number
  *       type:
  *         type: string
  *         enum: [voluntary, admin, newComer, association]
@@ -116,6 +128,12 @@ var mongoose = require('mongoose');
  *         type: string
  *       password:
  *         type: string
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phone:
+ *         type: number
  *       type:
  *         type: string
  *         enum: [voluntary, admin, newComer, association]
@@ -126,7 +144,10 @@ var mongoose = require('mongoose');
  */
 var UserSchema = new mongoose.Schema({
   username: String,
+  name: String,
   password: String,
+  email: String,
+  phone: Number,
   type: String,
   CIF: {
       type: String,
