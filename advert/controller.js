@@ -68,7 +68,7 @@ exports.modifyStateAdvert = function (req, res, next) {
 }
 
 exports.getAdvertsUser = function(req,res,next) {
-  advertDB.findAdvertByIdUser(req.decoded.userID).then(adverts => {
+  advertDB.findAdvertByIdUser(req.params.id).then(adverts => {
     if(!adverts) {
       res.status(400).json({ message: "Error with user"});
     } else {
@@ -97,10 +97,10 @@ verifyFieldAdvert = function (advertData, decoded) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [lookFor, offer]" });
     }
 
-    var regex = /^([1-9]|([012][0-9])|(3[01]))-([0]{0,1}[1-9]|1[012])-\d\d\d\d [012]{0,1}[0-9]:[0-6][0-9]$/;
+    var regex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]$/;
 
     if (!regex.test(advertData.date)) {
-      reject({ message: "Date tiene que ser en formato DD-MM-YYYY hh:mm" });
+      reject({ message: "Date tiene que ser en formato YYYY-MM-DD hh:mm" });
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();

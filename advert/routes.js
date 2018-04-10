@@ -36,7 +36,7 @@ var apiRoutes = express.Router();
  *         in: body
  *         schema:
  *           $ref: "#/definitions/AdvertBody"
- *         description: Fecha en formato DD-MM-YYYY hh:mm
+ *         description: Fecha en formato YYYY-MM-DD hh:mm
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
@@ -163,7 +163,7 @@ apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modi
 
 /**
  * @swagger
- * /advertsUser:
+ * /advertsUser/{id}:
  *   get:
  *     summary: Retorna els anuncis del Usuari
  *     tags: [Advert]
@@ -173,6 +173,12 @@ apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modi
  *       - "application/json"
  *     produces:
  *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'anunci que es vol modificar el seu estat
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
@@ -189,6 +195,6 @@ apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modi
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.get('/advertsUser', tokenMiddleware.tokenCheck, advertController.getAdvertsUser);
+apiRoutes.get('/advertsUser/:id', tokenMiddleware.tokenCheck, advertController.getAdvertsUser);
 
 exports.apiRoutes = apiRoutes;
