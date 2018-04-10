@@ -195,7 +195,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "05-05-2018 13:20",
+        "date": "2018-05-05 13:20:30",
         "title": "title1",
         "description": "description",
         "places": 2,
@@ -204,6 +204,7 @@ describe('POST /advert', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
+        // console.log("ERROR", res.body.message);
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');
@@ -220,7 +221,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "05-05-2018 13:20",
+        "date": "2018-05-05 13:20:00",
         "title": "title1",
         "description": "description",
         "places": 2,
@@ -257,7 +258,7 @@ describe('POST /advert', () => {
         res.should.have.status(400);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql("Date tiene que ser en formato DD-MM-YYYY hh:mm");
+        res.body.message.should.be.eql("Date tiene que ser en formato YYYY-MM-DD hh:mm:ss");
         done();
       });
   });
@@ -266,7 +267,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "05-01-2018 13:20",
+        "date": "2018-01-05 13:20:00",
         "title": "title2",
         "description": "description1",
         "places": 2,
@@ -287,7 +288,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "05-05-2018 13:20",
+        "date": "2018-05-05 13:20:00",
         "title": "title2",
         "description": "description1",
         "places": 0,
@@ -308,7 +309,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "05-05-2018 13:20",
+        "date": "2018-05-05 13:20:00",
         "title": "title2",
         "description": "description1",
         "places": 5,
@@ -454,7 +455,7 @@ describe('GET /advertsUser', () => {
 
   it('it should not get any advert if there is no token', (done) => {
     chai.request(server)
-      .get('/api/advertsUser/')
+      .get('/api/advertsUser/'+configTest.userId)
       .set('Accept', 'application/json')
       .end((err, res) => {
         res.should.have.status(403);
@@ -467,7 +468,7 @@ describe('GET /advertsUser', () => {
 
   it('it should get all the adverts from the user', (done) => {
     chai.request(server)
-      .get('/api/advertsUser/')
+      .get('/api/advertsUser/'+configTest.userId)
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
@@ -484,7 +485,7 @@ describe('GET /advertsUser', () => {
   it('it should get an empty array if the user doesnt have any adverts', (done) => {
     advertDB.Advert.remove({}, (err) => { });
     chai.request(server)
-      .get('/api/advertsUser/')
+      .get('/api/advertsUser/'+configTest.userId)
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
