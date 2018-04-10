@@ -118,6 +118,32 @@ var mongoose = require('mongoose');
  /**
  * @swagger
  * definitions:
+ *   UserInfo:
+ *     required:
+ *       - username
+ *       - password
+ *       - type
+ *     properties:
+ *       username:
+ *         type: string
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phone:
+ *         type: number
+ *       type:
+ *         type: string
+ *         enum: [voluntary, admin, newComer, association]
+ *       rate:
+ *         $ref: "#/definitions/UserRate"
+ *       CIF:
+ *         type: string
+ */
+
+ /**
+ * @swagger
+ * definitions:
  *   User:
  *     required:
  *       - username

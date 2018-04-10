@@ -120,6 +120,24 @@ exports.modifyUser = function (req, res, next) {
   })
 }
 
+exports.getUserInfo = function(req, res, next){
+  if (!req.params.id) {
+    res.status(400).json({ message: "Es necesita un userId per a trobar un usuari." });
+  } else {
+    usersDB.findUserById(req.params.id).then(user => {
+      if (!user) {
+        res.status(400).json({ message: "User not found in database" });
+      } else {
+        user.password = undefined;
+        res.status(200).send(user);
+      }
+    }).catch(err => {
+      console.log("Error", err);
+      res.status(400).send(err);
+    });
+  }
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
