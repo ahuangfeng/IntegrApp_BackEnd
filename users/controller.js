@@ -71,7 +71,7 @@ exports.login = function (req, res) {
           username: user.username
         }
         var token = jwt.sign(payload, config.secret, {
-          expiresIn: "24h" // expires in 24 hours
+          // expiresIn: "24h" // expires in 24 hours
         });
 
         res.json({
