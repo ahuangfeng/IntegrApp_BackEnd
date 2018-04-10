@@ -5,8 +5,8 @@ POST /Login --> fet
 GET /user --> fet
 DELETE /user --> fet
 PUT /user --> solo debe poder modificar ciertos aspectos! (fet pero hay que hablarlo)
-GET /forum --> fet
 POST /forum --> fet
+GET /forum --> fet
 POST /advert --> fet
 GET /advert -->fet
 DELETE /advert --> fet

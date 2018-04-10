@@ -439,7 +439,7 @@ describe('PUT /user', () => {
         "name": "nomProva",
         "email": "aa@gmail.com"
       })
-      .end((err, res) => { //TODO: solo tiene que modificar ciertas cosas!
+      .end((err, res) => { 
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
