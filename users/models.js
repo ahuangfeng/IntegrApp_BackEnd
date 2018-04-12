@@ -39,6 +39,7 @@ var mongoose = require('mongoose');
  *     required:
  *       - username
  *       - password
+ *       - name
  *       - type
  *     properties:
  *       username:
@@ -122,6 +123,7 @@ var mongoose = require('mongoose');
  *     required:
  *       - username
  *       - password
+ *       - name
  *       - type
  *     properties:
  *       username:
@@ -148,6 +150,7 @@ var mongoose = require('mongoose');
  *     required:
  *       - username
  *       - password
+ *       - name
  *       - type
  *     properties:
  *       username:
