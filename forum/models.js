@@ -64,6 +64,7 @@ var ForumSchema = new mongoose.Schema({
 *   ForumEntry:
 *     required:
 *       - createdAt
+*       - userId
 *       - content
 *       - forumId
 *     properties:

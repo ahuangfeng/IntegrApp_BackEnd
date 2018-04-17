@@ -44,11 +44,39 @@ exports.getForums = function (req, res, next) {
 }
 
 exports.commentForum = function(req, res, next){
+  verifyForumEntry(req.body, req.decoded).then(forum => {
+
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  });
   notImplemented(req, res, next);
 }
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
+}
+
+verifyForumEntry = function (forumEntry, decoded) {
+  return new Promise((resolve, reject) => {
+    if (!forumEntry.forumId || !forumEntry.content || !forumEntry.type) {
+      reject({ message: "Faltan datos obligatorios: forumId, content" });
+    }
+    userDB.findUserById(decoded.userID).then(res => {
+      if (res == null) {
+        reject({ message: "El usuario no existe" });
+      } else {
+        return forumDB.findForumById(forumEntry.forumId);
+      }
+    }).then(forumRes => {
+      if(res == null){
+        reject({message: "El forum no existe"});
+      }else{
+        resolve({forum: forumRes});
+      }
+    }).catch(err => {
+      reject({ message: "Ha habido un error: " + err.message });
+    })
+  });
 }
 
 verifyFieldForum = function (forumData, decoded) {
@@ -81,6 +109,15 @@ createForumDocument = function (forumData, decoded) {
   forum['userId'] = decoded.userID;
   forum['rate'] = 0;
   return forum;
+}
+
+createForumEntry = function (forumEntry, decoded) {
+  var forumEntry = {};
+  forumEntry['userId'] = decoded.userID;
+  forumEntry['createdAt'] = new Date().toLocaleString();
+  forumEntry['content'] = forumData.content;
+  forumEntry['forumId'] = forumData.forumId;
+  return forumEntry;
 }
 
 verifyTypeForum = function (typesToVerify) {

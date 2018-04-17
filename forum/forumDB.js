@@ -20,6 +20,21 @@ exports.saveForum = function (forumData) {
   });
 }
 
+exports.findForumById = function (id) {
+  return new Promise(function (resolve, reject) {
+    if (id.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida
+      Forum.findById(id, function (err, user) {
+        if (err) {
+          reject(err);
+        }
+        resolve(user);
+      });
+    } else {
+      reject({ message: "forumId no vàlido." })
+    }
+  });
+}
+
 exports.saveForumEntry = function (forumEntry) {
   var forumEntry = new ForumEntry(forumEntry);
   return new Promise((resolve, reject) => {
