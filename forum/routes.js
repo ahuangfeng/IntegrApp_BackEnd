@@ -43,6 +43,36 @@ var apiRoutes = express.Router();
  */
 apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
 
+/**
+ * @swagger
+ * /commentForum:
+ *   post:
+ *     summary: Crear un comentari en el forum
+ *     tags: [Not Implemented]
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumEntryBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ForumEntry"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.post('/commentForum', controller.commentForum);
 
 /**
  * @swagger

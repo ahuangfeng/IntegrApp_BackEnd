@@ -43,6 +43,10 @@ exports.getForums = function (req, res, next) {
   })
 }
 
+exports.commentForum = function(req, res, next){
+  notImplemented(req, res, next);
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
