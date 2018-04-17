@@ -41,7 +41,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
+apiRoutes.post('/forum', tokenMiddleware.tokenCheck, controller.createForum);
 
 /**
  * @swagger
@@ -49,6 +49,8 @@ apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
  *   post:
  *     summary: Crear un comentari en el forum
  *     tags: [Not Implemented]
+ *     security:
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -72,7 +74,7 @@ apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/commentForum', controller.commentForum);
+apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, controller.commentForum);
 
 /**
  * @swagger
@@ -108,6 +110,6 @@ apiRoutes.post('/commentForum', controller.commentForum);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.get('/forums',tokenMiddleware.tokenCheck, controller.getForums);
+apiRoutes.get('/forums', tokenMiddleware.tokenCheck, controller.getForums);
 
 exports.apiRoutes = apiRoutes;
