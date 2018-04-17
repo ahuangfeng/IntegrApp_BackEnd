@@ -2,8 +2,11 @@ var mongoose = require('mongoose');
 var models = require('./models');
 
 var Forum = mongoose.model('Forum', models.ForumSchema);
+var ForumEntry = mongoose.model('ForumEntry', models.ForumEntrySchema);
 
 exports.Forum = Forum;
+exports.ForumEntry = ForumEntry;
+
 exports.saveForum = function (forumData) {
   var forum = new Forum(forumData);
   return new Promise((resolve, reject) => {
@@ -12,6 +15,19 @@ exports.saveForum = function (forumData) {
         resolve(forumCreated);
       }).catch(err => {
         console.log("Error saving forum" + err.message)
+        reject(err);
+      });
+  });
+}
+
+exports.saveForumEntry = function (forumEntry) {
+  var forumEntry = new ForumEntry(forumEntry);
+  return new Promise((resolve, reject) => {
+    forumEntry.save()
+      .then(forumEntryCreated => {
+        resolve(forumEntryCreated);
+      }).catch(err => {
+        console.log("Error saving forum entry" + err.message)
         reject(err);
       });
   });

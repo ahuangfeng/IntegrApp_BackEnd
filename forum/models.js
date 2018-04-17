@@ -63,7 +63,6 @@ var ForumSchema = new mongoose.Schema({
 * definitions:
 *   ForumEntry:
 *     required:
-*       - userId
 *       - createdAt
 *       - content
 *       - forumId
@@ -99,3 +98,4 @@ var ForumEntrySchema = new mongoose.Schema({
 });
 
 exports.ForumSchema = ForumSchema;
+exports.ForumEntrySchema = ForumEntrySchema;
