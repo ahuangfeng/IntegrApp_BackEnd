@@ -18,6 +18,8 @@ var apiRoutes = express.Router();
  *   post:
  *     summary: Creació d'un forum
  *     tags: [Forum]
+ *     security:
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
@@ -50,6 +52,8 @@ apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
  *   get:
  *     summary: Retorna els forums
  *     tags: [Forum]
+ *     security:
+ *       - user: []
  *     consumes:
  *       - "application/json"
  *     produces:
