@@ -50,7 +50,7 @@ apiRoutes.post('/forum', tokenMiddleware.tokenCheck, controller.createForum);
  * /commentForum:
  *   post:
  *     summary: Crear un comentari en el forum
- *     tags: [Not Implemented]
+ *     tags: [Forum]
  *     security:
  *       - user: []
  *     consumes:
