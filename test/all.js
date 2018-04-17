@@ -17,18 +17,19 @@ chai.use(chaiHttp);
 describe('All tests', function() {
 
   before(function (done) {
-    usersDB.User.remove({}, (err) => { });
-    usersDB.saveUser({
-      "username": configTest.username,
-      "password": configTest.password,
-      "type": "voluntary"
-    }).then(response => {
-      response.should.be.an('object');
-      expect(response.username, configTest.username);
-      configTest.setUserId(response.id);
-      done();
-    }).catch(err => { 
-      console.error("Error found in login tests",err);
+    usersDB.User.remove({}, (err) => { 
+      usersDB.saveUser({
+        "username": configTest.username,
+        "password": configTest.password,
+        "type": "voluntary"
+      }).then(response => {
+        response.should.be.an('object');
+        expect(response.username, configTest.username);
+        configTest.setUserId(response.id);
+        done();
+      }).catch(err => { 
+        console.error("Error found in login tests",err);
+      });
     });
   });
 
