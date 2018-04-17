@@ -96,7 +96,6 @@ describe('POST /forum', () => {
 
 describe('GET /forum', () => {
   before(function (done) {
-    forumDB.Forum.remove({}, (err) => { });
     var forumData = [];
     forumData.push({
       title: "Title1", description: "Description1", createdAt: new Date().toISOString(),
@@ -118,7 +117,9 @@ describe('GET /forum', () => {
       title: "Title5", description: "Description5", createdAt: new Date().toISOString(),
       type: "entertainment", userId: configTest.userId, rate: 0
     });
-    forumDB.saveForum(forumData[0]).then(response => {
+    forumDB.Forum.remove({}, (callback) => { 
+      return forumDB.saveForum(forumData[0]);
+    }).then(response => {
       response.should.be.an("object");
       expect(response.title, forumData[0].title);
       // console.log(1,response.type);
@@ -224,6 +225,97 @@ describe('GET /forum', () => {
           });
         });
         // console.log("FOURM:", res.body);
+        done();
+      });
+  });
+
+});
+
+var forumIdMock = "-";
+describe('POST /commentForum', () => {
+  before(function (done) {
+    var forumData = {
+      title: "Title1", description: "Description1", createdAt: new Date().toISOString(),
+      type: "documentation", userId: configTest.userId, rate: 0
+    };
+    forumDB.Forum.remove({}, (callback) => { 
+      forumDB.saveForum(forumData).then(response => {
+        response.should.be.an("object");
+        expect(response.title, forumData.title);
+        forumIdMock = response.id;
+        done();
+      }).catch(err => {
+        console.log("error on creating mock forums test", err);
+      });
+    });
+  });
+
+  it('it should not comment the forum if no token provided', function (done) {
+    chai.request(server)
+      .post('/api/commentForum')
+      .send({
+        "forumId": forumIdMock,
+        "content": "Pos si, estic d'acord"
+      })
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
+        res.body.should.have.property("success");
+        done();
+      });
+  });
+
+  it('it should comment the forum if everything is correct', function (done) {
+    chai.request(server)
+      .post('/api/commentForum')
+      .send({
+        "forumId": forumIdMock,
+        "content": "Pos si, estic d'acord"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property("forumId");
+        res.body.should.have.property("content");
+        res.body.should.have.property("userId");
+        res.body.should.have.property("createdAt");
+        done();
+      });
+  });
+
+  it('it should not comment the forum if there are not all the fields', function (done) {
+    chai.request(server)
+      .post('/api/commentForum')
+      .send({
+        "forumId": forumIdMock,
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end(function (err, res) {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
+        done();
+      });
+  });
+
+  it('it should not comment the forum if the forumId is invalid', function (done) {
+    chai.request(server)
+      .post('/api/commentForum')
+      .send({
+        "forumId": "InvalidOne",
+        "content": "MockContent"
+      })
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .end(function (err, res) {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property("message");
         done();
       });
   });
