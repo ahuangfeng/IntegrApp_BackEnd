@@ -121,10 +121,10 @@ exports.modifyUser = function (req, res, next) {
 }
 
 exports.getUserInfo = function(req, res, next){
-  if (!req.params.id) {
-    res.status(400).json({ message: "Es necesita un userId per a trobar un usuari." });
+  if (!req.params.username) {
+    res.status(400).json({ message: "Es necesita un username per a trobar un usuari." });
   } else {
-    usersDB.findUserById(req.params.id).then(user => {
+    usersDB.findUserByName(req.params.username).then(user => {
       if (!user) {
         res.status(400).json({ message: "User not found in database" });
       } else {
