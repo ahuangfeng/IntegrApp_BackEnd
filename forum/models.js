@@ -98,5 +98,19 @@ var ForumEntrySchema = new mongoose.Schema({
   forumId: String,
 });
 
+
+/**
+* @swagger
+* definitions:
+*   FullForum:
+*     properties:
+*       forum:
+*         $ref: "#/definitions/Forum"
+*       comments:
+*         type: array
+*         items:
+*           $ref: "#/definitions/ForumEntry"
+*/
+
 exports.ForumSchema = ForumSchema;
 exports.ForumEntrySchema = ForumEntrySchema;

@@ -127,7 +127,6 @@ apiRoutes.post('/login', controller.login);
  */
 apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername);
 
-
 /**
  * @swagger
  * /userInfo/{id}:

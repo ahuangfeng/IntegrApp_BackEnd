@@ -48,6 +48,13 @@ exports.saveForumEntry = function (forumEntry) {
   });
 }
 
+exports.getForumEntries = function(forumId) {
+  return new Promise((resolve, reject) => {
+    // ForumEntry.
+    //TODO: 
+  });
+}
+
 exports.getForums = function (types) {
   return new Promise((resolve, reject) => {
     if (!Array.isArray(types)) {

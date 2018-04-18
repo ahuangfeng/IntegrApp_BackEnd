@@ -116,4 +116,39 @@ apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, controller.commentFo
  */
 apiRoutes.get('/forums', tokenMiddleware.tokenCheck, controller.getForums);
 
+
+/**
+ * @swagger
+ * /fullForum/{id}:
+ *   get:
+ *     summary: Retorna els forums
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/FullForum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, controller.getFullForum);
+
 exports.apiRoutes = apiRoutes;

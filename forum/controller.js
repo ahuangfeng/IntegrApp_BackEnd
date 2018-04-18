@@ -54,6 +54,21 @@ exports.commentForum = function(req, res, next){
   });
 }
 
+exports.getFullForum = function(req, res, next){
+  notImplemented(req, res, next);
+  var responseToSend = {};
+  if(!req.params.id){
+    res.status(400).json({ message: "Es necesita un id del forum." });
+  }else{
+    forumDB.findForumById(req.params.id).then(forum => {
+      responseToSend['forum'] = forum;
+      //TODO: 
+    }).catch(err => {
+      res.status(400).json(err);
+    });
+  }
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
