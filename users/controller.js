@@ -103,14 +103,14 @@ exports.deleteUser = function (req, res, next) {
 exports.modifyUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFields(userData);
+  var verify = verifyFieldsModify(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
   }
 
   usersDB.findUserById(req.params.id).then(user => {
-    usersDB.modifyUser(user.id, userData).then(modifiedMessage => {
+    usersDB.modifyUser(user, userData).then(modifiedMessage => {
       res.send({ message: modifiedMessage });
     }).catch(err => {
       res.status(400).json({ message: err.message });
@@ -119,6 +119,7 @@ exports.modifyUser = function (req, res, next) {
     res.status(400).json({ message: err.message });
   })
 }
+
 
 exports.getUserInfo = function(req, res, next){
   if (!req.params.username) {
@@ -159,8 +160,31 @@ verifyFields = function (userData) {
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
   if(!(!userData.email)) {
     if(!regex.test(userData.email)) {
-    return { success: false, message: "Email mal formado"};
+      return { success: false, message: "Email mal formado"};
+    }
   }
+  
+  return { success: true };
+}
+
+verifyFieldsModify = function (userData) {
+  var validTypes = ["voluntary", "admin", "newComer", "association"];
+  if(userData.type) {
+    if (validTypes.indexOf(userData.type) == -1) {
+      return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
+    }
+    if (userData.type == "association") {
+      if (!userData.CIF) {
+        return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
+      }
+    }
+  }
+  
+  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+  if(userData.email) {
+    if(!regex.test(userData.email)) {
+      return { success: false, message: "Email mal formado"};
+    }
   }
   
   return { success: true };
