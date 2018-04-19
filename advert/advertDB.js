@@ -42,43 +42,41 @@ exports.modifyStateAdvert = function (id, state) {
     if (validValues.indexOf(state) == -1) {
       reject({ message: "state no válido" });
     } else {
-      Advert.findByIdAndUpdate(id, { $set: {state:state}}, function(err, advert){
-        if(err) {
+      Advert.findByIdAndUpdate(id, { $set: { state: state } }, function (err, advert) {
+        if (err) {
           reject(err);
         }
         resolve(advert);
       });
-      // Advert.updateOne({ _id: id }, { $set: { state: state } }, function (err, advert) {
-      //   if (err) {
-      //     reject(err);
-      //   }
-      //   resolve(advert);
-      // });
     }
   });
 }
 
-exports.modifyAdvert = function(advert, content) {
-  return new Promise(function(resolve, reject) {
-    if(!content.date) {
+exports.modifyAdvert = function (advert, content) {
+  return new Promise(function (resolve, reject) {
+    if (!content.date) {
       content.date = advert.date;
     }
-    if(!content.title) {
+    if (!content.title) {
       content.title = advert.title;
     }
-    if(!content.description) {
+    if (!content.description) {
       content.description = advert.description;
     }
-    if(!content.places) {
+    if (!content.places) {
       content.places = advert.places;
     }
-    Advert.findOneAndUpdate({_id : advert._id}, {$set: { date : content.date, title : content.title,
-      description : content.description, places : content.places, state : "opened"}}, {new: true },
-       function (err, doc) {       
+    Advert.findOneAndUpdate({ _id: advert._id }, {
+      $set: {
+        date: content.date, title: content.title,
+        description: content.description, places: content.places, state: "opened"
+      }
+    }, { new: true },
+      function (err, doc) {
         if (!err) {
           resolve(doc);
         } else {
-          reject("Error modifying advert");
+          reject({ message: "Error modifying advert" });
         }
       });
   });

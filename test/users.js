@@ -442,7 +442,6 @@ describe('PUT /user', () => {
       .end((err, res) => { 
         res.should.have.status(200);
         res.body.should.be.an('object');
-        // console.log("BODY:", res.body);
         res.body.should.have.property('username');
         res.body.should.have.property('password');
         res.body.should.have.property('type');
