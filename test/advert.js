@@ -59,39 +59,40 @@ var advertIds = [];
 describe('GET /advert', () => {
 
   before(function (done) {
-    advertDB.Advert.remove({}, (err) => { });
-    mockAdverts.forEach(element => {
-      element.userId = configTest.userId;
-    });
-    advertDB.saveAdvert(mockAdverts[0]).then(res => {
-      res.should.be.an("object");
-      expect(res.state, mockAdverts[0].state);
-      expect(res.userId, configTest.userId);
-      expect(res.title, mockAdverts[0].title);
-      expect(res.premium, mockAdverts[0].premium);
-      expect(res.description, mockAdverts[0].description);
-      advertIds.push(res.id);
-      return advertDB.saveAdvert(mockAdverts[1]);
-    }).then(response => {
-      response.should.be.an("object");
-      expect(response.userId, configTest.userId);
-      expect(response.state, mockAdverts[1].state);
-      expect(response.title, mockAdverts[1].title);
-      expect(response.premium, mockAdverts[1].premium);
-      expect(response.description, mockAdverts[1].description);
-      advertIds.push(response.id);
-      return advertDB.saveAdvert(mockAdverts[2]);
-    }).then(res => {
-      res.should.be.an("object");
-      expect(res.userId, configTest.userId);
-      expect(res.state, mockAdverts[2].state);
-      expect(res.title, mockAdverts[2].title);
-      expect(res.premium, mockAdverts[2].premium);
-      expect(res.description, mockAdverts[2].description);
-      advertIds.push(res.id);
-      done();
-    }).catch(err => {
-      console.log("Error :", err.message);
+    advertDB.Advert.remove({}, (err) => { 
+      mockAdverts.forEach(element => {
+        element.userId = configTest.userId;
+      });
+      advertDB.saveAdvert(mockAdverts[0]).then(res => {
+        res.should.be.an("object");
+        expect(res.state, mockAdverts[0].state);
+        expect(res.userId, configTest.userId);
+        expect(res.title, mockAdverts[0].title);
+        expect(res.premium, mockAdverts[0].premium);
+        expect(res.description, mockAdverts[0].description);
+        advertIds.push(res.id);
+        return advertDB.saveAdvert(mockAdverts[1]);
+      }).then(response => {
+        response.should.be.an("object");
+        expect(response.userId, configTest.userId);
+        expect(response.state, mockAdverts[1].state);
+        expect(response.title, mockAdverts[1].title);
+        expect(response.premium, mockAdverts[1].premium);
+        expect(response.description, mockAdverts[1].description);
+        advertIds.push(response.id);
+        return advertDB.saveAdvert(mockAdverts[2]);
+      }).then(res => {
+        res.should.be.an("object");
+        expect(res.userId, configTest.userId);
+        expect(res.state, mockAdverts[2].state);
+        expect(res.title, mockAdverts[2].title);
+        expect(res.premium, mockAdverts[2].premium);
+        expect(res.description, mockAdverts[2].description);
+        advertIds.push(res.id);
+        done();
+      }).catch(err => {
+        console.log("Error :", err.message);
+      });
     });
   });
 
@@ -330,37 +331,38 @@ describe('POST /advert', () => {
 describe('DELETE /advert/{id}', () => {
 
   before(function (done) {
-    advertDB.Advert.remove({}, (err) => { });
-    advertIds = [];
-    advertDB.saveAdvert(mockAdverts[0]).then(res => {
-      res.should.be.an("object");
-      expect(res.state, mockAdverts[0].state);
-      expect(res.title, mockAdverts[0].title);
-      expect(res.userId, configTest.userId);
-      expect(res.premium, mockAdverts[0].premium);
-      expect(res.description, mockAdverts[0].description);
-      advertIds.push(res.id);
-      return advertDB.saveAdvert(mockAdverts[1]);
-    }).then(response => {
-      response.should.be.an("object");
-      expect(response.state, mockAdverts[1].state);
-      expect(response.title, mockAdverts[1].title);
-      expect(response.userId, configTest.userId);
-      expect(response.premium, mockAdverts[1].premium);
-      expect(response.description, mockAdverts[1].description);
-      advertIds.push(response.id);
-      return advertDB.saveAdvert(mockAdverts[2]);
-    }).then(res => {
-      res.should.be.an("object");
-      expect(res.state, mockAdverts[2].state);
-      expect(res.userId, configTest.userId);
-      expect(res.title, mockAdverts[2].title);
-      expect(res.premium, mockAdverts[2].premium);
-      expect(res.description, mockAdverts[2].description);
-      advertIds.push(res.id);
-      done();
-    }).catch(err => {
-      console.log("Error :", err.message);
+    advertDB.Advert.remove({}, (err) => { 
+      advertIds = [];
+      advertDB.saveAdvert(mockAdverts[0]).then(res => {
+        res.should.be.an("object");
+        expect(res.state, mockAdverts[0].state);
+        expect(res.title, mockAdverts[0].title);
+        expect(res.userId, configTest.userId);
+        expect(res.premium, mockAdverts[0].premium);
+        expect(res.description, mockAdverts[0].description);
+        advertIds.push(res.id);
+        return advertDB.saveAdvert(mockAdverts[1]);
+      }).then(response => {
+        response.should.be.an("object");
+        expect(response.state, mockAdverts[1].state);
+        expect(response.title, mockAdverts[1].title);
+        expect(response.userId, configTest.userId);
+        expect(response.premium, mockAdverts[1].premium);
+        expect(response.description, mockAdverts[1].description);
+        advertIds.push(response.id);
+        return advertDB.saveAdvert(mockAdverts[2]);
+      }).then(res => {
+        res.should.be.an("object");
+        expect(res.state, mockAdverts[2].state);
+        expect(res.userId, configTest.userId);
+        expect(res.title, mockAdverts[2].title);
+        expect(res.premium, mockAdverts[2].premium);
+        expect(res.description, mockAdverts[2].description);
+        advertIds.push(res.id);
+        done();
+      }).catch(err => {
+        console.log("Error :", err.message);
+      });
     });
   });
 
