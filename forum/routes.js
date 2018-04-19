@@ -121,7 +121,7 @@ apiRoutes.get('/forums', tokenMiddleware.tokenCheck, controller.getForums);
  * @swagger
  * /fullForum/{id}:
  *   get:
- *     summary: Retorna els forums
+ *     summary: Retorna el forum amb tots els seus comentaris
  *     tags: [Forum]
  *     security:
  *       - user: []
