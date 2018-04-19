@@ -82,6 +82,21 @@ var mongoose = require('mongoose');
 *         enum: [lookFor, offer]
 */
 
+/**
+* @swagger
+* definitions:
+*   ModifAdvertBody:
+*     properties:
+*       date:
+*         type: string
+*       title:
+*         type: string
+*       description:
+*         type: string
+*       places:
+*         type: number
+*/
+
 var AdvertSchema = new mongoose.Schema({
   userId: String,
   createdAt: String,

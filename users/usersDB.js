@@ -39,9 +39,30 @@ exports.deleteUser = function(id) {
   });
 }
 
-exports.modifyUser = function(id, content) {
+exports.modifyUser = function(user, content) {
   return new Promise(function(resolve, reject) {
-    User.updateOne({_id : id}, {$set: { username : content.username, password : content.password,
+    if(!content.username) {
+      content.username = user.username;
+    }
+    if(!content.password) {
+      content.password = user.password;
+    }
+    if(!content.name) {
+      content.name = user.name;
+    }
+    if(!content.email) {
+      content.email = user.email;
+    }
+    if(!content.phone) {
+      content.phone = user.phone;
+    }
+    if(!content.type) {
+      content.type = user.type;
+    }
+    if(!content.CIF) {
+      content.CIF = user.CIF;
+    }
+    User.updateOne({_id : user.id}, {$set: { username : content.username, password : content.password,
       name : content.name, email : content.email, phone : content.phone,
       type : content.type, CIF : content.CIF } }, function (err) {       
         if (!err) {
