@@ -62,11 +62,11 @@ exports.modifyUser = function(user, content) {
     if(!content.CIF) {
       content.CIF = user.CIF;
     }
-    User.updateOne({_id : user.id}, {$set: { username : content.username, password : content.password,
+    User.findOneAndUpdate({_id : user.id}, {$set: { username : content.username, password : content.password,
       name : content.name, email : content.email, phone : content.phone,
-      type : content.type, CIF : content.CIF } }, function (err) {       
+      type : content.type, CIF : content.CIF } }, {new: true }, function (err,doc) {       
         if (!err) {
-          resolve("User modified");
+          resolve(doc);
         } else {
           reject("Error modifying user");
         }

@@ -72,11 +72,11 @@ exports.modifyAdvert = function(advert, content) {
     if(!content.places) {
       content.places = advert.places;
     }
-    Advert.updateOne({_id : advert._id}, {$set: { date : content.date, title : content.title,
-      description : content.description, places : content.places, state : "opened"} },
-       function (err) {       
+    Advert.findOneAndUpdate({_id : advert._id}, {$set: { date : content.date, title : content.title,
+      description : content.description, places : content.places, state : "opened"}}, {new: true },
+       function (err, doc) {       
         if (!err) {
-          resolve("Advert modified");
+          resolve(doc);
         } else {
           reject("Error modifying advert");
         }
