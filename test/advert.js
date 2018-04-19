@@ -502,35 +502,36 @@ describe('GET /advertsUser', () => {
 describe('PATCH /advert', () => {
 
   before(function (done) {
-    advertDB.Advert.remove({}, (err) => { });
-    advertIds = [];
-    advertDB.saveAdvert(mockAdverts[0]).then(res => {
-      res.should.be.an("object");
-      expect(res.state, mockAdverts[0].state);
-      expect(res.userId, configTest.userId);
-      expect(res.title, mockAdverts[0].title);
-      expect(res.premium, mockAdverts[0].premium);
-      expect(res.description, mockAdverts[0].description);
-      advertIds.push(res.id);
-      return advertDB.saveAdvert(mockAdverts[1]);
-    }).then(response => {
-      response.should.be.an("object");
-      expect(response.state, mockAdverts[1].state);
-      expect(response.title, mockAdverts[1].title);
-      expect(response.premium, mockAdverts[1].premium);
-      expect(response.description, mockAdverts[1].description);
-      advertIds.push(response.id);
-      return advertDB.saveAdvert(mockAdverts[2]);
-    }).then(res => {
-      res.should.be.an("object");
-      expect(res.state, mockAdverts[2].state);
-      expect(res.title, mockAdverts[2].title);
-      expect(res.premium, mockAdverts[2].premium);
-      expect(res.description, mockAdverts[2].description);
-      advertIds.push(res.id);
-      done();
-    }).catch(err => {
-      console.log("Error :", err.message);
+    advertDB.Advert.remove({}, (err) => { 
+      advertIds = [];
+      advertDB.saveAdvert(mockAdverts[0]).then(res => {
+        res.should.be.an("object");
+        expect(res.state, mockAdverts[0].state);
+        expect(res.userId, configTest.userId);
+        expect(res.title, mockAdverts[0].title);
+        expect(res.premium, mockAdverts[0].premium);
+        expect(res.description, mockAdverts[0].description);
+        advertIds.push(res.id);
+        return advertDB.saveAdvert(mockAdverts[1]);
+      }).then(response => {
+        response.should.be.an("object");
+        expect(response.state, mockAdverts[1].state);
+        expect(response.title, mockAdverts[1].title);
+        expect(response.premium, mockAdverts[1].premium);
+        expect(response.description, mockAdverts[1].description);
+        advertIds.push(response.id);
+        return advertDB.saveAdvert(mockAdverts[2]);
+      }).then(res => {
+        res.should.be.an("object");
+        expect(res.state, mockAdverts[2].state);
+        expect(res.title, mockAdverts[2].title);
+        expect(res.premium, mockAdverts[2].premium);
+        expect(res.description, mockAdverts[2].description);
+        advertIds.push(res.id);
+        done();
+      }).catch(err => {
+        console.log("Error :", err.message);
+      });
     });
   });
 
@@ -558,8 +559,13 @@ describe('PATCH /advert', () => {
         //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
-        expect(res.body.message, "State of Advert modified");
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('lookFor');
+        res.body.state.should.be.eql('opened');
         done();
       });
   });
@@ -574,8 +580,13 @@ describe('PATCH /advert', () => {
         //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
-        expect(res.body.message, "State of Advert modified");
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('lookFor');
+        res.body.state.should.be.eql('opened');
         done();
       });
   });

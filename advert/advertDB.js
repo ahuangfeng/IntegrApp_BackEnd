@@ -29,15 +29,32 @@ exports.deleteAdvert = function (id) {
   });
 }
 
+// TODO: utilizar findByIdAndUpdate
+// Tank.findByIdAndUpdate(id, { $set: { size: 'large' }}, { new: true }, function (err, tank) {
+//   if (err) return handleError(err);
+//   res.send(tank);
+// });
+
+
 exports.modifyStateAdvert = function (id, state) {
   return new Promise(function (resolve, reject) {
-      Advert.updateOne({ _id : id}, {$set: { state : state} }, function (err) {       
-        if (!err) {
-          resolve("State of Advert modified");
-        } else {
-          reject("Error modifying state of advert");
+    var validValues = ['opened', 'closed'];
+    if (validValues.indexOf(state) == -1) {
+      reject({ message: "state no válido" });
+    } else {
+      Advert.findByIdAndUpdate(id, { $set: {state:state}}, function(err, advert){
+        if(err) {
+          reject(err);
         }
+        resolve(advert);
       });
+      // Advert.updateOne({ _id: id }, { $set: { state: state } }, function (err, advert) {
+      //   if (err) {
+      //     reject(err);
+      //   }
+      //   resolve(advert);
+      // });
+    }
   });
 }
 
@@ -89,10 +106,10 @@ exports.getAdvert = function (types) {
   })
 }
 
-exports.findAdvertByIdUser = function(name) {
+exports.findAdvertByIdUser = function (name) {
   return new Promise(function (resolve, reject) {
-    Advert.find({userId: name}, function(err, advert) {
-      if(err) {
+    Advert.find({ userId: name }, function (err, advert) {
+      if (err) {
         console.log("Error finding advert", name);
         reject(err);
       }
