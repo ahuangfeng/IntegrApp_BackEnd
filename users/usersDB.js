@@ -58,10 +58,14 @@ exports.modifyUser = function (user, content) {
     }
     if (!content.type) {
       content.type = user.type;
+      if (user.type=="association") {
+        if (!content.CIF) {
+          content.CIF = user.CIF;
+        }
+      } 
+      else content.CIF = "";
     }
-    if (!content.CIF) {
-      content.CIF = user.CIF;
-    }
+
     User.findOneAndUpdate({ _id: user.id }, {
       $set: {
         username: content.username, password: content.password,
