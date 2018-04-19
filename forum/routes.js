@@ -1,5 +1,5 @@
 
-var controller = require('./controller');
+var forumController = require('./controller');
 var express = require('express');
 var tokenMiddleware = require('../middleware/tokenVerification');
 
@@ -43,7 +43,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/forum', tokenMiddleware.tokenCheck, controller.createForum);
+apiRoutes.post('/forum', tokenMiddleware.tokenCheck, forumController.createForum);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ apiRoutes.post('/forum', tokenMiddleware.tokenCheck, controller.createForum);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, controller.commentForum);
+apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, forumController.commentForum);
 
 /**
  * @swagger
@@ -114,7 +114,7 @@ apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, controller.commentFo
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.get('/forums', tokenMiddleware.tokenCheck, controller.getForums);
+apiRoutes.get('/forums', tokenMiddleware.tokenCheck, forumController.getForums);
 
 
 /**
@@ -149,6 +149,6 @@ apiRoutes.get('/forums', tokenMiddleware.tokenCheck, controller.getForums);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, controller.getFullForum);
+apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getFullForum);
 
 exports.apiRoutes = apiRoutes;
