@@ -490,5 +490,43 @@ describe('PUT /user', () => {
         done();
       });
   });
+
+  it('it should not modify the user with invalid password', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "NewUsernameee",
+        "password": "",
+        "type": "voluntary",
+        "CIF": "string",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with invalid name', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "name": "",
+        "email": "aa@gmail.com"
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
   
 });
