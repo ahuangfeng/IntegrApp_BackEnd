@@ -111,7 +111,7 @@ exports.modifyUser = function (req, res, next) {
 
   usersDB.findUserById(req.params.id).then(user => {
     usersDB.modifyUser(user, userData).then(modifiedMessage => {
-      res.send({ message: modifiedMessage });
+      res.send(modifiedMessage);
     }).catch(err => {
       res.status(400).json({ message: err.message });
     });
