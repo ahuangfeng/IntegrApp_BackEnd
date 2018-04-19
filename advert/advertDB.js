@@ -41,6 +41,32 @@ exports.modifyStateAdvert = function (id, state) {
   });
 }
 
+exports.modifyAdvert = function(advert, content) {
+  return new Promise(function(resolve, reject) {
+    if(!content.date) {
+      content.date = advert.date;
+    }
+    if(!content.title) {
+      content.title = advert.title;
+    }
+    if(!content.description) {
+      content.description = advert.description;
+    }
+    if(!content.places) {
+      content.places = advert.places;
+    }
+    Advert.updateOne({_id : advert._id}, {$set: { date : content.date, title : content.title,
+      description : content.description, places : content.places, state : "opened"} },
+       function (err) {       
+        if (!err) {
+          resolve("Advert modified");
+        } else {
+          reject("Error modifying advert");
+        }
+      });
+  });
+}
+
 exports.findAdvertById = function (idAdvert) {
   return new Promise(function (resolve, reject) {
     if (idAdvert.match(/^[0-9a-fA-F]{24}$/)) {
