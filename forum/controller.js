@@ -37,13 +37,17 @@ exports.getForums = function (req, res, next) {
     }
   }
   forumDB.getForums(typesToGet).then(forums => {
-    res.send(forums);
+    if (forums) {
+      res.send(forums);
+    } else {
+      res.status(404).json({ message: "No se han encontrado forums." });
+    }
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
 }
 
-exports.commentForum = function(req, res, next){
+exports.commentForum = function (req, res, next) {
   verifyForumEntry(req.body, req.decoded).then(forum => {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
     return forumDB.saveForumEntry(forumEntryObj);
@@ -54,15 +58,23 @@ exports.commentForum = function(req, res, next){
   });
 }
 
-exports.getFullForum = function(req, res, next){
-  notImplemented(req, res, next);
+exports.getFullForum = function (req, res, next) {
   var responseToSend = {};
-  if(!req.params.id){
+  if (!req.params.id) {
     res.status(400).json({ message: "Es necesita un id del forum." });
-  }else{
+  } else {
     forumDB.findForumById(req.params.id).then(forum => {
-      responseToSend['forum'] = forum;
-      //TODO: 
+      if (forum == null) {
+        res.status(404).json({ message: "El forum no ha pogut ser trobat." })
+      } else {
+        responseToSend['forum'] = forum;
+        forumDB.getForumEntries(forum.id).then(entries => {
+          responseToSend['entries'] = entries;
+          res.send(responseToSend);
+        }).catch(err => {
+          res.status(400).json(err);
+        });
+      }
     }).catch(err => {
       res.status(400).json(err);
     });
@@ -85,10 +97,10 @@ verifyForumEntry = function (forumEntry, decoded) {
         return forumDB.findForumById(forumEntry.forumId);
       }
     }).then(forumRes => {
-      if(forumRes == null){
-        reject({message: "El forum no existe"});
-      }else{
-        resolve({forum: forumRes});
+      if (forumRes == null) {
+        reject({ message: "El forum no existe" });
+      } else {
+        resolve({ forum: forumRes });
       }
     }).catch(err => {
       reject({ message: "Ha habido un error: " + err.message });

@@ -50,8 +50,16 @@ exports.saveForumEntry = function (forumEntry) {
 
 exports.getForumEntries = function(forumId) {
   return new Promise((resolve, reject) => {
-    // ForumEntry.
-    //TODO: 
+    if (forumId.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida
+      ForumEntry.find({ forumId: forumId }, function(err, entries){
+        if(err){ 
+          reject(err);
+        }
+        resolve(entries);
+      });
+    } else {
+      reject({ message: "forumId no vàlido." })
+    }
   });
 }
 
