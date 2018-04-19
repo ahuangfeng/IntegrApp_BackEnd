@@ -395,7 +395,6 @@ describe('GET /fullForum/:id', () => {
         res.should.have.status(400);
         res.body.should.be.an('object');
         res.body.should.have.property("message");
-        res.body.should.have.property("success");
         done();
       });
   });
