@@ -9,7 +9,7 @@ var ReportSchema = new mongoose.Schema(
             enum: ['user', 'advert', 'forum']
         },
         createdAt: String,
-        reportId: String
+        typeId: String
     }
 );
 

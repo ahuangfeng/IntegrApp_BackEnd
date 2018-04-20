@@ -13,7 +13,7 @@ exports.saveReport = function (reportData) {
                 resolve(reportCreated);
             })
             .catch(err => {
-                console.log("Error savin report"+err.message)
+                console.log("Error saving report"+err.message)
                 reject(err);
             });
     });
