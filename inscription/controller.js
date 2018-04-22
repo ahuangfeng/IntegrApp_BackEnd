@@ -49,6 +49,20 @@ exports.createInscription = function (req, res, next) {
     });
 }
 
+exports.getInscriptions = function (req, res, next) {
+    if (!req.params.advertId) {
+        res.status(400).json({ message: "Es necesita un identificador per a trobar un advert." });
+    }
+    else {
+        inscriptionDB.findInscriptionsAdvert(req.params.advertId).then(data => {
+            res.send(data);
+          }).catch(err => {
+            res.status(400).send(err);
+          });
+    }
+    
+  }
+
 notImplemented = function (req, res, next) {
     res.status(501).json({ message: "Function not implemented" });
 }

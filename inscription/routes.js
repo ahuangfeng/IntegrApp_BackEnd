@@ -84,6 +84,6 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *         schema:
  *           $ref: "#/definitions/InscriptionFailed"
  */
-//apiRoutes.get('/inscription', tokenMiddleware.tokenCheck, inscriptionController.getInscriptions);
+apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptions);
 
 exports.apiRoutes = apiRoutes;

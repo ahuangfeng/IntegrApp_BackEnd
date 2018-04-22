@@ -25,3 +25,15 @@ exports.saveInscription = function (inscriptionData) {
       })
   });
 }
+
+exports.findInscriptionsAdvert = function (idAdvert) {
+    return new Promise(function (resolve, reject) {
+      Inscription.find({advertId: idAdvert}, function (err, inscriptions) {
+        if (err) {
+          console.log("Error finding:", err);
+          reject(err)
+        }
+        resolve(inscriptions);
+      });
+    })
+  }
