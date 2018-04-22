@@ -75,7 +75,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/Inscription"
+ *             $ref: "#/definitions/InscriptionInfo"
  *       400:
  *         description: Error
  *         schema:
