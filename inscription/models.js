@@ -53,6 +53,19 @@ var mongoose = require('mongoose');
 *         type: string
 */
 
+/**
+* @swagger
+* definitions:
+*   InscriptionInfo:
+*     required:
+*       - userId
+*       - advertId
+*     properties:
+*       userId:
+*         type: string
+*       advertId:
+*         type: string
+*/
 
 var InscriptionSchema = new mongoose.Schema({
     inscriptionId: String,
