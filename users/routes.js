@@ -164,7 +164,7 @@ apiRoutes.get('/userInfo/:username', tokenMiddleware.tokenCheck, controller.getU
 
 /**
  * @swagger
- * /userInfo/{userID}:
+ * /userInfoById/{userID}:
  *   get:
  *     summary: Retorna un usuari sense la contrasenya a partir del seu Identificador
  *     tags: [User]
@@ -173,7 +173,7 @@ apiRoutes.get('/userInfo/:username', tokenMiddleware.tokenCheck, controller.getU
  *     consumes:
  *       - "application/json"
  *     parameters:
- *       - name: username
+ *       - name: userID
  *         in: path
  *         type: string
  *         required: true
