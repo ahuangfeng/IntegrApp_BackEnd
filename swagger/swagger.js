@@ -10,7 +10,7 @@ var options = {
     },
     basePath: '/api' // Base path (optional)
   },
-  apis: ['./routes/*', './db/*', './users/*', './forum/*', './advert/*'] // Path to the API docs
+  apis: ['./routes/*', './db/*', './users/*', './forum/*', './advert/*', './inscription/*'] // Path to the API docs
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
