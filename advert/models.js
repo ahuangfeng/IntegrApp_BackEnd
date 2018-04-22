@@ -56,6 +56,8 @@ var mongoose = require('mongoose');
 *       typeAdvert:
 *         type: string
 *         enum: [lookFor, offer]
+*       registered:
+*         type: [string]
 */
 
 /**
@@ -118,7 +120,8 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
-  }
+  },
+  registered: [String]
 });
 
 exports.AdvertSchema = AdvertSchema;

@@ -141,3 +141,28 @@ exports.findAdvertByIdUser = function (name) {
     });
   });
 }
+
+exports.addRegisteredUser = function(advertId, userId) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOne({
+      _id: advertId
+    }, function (err, advert) {
+      if (err) {
+        console.log("Error finding advert", advertId);
+        reject(err);
+      }
+      else {
+        Advert.updateOne({
+          _id: advertId
+        }, {$push: {registered: userId} },
+        function(err, advert) {
+          if(err) {
+            console.log("Error updating advert", advertId);
+            reject(err);
+          }
+          else resolve(advert);
+        });
+      }
+    });
+  });
+}

@@ -26,14 +26,19 @@ exports.createInscription = function (req, res, next) {
                 res.status(400).json({ message: "Este advertId no existe."});
             }
             else {
-                inscriptionDB.saveInscription(inscriptionData)
+                advertDB.addRegisteredUser(inscriptionData.advertId, inscriptionData.userId).then(advert => {
+                    inscriptionDB.saveInscription(inscriptionData)
                     .then(inscription => {
-                    res.send(inscription);
+                        res.send(inscription);
                     })
                     .catch(err => {
-                    var response = { message: err.message };
-                    res.status(400).json(response);
+                        var response = { message: err.message };
+                        res.status(400).json(response);
                     });
+                }).catch(err => {                    
+                        var response = { message: err.message };
+                        res.status(400).json(response);
+                    });                
             }
         }).catch(err => {
             res.status(400).json({ message: "Error en verificación de identificador de advert: " + err.message });
