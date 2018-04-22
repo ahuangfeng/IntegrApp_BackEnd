@@ -53,7 +53,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
 
 /**
  * @swagger
- * /inscription:
+ * /inscription/{advertId}:
  *   get:
  *     summary: Retorna les inscripcions a l'anunci
  *     tags: [Inscription]
@@ -67,6 +67,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *       - name: advertID
  *         in: query
  *         type: string
+ *         required: true
  *         description: identificador de l'anunci
  *     responses:
  *       200:
