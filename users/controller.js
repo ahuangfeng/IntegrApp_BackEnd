@@ -140,6 +140,26 @@ exports.getUserInfo = function(req, res, next){
   }
 }
 
+exports.getUserInfoById = function(req, res, next){
+  if (!req.params.userID) {
+    res.status(400).json({ message: "Es necesita un identificador per a trobar un usuari." });
+  } else {
+    usersDB.findUserById(req.params.userID).then(user => {
+      if (!user) {
+        res.status(400).json({ message: "User not found in database" });
+      } else {
+        user.password = undefined;
+        user.CIF = undefined;
+        res.status(200).send(user);
+      }
+    }).catch(err => {
+      console.log("Error", err);
+      res.status(400).send(err);
+    });
+  }
+}
+
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
