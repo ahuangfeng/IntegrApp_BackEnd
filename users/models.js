@@ -185,6 +185,10 @@ var UserSchema = new mongoose.Schema({
             else return false;
         }
     },
+    rate:{
+        likes: Number,
+        dislikes: Number
+    }
 });
 
 exports.UserSchema = UserSchema;

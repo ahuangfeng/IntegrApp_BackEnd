@@ -2,6 +2,7 @@
  * Controller of users
  */
 var usersDB = require('./usersDB');
+var advertDB = require('../advert/advertDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
@@ -16,11 +17,14 @@ exports.createUser = function (req, res, next) {
 
   usersDB.findUserByName(userData.username).then(found => {
     if (found == null) {
+      userData['rate'] = {
+        likes: 0,
+        dislikes: 0
+      };
       usersDB.saveUser(userData)
         .then(user => {
           res.send(user);
-        })
-        .catch(err => {
+        }).catch(err => {
           console.log("error on saving userData:", err);
           var response = { message: err.message };
           res.status(400).json(response);
@@ -49,7 +53,15 @@ exports.getUserByUsername = function (req, res, next) {
       if (!user) {
         res.status(400).json({ message: "User not found in database" });
       } else {
-        res.send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          user['adverts'] = adverts;
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
@@ -131,7 +143,14 @@ exports.getUserInfo = function(req, res, next){
       } else {
         user.password = undefined;
         user.CIF = undefined;
-        res.status(200).send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
@@ -150,7 +169,14 @@ exports.getUserInfoById = function(req, res, next){
       } else {
         user.password = undefined;
         user.CIF = undefined;
-        res.status(200).send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
@@ -158,7 +184,6 @@ exports.getUserInfoById = function(req, res, next){
     });
   }
 }
-
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
