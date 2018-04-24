@@ -9,14 +9,20 @@ var advertDB = require('../advert/advertDB');
 
 exports.createInscription = function (req, res, next) {
     var inscriptionData = req.body;
+<<<<<<< HEAD
   
     var verify = verifyFieldsInscription(inscriptionData);
+=======
+
+    var verify = verifyFields(inscriptionData);
+>>>>>>> e7912576e6f20a494d0206f8437bd2d5b6be88e2
     if (!verify.success) {
-      res.status(400).json({ message: verify.message });
-      return;
+        res.status(400).json({ message: verify.message });
+        return;
     }
-  
+
     userDB.findUserById(inscriptionData.userId).then(found => {
+<<<<<<< HEAD
       if (found == null) {
         res.status(400).json({ message: "Este userId no existe."});
       }
@@ -54,8 +60,37 @@ exports.createInscription = function (req, res, next) {
             res.status(400).json({ message: "Error en verificación de identificador de advert: " + err.message });
         });
       }
+=======
+        if (found == null) {
+            res.status(400).json({ message: "Este userId no existe." });
+        }
+        else {
+            advertDB.findAdvertById(inscriptionData.advertId).then(found => {
+                if (found == null) {
+                    res.status(400).json({ message: "Este advertId no existe." });
+                }
+                else {
+                    advertDB.addRegisteredUser(inscriptionData.advertId, inscriptionData.userId).then(advert => {
+                        inscriptionDB.saveInscription(inscriptionData)
+                            .then(inscription => {
+                                res.send(inscription);
+                            })
+                            .catch(err => {
+                                var response = { message: err.message };
+                                res.status(400).json(response);
+                            });
+                    }).catch(err => {
+                        var response = { message: err.message };
+                        res.status(400).json(response);
+                    });
+                }
+            }).catch(err => {
+                res.status(400).json({ message: "Error en verificación de identificador de advert: " + err.message });
+            });
+        }
+>>>>>>> e7912576e6f20a494d0206f8437bd2d5b6be88e2
     }).catch(err => {
-      res.status(400).json({ message: "Error en verificación de identificador de usuario: " + err.message });
+        res.status(400).json({ message: "Error en verificación de identificador de usuario: " + err.message });
     });
 }
 
@@ -66,10 +101,11 @@ exports.getInscriptions = function (req, res, next) {
     else {
         inscriptionDB.findInscriptionsAdvert(req.params.advertId).then(data => {
             res.send(data);
-          }).catch(err => {
+        }).catch(err => {
             res.status(400).send(err);
-          });
+        });
     }
+<<<<<<< HEAD
     
 }
 
@@ -85,6 +121,9 @@ exports.getInscriptionsUser = function (req, res, next) {
           });
     }
     
+=======
+
+>>>>>>> e7912576e6f20a494d0206f8437bd2d5b6be88e2
 }
 
 notImplemented = function (req, res, next) {
@@ -94,8 +133,8 @@ notImplemented = function (req, res, next) {
 
 verifyFieldsInscription = function (inscriptionData) {
     if (!inscriptionData.userId || !inscriptionData.advertId) {
-      return { success: false, message: "Faltan datos obligatorios: userId, advertId" };
+        return { success: false, message: "Faltan datos obligatorios: userId, advertId" };
     }
-       
+
     return { success: true };
-  }
+}

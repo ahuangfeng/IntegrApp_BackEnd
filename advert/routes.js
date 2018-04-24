@@ -178,7 +178,7 @@ apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modi
  *         in: path
  *         type: string
  *         required: true
- *         description: Id de l'anunci que es vol modificar el seu estat
+ *         description: Id de l'usuari
  *     responses:
  *       200:
  *         description: Operació executada amb éxit

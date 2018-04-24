@@ -8,7 +8,7 @@ var config = require('config'); // get our config file
 exports.createUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFields(userData);
+  var verify = verifyFieldsUser(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
@@ -164,7 +164,7 @@ notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFields = function (userData) {
+verifyFieldsUser = function (userData) {
   var validTypes = ["voluntary", "admin", "newComer", "association"];
   if (!userData.username || !userData.password || !userData.type || !userData.name) {
     return { success: false, message: "Faltan datos obligatorios: username, password, type, name" };
