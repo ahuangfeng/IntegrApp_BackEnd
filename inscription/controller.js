@@ -68,7 +68,7 @@ notImplemented = function (req, res, next) {
 }
 
 
-verifyFields = function (inscriptionData) {
+verifyFieldsInscription = function (inscriptionData) {
     if (!inscriptionData.userId || !inscriptionData.advertId) {
         return { success: false, message: "Faltan datos obligatorios: userId, advertId" };
     }
