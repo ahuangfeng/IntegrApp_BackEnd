@@ -130,11 +130,11 @@ exports.getAdvert = function (types) {
   })
 }
 
-exports.findAdvertByIdUser = function (name) {
+exports.findAdvertByIdUser = function (userId) {
   return new Promise(function (resolve, reject) {
-    Advert.find({ userId: name }, function (err, advert) {
+    Advert.find({ userId: userId }, function (err, advert) {
       if (err) {
-        console.log("Error finding advert", name);
+        console.log("Error finding advert", userId);
         reject(err);
       }
       resolve(advert);
