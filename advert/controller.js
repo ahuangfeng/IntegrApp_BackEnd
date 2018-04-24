@@ -24,7 +24,8 @@ exports.createAdvert = function (req, res, next) {
   });
 }
 
-exports.getAdverts = function (req, res, next) {
+exports.getAdverts = function (req, res, next) { 
+  //TODO: pasarte el user en atributo
   var types = req.query.type;
   var typesToGet = [];
   if (types != undefined) {
@@ -37,6 +38,15 @@ exports.getAdverts = function (req, res, next) {
     }
   }
   advertDB.getAdvert(typesToGet).then(advert => {
+    // userDB.findUserById
+    // console.log("advert", advert);
+    // advert.forEach(ad => {
+    //   userDB.findUserById(ad.userId).then(user => {
+
+    //   }).catch(err => {
+    //     console.log("Error finding user", err);
+    //   });
+    // })
     res.send(advert);
   }).catch(err => {
     res.status(400).json({ message: err.message });
