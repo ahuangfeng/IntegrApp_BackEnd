@@ -437,9 +437,12 @@ describe('PUT /user', () => {
         "password": "test2",
         "type": "voluntary",
         "name": "nomProva",
-        "email": "aa@gmail.com"
+        "email": "aa@gmail.com",
+        "phone": 912222321,
+        "type": "voluntary"
       })
       .end((err, res) => { 
+        // console.log("RES:", res.body);
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('username');
@@ -457,8 +460,13 @@ describe('PUT /user', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({
-        "name": "nomProva333",
-        "email": "aa@hotmail.com"
+        "username": "NuevoValido2",
+        "password": "test2",
+        "type": "voluntary",
+        "name": "nomProva",
+        "email": "aa@gmail.com",
+        "phone": 912222321,
+        "type": "voluntary"
       })
       .end((err, res) => { 
         res.should.have.status(200);
