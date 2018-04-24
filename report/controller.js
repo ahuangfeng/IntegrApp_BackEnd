@@ -33,9 +33,12 @@ verifyFieldsReport = function (reportData, decoded) {
             else {
                 if (reportData.type == "advert") {
                     advertDB.findAdvertById(reportData.typeId).then(res => {
-                        
+                        if (res == null) {
+                            reject({message: "el id del advert no existe"});
+                        }
                     })
-
+                } else if (reportData.type == "forum") {
+                    
                 }
             }
         })
