@@ -19,3 +19,5 @@ PATCH /advert --> discutir si state per valor o segons el de la BD
 GET /advertUser --> fet
 
 Not implemented:
+
+S'ha de verificar la doc!
