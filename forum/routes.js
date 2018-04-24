@@ -1,5 +1,5 @@
 
-var controller = require('./controller');
+var forumController = require('./controller');
 var express = require('express');
 var tokenMiddleware = require('../middleware/tokenVerification');
 
@@ -43,8 +43,40 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
+apiRoutes.post('/forum', tokenMiddleware.tokenCheck, forumController.createForum);
 
+/**
+ * @swagger
+ * /commentForum:
+ *   post:
+ *     summary: Crear un comentari en el forum
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumEntryBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ForumEntry"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, forumController.commentForum);
 
 /**
  * @swagger
@@ -82,6 +114,41 @@ apiRoutes.post('/forum',tokenMiddleware.tokenCheck, controller.createForum);
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.get('/forums',tokenMiddleware.tokenCheck, controller.getForums);
+apiRoutes.get('/forums', tokenMiddleware.tokenCheck, forumController.getForums);
+
+
+/**
+ * @swagger
+ * /fullForum/{id}:
+ *   get:
+ *     summary: Retorna el forum amb tots els seus comentaris
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/FullForum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getFullForum);
 
 exports.apiRoutes = apiRoutes;
