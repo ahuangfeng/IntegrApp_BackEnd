@@ -159,6 +159,37 @@ exports.getUserInfo = function(req, res, next){
   }
 }
 
+exports.likeUser = function(req, res, next){
+  //TODO: verificar si rate existe y si el user del token es el user del body
+  if(!req.params.id){
+    res.status(400).json({ message: "Es necesita un identificador per fer like a l'usuari." });
+  }else{
+    usersDB.findUserById(req.params.userID).then(user => {
+      if (!user) {
+        res.status(400).json({ message: "User not found in database" });
+      } else {
+        var likes = user.rate.likes;
+        if(likes != undefined){
+          likes = 1;
+        }else{
+          likes++;
+        }
+        var userToSave = JSON.parse(JSON.stringify(user));
+        userToSave.rate.likes = likes;
+        usersDB.modifyUser(user,userToSave).then(userReceived => {
+          res.send(userReceived);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
+      }
+    }).catch(err => {
+      console.log("Error", err);
+      res.status(400).send(err);
+    });
+  }
+}
+
 exports.getUserInfoById = function(req, res, next){
   if (!req.params.userID) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un usuari." });

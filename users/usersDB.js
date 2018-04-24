@@ -70,7 +70,7 @@ exports.modifyUser = function (user, content) {
       $set: {
         username: content.username, password: content.password,
         name: content.name, email: content.email, phone: content.phone,
-        type: content.type, CIF: content.CIF
+        type: content.type, CIF: content.CIF, rate: content.rate
       }
     }, { new: true }, function (err, doc) {
       if (!err) {

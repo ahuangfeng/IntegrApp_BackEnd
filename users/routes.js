@@ -229,6 +229,41 @@ apiRoutes.get('/userInfoById/:userID', tokenMiddleware.tokenCheck, controller.ge
  */
 apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
 
+
+/**
+ * @swagger
+ * /like/{userId}:
+ *   post:
+ *     summary: Esborra un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'usuari que es vol fer like
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/UserInfo"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.post('/like/:userId',tokenMiddleware.tokenCheck, controller.likeUser);
+
 /**
  * @swagger
  * /user/{id}:
