@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var models = require('./models');
 
 var Advert = mongoose.model('Advert', models.AdvertSchema);
+var usersDB = require('../users/usersDB');
 
 exports.Advert = Advert;
 exports.saveAdvert = function (advertData) {
@@ -116,7 +117,9 @@ exports.getAdvert = function (types) {
           console.log("Error finding adverts with this types", err);
           reject(err);
         }
-        resolve(advert);
+        addUsersToAdvert(advert).then(added => {
+          resolve(added);
+        });
       });
     } else {
       Advert.find({}, (err, advert) => {
@@ -124,10 +127,33 @@ exports.getAdvert = function (types) {
           console.log("Error finding all adverts", err);
           reject(err);
         }
-        resolve(advert);
+        addUsersToAdvert(advert).then(added => {
+          resolve(added);
+        });
       });
     }
   })
+}
+
+addUsersToAdvert = function(adverts){
+  return new Promise((resolve, reject) => {
+    var advertArray = [];
+    var itemsProcessed = 0;
+    adverts.forEach((item, index, array) => {
+      usersDB.User.findById(item.userId, (err, user) => {
+        var advertToSent = JSON.parse(JSON.stringify(item));
+        advertToSent['user'] = user;
+        if (user) {
+          advertToSent['user'].password = undefined;
+        }
+        advertArray.push(advertToSent);
+        itemsProcessed++;
+        if (itemsProcessed === array.length) {
+          resolve(advertArray);
+        }
+      });
+    });
+  });
 }
 
 exports.findAdvertByIdUser = function (userId) {
@@ -142,7 +168,7 @@ exports.findAdvertByIdUser = function (userId) {
   });
 }
 
-exports.addRegisteredUser = function(advertId, userId) {
+exports.addRegisteredUser = function (advertId, userId) {
   return new Promise(function (resolve, reject) {
     Advert.findOne({
       _id: advertId
@@ -154,14 +180,14 @@ exports.addRegisteredUser = function(advertId, userId) {
       else {
         Advert.updateOne({
           _id: advertId
-        }, {$push: {registered: userId} },
-        function(err, advert) {
-          if(err) {
-            console.log("Error updating advert", advertId);
-            reject(err);
-          }
-          else resolve(advert);
-        });
+        }, { $push: { registered: userId } },
+          function (err, advert) {
+            if (err) {
+              console.log("Error updating advert", advertId);
+              reject(err);
+            }
+            else resolve(advert);
+          });
       }
     });
   });

@@ -80,7 +80,7 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, advertController.createAdv
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/Advert"
+ *             $ref: "#/definitions/AdvertResponse"
  *       400:
  *         description: Error
  *         schema:

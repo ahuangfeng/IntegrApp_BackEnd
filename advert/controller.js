@@ -37,17 +37,10 @@ exports.getAdverts = function (req, res, next) {
       return;
     }
   }
-  advertDB.getAdvert(typesToGet).then(advert => {
-    // userDB.findUserById
-    // console.log("advert", advert);
-    // advert.forEach(ad => {
-    //   userDB.findUserById(ad.userId).then(user => {
 
-    //   }).catch(err => {
-    //     console.log("Error finding user", err);
-    //   });
-    // })
-    res.send(advert);
+  advertDB.getAdvert(typesToGet).then(adverts => {
+    // console.log("adverts", adverts);
+    res.send(adverts);
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
