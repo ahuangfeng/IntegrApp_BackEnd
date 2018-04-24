@@ -133,6 +133,8 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(2);
+        res.body[0].should.have.property('user');
+        res.body[1].should.have.property('user');
         done();
       });
   });
@@ -147,6 +149,7 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(1);
+        res.body[0].should.have.property('user');
         done();
       });
   });
@@ -161,6 +164,9 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(3);
+        res.body[0].should.have.property('user');
+        res.body[1].should.have.property('user');
+        res.body[2].should.have.property('user');
         done();
       });
   });
