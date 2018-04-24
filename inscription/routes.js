@@ -64,8 +64,8 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *     produces:
  *       - "application/json"
  *     parameters: 
- *       - name: advertID
- *         in: query
+ *       - name: advertId
+ *         in: path
  *         type: string
  *         required: true
  *         description: identificador de l'anunci
