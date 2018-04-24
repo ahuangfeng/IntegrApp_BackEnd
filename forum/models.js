@@ -58,4 +58,59 @@ var ForumSchema = new mongoose.Schema({
   rate: Number
 });
 
+/**
+* @swagger
+* definitions:
+*   ForumEntry:
+*     required:
+*       - createdAt
+*       - userId
+*       - content
+*       - forumId
+*     properties:
+*       userId:
+*         type: string
+*       createdAt:
+*         type: string
+*       content:
+*         type: string
+*       forumId:
+*         type: string
+*/
+
+/**
+* @swagger
+* definitions:
+*   ForumEntryBody:
+*     required:
+*       - forumId
+*       - content
+*     properties:
+*       forumId:
+*         type: string
+*       content:
+*         type: string
+*/
+var ForumEntrySchema = new mongoose.Schema({
+  userId: String,
+  createdAt: String,
+  content: String,
+  forumId: String,
+});
+
+
+/**
+* @swagger
+* definitions:
+*   FullForum:
+*     properties:
+*       forum:
+*         $ref: "#/definitions/Forum"
+*       comments:
+*         type: array
+*         items:
+*           $ref: "#/definitions/ForumEntry"
+*/
+
 exports.ForumSchema = ForumSchema;
+exports.ForumEntrySchema = ForumEntrySchema;

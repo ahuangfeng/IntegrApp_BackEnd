@@ -1,5 +1,5 @@
 /**
- * Controller of forum
+ * Controller of advert
  */
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
@@ -57,11 +57,13 @@ exports.deleteAdvert = function (req, res, next) {
 
 exports.modifyStateAdvert = function (req, res, next) {
   advertDB.findAdvertById(req.params.id).then(advert => {
-    advertDB.modifyStateAdvert(advert._id, advert.state).then(modified => {
-      res.send({ message: modified });
+    //TODO: 
+    var stateToModify = req.body.state;
+    advertDB.modifyStateAdvert(advert._id, stateToModify).then(modified => {
+      res.send(modified);
     }).catch(err => {
       res.status(400).json({ message: err.message });
-    })
+    });
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
@@ -78,6 +80,25 @@ exports.getAdvertsUser = function(req,res,next) {
     console.log("Error", err);
     res.status(400).send(err);
   });
+}
+
+exports.modifyAdvert = function (req, res, next) {
+  var advertData = req.body;
+  var verify = verifyFieldAdvertModify(advertData, req.decoded);
+  if (!verify.success) {
+    res.status(400).json({ message: verify.message });
+    return;
+  }
+
+  advertDB.findAdvertById(req.params.id).then(advert => {
+    advertDB.modifyAdvert(advert, advertData).then(modifiedMessage => {
+      res.send({ message: modifiedMessage });
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    });
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  })
 }
 
 notImplemented = function (req, res, next) {
@@ -123,6 +144,41 @@ verifyFieldAdvert = function (advertData, decoded) {
       reject({ message: "Ha habido un error: " + err.message });
     })
   });
+}
+
+verifyFieldAdvertModify = function (advertData, decoded) {
+    if (advertData.places) {
+      if (advertData.places <= 0) {
+        return{success: false, message: "places tiene que ser mayor que 0" };
+      } 
+    }
+    var regex = /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$/;
+    if (advertData.date) {
+      if (!regex.test(advertData.date)) {
+        return{success: false, message: "Date tiene que ser en formato YYYY-MM-DD hh:mm:ss" };
+      }
+      var dataAux = new Date(advertData.date).toLocaleString();
+      dataAux = new Date(dataAux).getTime();
+  
+      var today = new Date().toLocaleString();
+      today = new Date(today).getTime();
+  
+  
+      if (dataAux - today < 0) {
+        return{success: false, message: "Date tiene que ser posterior a la date actual" };
+      }
+    }
+    
+
+    userDB.findUserById(decoded.userID).then(res => {
+      if (res == null) {
+        reject({success: false, message: "El usuario no existe" });
+      }
+    }).catch(err => {
+      reject({message: "Ha habido un error: " + err.message });
+    });
+
+    return{success: true};
 }
 
 createAdvertDocument = function (advertData, user, decoded) {

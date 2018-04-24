@@ -127,7 +127,6 @@ apiRoutes.post('/login', controller.login);
  */
 apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername);
 
-
 /**
  * @swagger
  * /userInfo/{username}:
@@ -161,6 +160,40 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.get('/userInfo/:username', tokenMiddleware.tokenCheck, controller.getUserInfo);
+
+/**
+ * @swagger
+ * /userInfoById/{userID}:
+ *   get:
+ *     summary: Retorna un usuari sense la contrasenya a partir del seu Identificador
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: userID
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Identificador de l'usuari
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/UserInfo"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/userInfoById/:userID', tokenMiddleware.tokenCheck, controller.getUserInfoById);
 
 /**
  * @swagger

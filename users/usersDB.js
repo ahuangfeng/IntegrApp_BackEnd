@@ -26,30 +26,59 @@ exports.saveUser = function (userData) {
   });
 }
 
-exports.deleteUser = function(id) {
-  return new Promise(function(resolve, reject) {
+exports.deleteUser = function (id) {
+  return new Promise(function (resolve, reject) {
 
-    User.deleteOne({_id: id}, function(err){
-      if(!err) {
+    User.deleteOne({ _id: id }, function (err) {
+      if (!err) {
         resolve("User deleted");
-      }else {
+      } else {
         reject("Se ha producido un error al eliminar usuario");
       }
     });
   });
 }
 
-exports.modifyUser = function(id, content) {
-  return new Promise(function(resolve, reject) {
-    User.updateOne({_id : id}, {$set: { username : content.username, password : content.password,
-      name : content.name, email : content.email, phone : content.phone,
-      type : content.type, CIF : content.CIF } }, function (err) {       
-        if (!err) {
-          resolve("User modified");
-        } else {
-          reject("Error modifying user");
+exports.modifyUser = function (user, content) {
+  return new Promise(function (resolve, reject) {
+    if (!content.username) {
+      content.username = user.username;
+    }
+    if (!content.password) {
+      content.password = user.password;
+    }
+    if (!content.name) {
+      content.name = user.name;
+    }
+    if (!content.email) {
+      content.email = user.email;
+    }
+    if (!content.phone) {
+      content.phone = user.phone;
+    }
+    if (!content.type) {
+      content.type = user.type;
+      if (user.type=="association") {
+        if (!content.CIF) {
+          content.CIF = user.CIF;
         }
-      });
+      } 
+      else content.CIF = "";
+    }
+
+    User.findOneAndUpdate({ _id: user.id }, {
+      $set: {
+        username: content.username, password: content.password,
+        name: content.name, email: content.email, phone: content.phone,
+        type: content.type, CIF: content.CIF
+      }
+    }, { new: true }, function (err, doc) {
+      if (!err) {
+        resolve(doc);
+      } else {
+        reject({ message: "Error modifying user" });
+      }
+    });
   });
 }
 
@@ -88,8 +117,8 @@ exports.findUserById = function (id) {
         }
         resolve(user);
       });
-    }else{
-      reject({message: "UserId no vàlido."})
+    } else {
+      reject({ message: "UserId no vàlido." })
     }
   });
 }

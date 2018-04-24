@@ -8,7 +8,7 @@ var config = require('config'); // get our config file
 exports.createUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFields(userData);
+  var verify = verifyFieldsUser(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
@@ -103,15 +103,15 @@ exports.deleteUser = function (req, res, next) {
 exports.modifyUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFields(userData);
+  var verify = verifyFieldsModify(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
   }
 
   usersDB.findUserById(req.params.id).then(user => {
-    usersDB.modifyUser(user.id, userData).then(modifiedMessage => {
-      res.send({ message: modifiedMessage });
+    usersDB.modifyUser(user, userData).then(modifiedMessage => {
+      res.send(modifiedMessage);
     }).catch(err => {
       res.status(400).json({ message: err.message });
     });
@@ -119,6 +119,7 @@ exports.modifyUser = function (req, res, next) {
     res.status(400).json({ message: err.message });
   })
 }
+
 
 exports.getUserInfo = function(req, res, next){
   if (!req.params.username) {
@@ -139,11 +140,31 @@ exports.getUserInfo = function(req, res, next){
   }
 }
 
+exports.getUserInfoById = function(req, res, next){
+  if (!req.params.userID) {
+    res.status(400).json({ message: "Es necesita un identificador per a trobar un usuari." });
+  } else {
+    usersDB.findUserById(req.params.userID).then(user => {
+      if (!user) {
+        res.status(400).json({ message: "User not found in database" });
+      } else {
+        user.password = undefined;
+        user.CIF = undefined;
+        res.status(200).send(user);
+      }
+    }).catch(err => {
+      console.log("Error", err);
+      res.status(400).send(err);
+    });
+  }
+}
+
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
 
-verifyFields = function (userData) {
+verifyFieldsUser = function (userData) {
   var validTypes = ["voluntary", "admin", "newComer", "association"];
   if (!userData.username || !userData.password || !userData.type || !userData.name) {
     return { success: false, message: "Faltan datos obligatorios: username, password, type, name" };
@@ -159,8 +180,34 @@ verifyFields = function (userData) {
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
   if(!(!userData.email)) {
     if(!regex.test(userData.email)) {
-    return { success: false, message: "Email mal formado"};
+      return { success: false, message: "Email mal formado"};
+    }
   }
+  
+  return { success: true };
+}
+
+verifyFieldsModify = function (userData) {
+  if(!userData.username || !userData.password || !userData.name || !userData.email || !userData.phone || !userData.type) {
+    return { success: false, message: "Faltan datos obligatorios: username, password, name, email, phone, type" };
+  }
+  var validTypes = ["voluntary", "admin", "newComer", "association"];
+  if(userData.type) {
+    if (validTypes.indexOf(userData.type) == -1) {
+      return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
+    }
+    if (userData.type == "association") {
+      if (!userData.CIF) {
+        return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
+      }
+    }
+  }
+  
+  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+  if(userData.email) {
+    if(!regex.test(userData.email)) {
+      return { success: false, message: "Email mal formado"};
+    }
   }
   
   return { success: true };
