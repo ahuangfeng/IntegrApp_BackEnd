@@ -442,7 +442,33 @@ describe('PUT /user', () => {
       .end((err, res) => { 
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
+        res.body.should.have.property('username');
+        res.body.should.have.property('password');
+        res.body.should.have.property('type');
+        res.body.should.have.property('email');
+        res.body.should.have.property('name');
+        done();
+      });
+  });
+
+  it('it should modify the user with valid data', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "name": "nomProva333",
+        "email": "aa@hotmail.com"
+      })
+      .end((err, res) => { 
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property('username');
+        res.body.should.have.property('password');
+        res.body.should.have.property('type');
+        res.body.should.have.property('email');
+        res.body.should.have.property('name');
+        expect(res.body.email, "aa@hotmail.com");
         done();
       });
   });
@@ -456,6 +482,44 @@ describe('PUT /user', () => {
         "username": "provaNexistant",
         "password": "xxxxxxx",
         "type": "voluntary",
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with invalid password', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "username": "NewUsernameee",
+        "password": "",
+        "type": "voluntary",
+        "CIF": "string",
+        "name": "nomProva",
+        "email": "aa@gmail.com"
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('it should not modify the user with invalid name', (done) => {
+    chai.request(server)
+      .put('/api/user/' + configTest.userId)
+      .set('Accept', 'application/json')
+      .set('x-access-token', configTest.token)
+      .send({
+        "name": "",
+        "email": "aa@gmail.com"
       })
       .end((err, res) => {
         res.should.have.status(400);

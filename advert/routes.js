@@ -197,4 +197,42 @@ apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modi
  */
 apiRoutes.get('/advertsUser/:id', tokenMiddleware.tokenCheck, advertController.getAdvertsUser);
 
+/**
+ * @swagger
+ * /advert/{id}:
+ *   put:
+ *     summary: Modificació d'un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'anunci que es vol modificar
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ModifAdvertBody"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Advert"
+ *       400:
+ *         description: No s'ha trobat l'anunci
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/advert/:id', tokenMiddleware.tokenCheck, advertController.modifyAdvert);
+
 exports.apiRoutes = apiRoutes;

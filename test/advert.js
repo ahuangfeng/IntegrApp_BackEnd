@@ -570,8 +570,13 @@ describe('PATCH /advert', () => {
         //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
-        expect(res.body.message, "State of Advert modified");
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('lookFor');
+        res.body.state.should.be.eql('opened');
         done();
       });
   });
@@ -586,8 +591,13 @@ describe('PATCH /advert', () => {
         //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
-        expect(res.body.message, "State of Advert modified");
+        res.body.should.have.property('date');
+        res.body.should.have.property('title');
+        res.body.should.have.property('description');
+        res.body.should.have.property('places');
+        res.body.should.have.property('typeAdvert');
+        res.body.typeAdvert.should.be.eql('lookFor');
+        res.body.state.should.be.eql('opened');
         done();
       });
   });

@@ -59,27 +59,27 @@ var mongoose = require('mongoose');
  *         type: string
  */
 
- /**
- * @swagger
- * definitions:
- *   ModifUserBody:
- *     properties:
- *       username:
- *         type: string
- *       password:
- *         type: string
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       phone:
- *         type: number
- *       type:
- *         type: string
- *         enum: [voluntary, admin, newComer, association]
- *       CIF:
- *         type: string
- */
+/**
+* @swagger
+* definitions:
+*   ModifUserBody:
+*     properties:
+*       username:
+*         type: string
+*       password:
+*         type: string
+*       name:
+*         type: string
+*       email:
+*         type: string
+*       phone:
+*         type: number
+*       type:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       CIF:
+*         type: string
+*/
 
 /**
  * @swagger
@@ -92,99 +92,99 @@ var mongoose = require('mongoose');
  *         type: string
  */
 
- /**
- * @swagger
- * definitions:
- *   LoginResponse:
- *     properties:
- *       success:
- *         type: boolean
- *       message:
- *         type: string
- *       token:
- *         type: string
- */
+/**
+* @swagger
+* definitions:
+*   LoginResponse:
+*     properties:
+*       success:
+*         type: boolean
+*       message:
+*         type: string
+*       token:
+*         type: string
+*/
 
- /**
- * @swagger
- * definitions:
- *   LoginFailed:
- *     properties:
- *       success:
- *         type: boolean
- *       message:
- *         type: string
- */
+/**
+* @swagger
+* definitions:
+*   LoginFailed:
+*     properties:
+*       success:
+*         type: boolean
+*       message:
+*         type: string
+*/
 
- /**
- * @swagger
- * definitions:
- *   UserInfo:
- *     required:
- *       - username
- *       - password
- *       - name
- *       - type
- *     properties:
- *       username:
- *         type: string
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       phone:
- *         type: number
- *       type:
- *         type: string
- *         enum: [voluntary, admin, newComer, association]
- *       rate:
- *         $ref: "#/definitions/UserRate"
- *       CIF:
- *         type: string
- */
+/**
+* @swagger
+* definitions:
+*   UserInfo:
+*     required:
+*       - username
+*       - password
+*       - name
+*       - type
+*     properties:
+*       username:
+*         type: string
+*       name:
+*         type: string
+*       email:
+*         type: string
+*       phone:
+*         type: number
+*       type:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       rate:
+*         $ref: "#/definitions/UserRate"
+*       CIF:
+*         type: string
+*/
 
- /**
- * @swagger
- * definitions:
- *   User:
- *     required:
- *       - username
- *       - password
- *       - name
- *       - type
- *     properties:
- *       username:
- *         type: string
- *       password:
- *         type: string
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       phone:
- *         type: number
- *       type:
- *         type: string
- *         enum: [voluntary, admin, newComer, association]
- *       rate:
- *         $ref: "#/definitions/UserRate"
- *       CIF:
- *         type: string
- */
+/**
+* @swagger
+* definitions:
+*   User:
+*     required:
+*       - username
+*       - password
+*       - name
+*       - type
+*     properties:
+*       username:
+*         type: string
+*       password:
+*         type: string
+*       name:
+*         type: string
+*       email:
+*         type: string
+*       phone:
+*         type: number
+*       type:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       rate:
+*         $ref: "#/definitions/UserRate"
+*       CIF:
+*         type: string
+*/
 var UserSchema = new mongoose.Schema({
-  username: String,
-  name: String,
-  password: String,
-  email: String,
-  phone: Number,
-  type: String,
-  CIF: {
-      type: String,
-      required: function () {
-          if (this.type == "association") return true;
-          else return false;
-      }
-  },
+    username: { type: String, unique: true, dropDups: true },
+    name: String,
+    password: String,
+    email: String,
+    phone: Number,
+    type: String,
+    CIF: {
+        type: String,
+        required: function () {
+            if (this.type == "association") return true;
+            else return false;
+        }
+    },
 });
 
 exports.UserSchema = UserSchema;

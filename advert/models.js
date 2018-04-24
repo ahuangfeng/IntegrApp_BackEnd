@@ -56,6 +56,8 @@ var mongoose = require('mongoose');
 *       typeAdvert:
 *         type: string
 *         enum: [lookFor, offer]
+*       registered:
+*         type: [string]
 */
 
 /**
@@ -82,6 +84,21 @@ var mongoose = require('mongoose');
 *         enum: [lookFor, offer]
 */
 
+/**
+* @swagger
+* definitions:
+*   ModifAdvertBody:
+*     properties:
+*       date:
+*         type: string
+*       title:
+*         type: string
+*       description:
+*         type: string
+*       places:
+*         type: number
+*/
+
 var AdvertSchema = new mongoose.Schema({
   userId: String,
   createdAt: String,
@@ -103,7 +120,8 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
-  }
+  },
+  registered: [String]
 });
 
 exports.AdvertSchema = AdvertSchema;
