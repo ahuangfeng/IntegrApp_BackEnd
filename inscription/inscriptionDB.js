@@ -37,3 +37,26 @@ exports.findInscriptionsAdvert = function (idAdvert) {
       });
     })
   }
+
+  exports.findInscriptionsUser = function (idUser) {
+    return new Promise(function (resolve, reject) {
+      Inscription.find({userId: idUser}, function (err, inscriptions) {
+        if (err) {
+          console.log("Error finding:", err);
+          reject(err)
+        }
+        resolve(inscriptions);
+      });
+    })
+  }
+
+  exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
+    return new Promise(function (resolve, reject) {
+      Inscription.find({userId: idUser, advertId: idAdvert}, function (err, inscriptions) {
+        if(err) {
+          reject(err)
+        }
+        resolve(inscriptions);
+      });
+    })
+  }

@@ -87,4 +87,39 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  */
 apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptions);
 
+/**
+ * @swagger
+ * /inscriptionsUser/{userId}:
+ *   get:
+ *     summary: Retorna les inscripcions a anuncis de l'usuari
+ *     tags: [Inscription]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: identificador de l'usuari
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: "#/definitions/InscriptionInfo"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/InscriptionFailed"
+ */
+apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptionsUser);
 exports.apiRoutes = apiRoutes;
