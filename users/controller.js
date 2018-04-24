@@ -188,6 +188,9 @@ verifyFields = function (userData) {
 }
 
 verifyFieldsModify = function (userData) {
+  if(!userData.username || !userData.password || !userData.name || !userData.email || !userData.phone || !userData.type) {
+    return { success: false, message: "Faltan datos obligatorios: username, password, name, email, phone, type" };
+  }
   var validTypes = ["voluntary", "admin", "newComer", "association"];
   if(userData.type) {
     if (validTypes.indexOf(userData.type) == -1) {
