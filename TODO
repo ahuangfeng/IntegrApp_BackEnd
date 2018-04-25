@@ -3,28 +3,34 @@ POST /register --> fet
 GET /users --> fet
 POST /Login --> fet
 GET /user --> fet
-GET /userInfo/username 
+GET /userInfo/username
+GET /userinfoById/id 
 DELETE /user --> fet
-PUT /user --> solo debe poder modificar ciertos aspectos! (fet pero hay que hablarlo)
+PUT /user --> fet
 
 POST /forum --> fet
 POST /commentForum --> fet
-GET /forum --> fet
+GET /forums --> fet
 GET /fullForum/id --> fet
 
 POST /advert --> fet
 GET /advert -->fet
 DELETE /advert --> fet
 PATCH /advert --> discutir si state per valor o segons el de la BD
+PUT /advert/id 
 GET /advertUser --> fet
 
 Not implemented:
 
+Inscription:
+POST /Inscription
+GET /inscription/advertId
+GET /inscriptionUser/userId
+
 S'ha de verificar la doc!
+
 
 TODO: 
 En GET /user --> array anuncios publicados del user y los likes y dislikes --> (rate {likes : 0, dislikes: 24})
 
 DELETE /commentForum
-
-GET /adverts --> retorni els users tambe

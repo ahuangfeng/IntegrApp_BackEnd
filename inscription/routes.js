@@ -75,7 +75,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/InscriptionInfo"
+ *             $ref: "#/definitions/Inscription"
  *       400:
  *         description: Error
  *         schema:
@@ -111,7 +111,7 @@ apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionC
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/InscriptionInfo"
+ *             $ref: "#/definitions/Inscription"
  *       400:
  *         description: Error
  *         schema:

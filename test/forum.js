@@ -94,7 +94,7 @@ describe('POST /forum', () => {
   });
 });
 
-describe('GET /forum', () => {
+describe('GET /forums', () => {
   before(function (done) {
     var forumData = [];
     forumData.push({

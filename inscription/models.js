@@ -28,12 +28,12 @@ var mongoose = require('mongoose');
 *       - userId
 *       - advertId
 *     properties:
-*       inscriptionId:
+*       _id:
 *         type: string
 *       userId:
 *         type: string
 *       advertId:
-*         type: 
+*         type: string
 *       status:
 *         type: string
 *         enum: [pending, refused, completed, accepted]
