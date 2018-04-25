@@ -70,6 +70,23 @@ exports.getUserByUsername = function (req, res, next) {
   }
 }
 
+exports.likeUser = function (req, res, next) {
+  if (!req.params.userId) {
+    res.status(400).json({ message: "Es necesita un userId per fer like" });
+  } else {
+    notImplemented(req, res, next);
+    
+  }
+}
+
+exports.dislikeUser = function (req, res, next) {
+  if (!req.params.userId) {
+    res.status(400).json({ message: "Es necesita un userId per fer like" });
+  } else {
+    notImplemented(req, res, next);
+  }
+}
+
 exports.login = function (req, res) {
   usersDB.findUserByName(req.body.username).then(user => {
     if (!user) {
@@ -133,7 +150,7 @@ exports.modifyUser = function (req, res, next) {
 }
 
 
-exports.getUserInfo = function(req, res, next){
+exports.getUserInfo = function (req, res, next) {
   if (!req.params.username) {
     res.status(400).json({ message: "Es necesita un username per a trobar un usuari." });
   } else {
@@ -159,7 +176,7 @@ exports.getUserInfo = function(req, res, next){
   }
 }
 
-exports.getUserInfoById = function(req, res, next){
+exports.getUserInfoById = function (req, res, next) {
   if (!req.params.userID) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un usuari." });
   } else {
@@ -203,21 +220,21 @@ verifyFieldsUser = function (userData) {
     }
   }
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if(!(!userData.email)) {
-    if(!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado"};
+  if (!(!userData.email)) {
+    if (!regex.test(userData.email)) {
+      return { success: false, message: "Email mal formado" };
     }
   }
-  
+
   return { success: true };
 }
 
 verifyFieldsModify = function (userData) {
-  if(!userData.username || !userData.password || !userData.name || !userData.email || !userData.phone || !userData.type) {
+  if (!userData.username || !userData.password || !userData.name || !userData.email || !userData.phone || !userData.type) {
     return { success: false, message: "Faltan datos obligatorios: username, password, name, email, phone, type" };
   }
   var validTypes = ["voluntary", "admin", "newComer", "association"];
-  if(userData.type) {
+  if (userData.type) {
     if (validTypes.indexOf(userData.type) == -1) {
       return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
     }
@@ -227,13 +244,13 @@ verifyFieldsModify = function (userData) {
       }
     }
   }
-  
+
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if(userData.email) {
-    if(!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado"};
+  if (userData.email) {
+    if (!regex.test(userData.email)) {
+      return { success: false, message: "Email mal formado" };
     }
   }
-  
+
   return { success: true };
 }
