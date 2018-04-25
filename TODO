@@ -23,13 +23,15 @@ GET /advertUser --> fet
 Not implemented:
 
 Inscription:
-POST /Inscription
-GET /inscription/advertId
+POST /Inscription --> fet
+GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 S'ha de verificar la doc!
 
 
 TODO: 
+Un tiu pot inscriures dos cops? ara si xD
+
 
 DELETE /commentForum
