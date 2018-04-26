@@ -118,6 +118,9 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
+          added.sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
           resolve(added);
         });
       });
@@ -128,6 +131,9 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
+          added.sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
           resolve(added);
         });
       });
@@ -135,7 +141,7 @@ exports.getAdvert = function (types) {
   })
 }
 
-addUsersToAdvert = function(adverts){
+addUsersToAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
     var advertArray = [];
     var itemsProcessed = 0;
