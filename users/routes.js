@@ -273,7 +273,7 @@ apiRoutes.put('/user/:id', tokenMiddleware.tokenCheck, controller.modifyUser);
  * /like/{userId}:
  *   post:
  *     summary: Fer like a un usuari
- *     tags: [Not Implemented]
+ *     tags: [User]
  *     security:
  *       - user: []
  *     consumes:
@@ -307,7 +307,7 @@ apiRoutes.post('/like/:userId', tokenMiddleware.tokenCheck, controller.likeUser)
  * /dislike/{userId}:
  *   post:
  *     summary: Fer dislike a un usuari
- *     tags: [Not Implemented]
+ *     tags: [User]
  *     security:
  *       - user: []
  *     consumes:
