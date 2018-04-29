@@ -106,7 +106,23 @@ exports.findUserByName = function (name) {
         console.log("Error finding user", name);
         reject(err);
       }
-      resolve(user);
+      Like.find({ likedUser: user._id }, function (err, likes) {
+        if (err) {
+          reject(err);
+        }
+        var userLikes = 0;
+        var userDislikes = 0;
+        likes.forEach(like => {
+          if (like.type == "like") {
+            userLikes++;
+          } else {
+            userDislikes++;
+          }
+        });
+        var userToSend = JSON.parse(JSON.stringify(user));
+        userToSend['rate'] = { likes: userLikes, dislikes: userDislikes };
+        resolve(userToSend);
+      });
     });
   });
 }
@@ -118,7 +134,23 @@ exports.findUserById = function (id) {
         if (err) {
           reject(err);
         }
-        resolve(user);
+        Like.find({ likedUser: id }, function (err, likes) {
+          if (err) {
+            reject(err);
+          }
+          var userLikes = 0;
+          var userDislikes = 0;
+          likes.forEach(like => {
+            if (like.type == "like") {
+              userLikes++;
+            } else {
+              userDislikes++;
+            }
+          });
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['rate'] = { likes: userLikes, dislikes: userDislikes };
+          resolve(userToSend);
+        });
       });
     } else {
       reject({ message: "UserId no vàlido." })
@@ -128,15 +160,15 @@ exports.findUserById = function (id) {
 
 exports.likeUser = function (type, userId, likedUser) {
   return new Promise(function (resolve, reject) {
-    Like.findOne({ type: type, userId: userId, likedUser: likedUser }, function (err, like) {
+    Like.findOne({ userId: userId, likedUser: likedUser }, function (err, like) {
       if (err) {
         reject(err);
       }
       if (like) {
-        if (type == "like") {
+        if (type == like.type) {
           resolve(like);
         } else {
-          Like.findByIdAndUpdate(like._id, { $set: { type: type } }, function (err, res) {
+          Like.findByIdAndUpdate(like._id, { $set: { type: type } }, { new: true }, function (err, res) {
             if (err) {
               reject(err);
             }
