@@ -20,7 +20,9 @@ exports.saveUser = function (userData) {
   return new Promise(function (resolve, reject) {
     user.save()
       .then(user => {
-        resolve(user);
+        var sendingUser = JSON.parse(JSON.stringify(user));
+        sendingUser['rate'] = { likes: 0, dislikes: 0 };
+        resolve(sendingUser);
       })
       .catch(err => {
         console.log("Error saving user: " + err.message);
@@ -85,12 +87,12 @@ exports.modifyUser = function (user, content) {
   });
 }
 
-exports.findAllUsers = function () {
+exports.findAllUsers = function () { //Necesitas los likes?
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {
       if (err) {
         console.log("Error finding:", err);
-        reject(err)
+        reject(err);
       }
       resolve(users);
     });

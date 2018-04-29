@@ -188,10 +188,6 @@ var UserSchema = new mongoose.Schema({
             if (this.type == "association") return true;
             else return false;
         }
-    },
-    rate:{
-        likes: Number,
-        dislikes: Number
     }
 });
 

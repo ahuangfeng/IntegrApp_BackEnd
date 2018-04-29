@@ -17,10 +17,6 @@ exports.createUser = function (req, res, next) {
 
   usersDB.findUserByName(userData.username).then(found => {
     if (found == null) {
-      userData['rate'] = {
-        likes: 0,
-        dislikes: 0
-      };
       usersDB.saveUser(userData)
         .then(user => {
           res.send(user);
