@@ -73,7 +73,13 @@ exports.likeUser = function (req, res, next) {
     usersDB.findUserById(req.params.userId).then(userFound => {
       if (userFound) {
         usersDB.likeUser("like", req.decoded.userID, req.params.userId).then(like => {
-          res.send(like);
+          usersDB.findUserById(req.params.userId).then(user => {
+            var sendUser = JSON.parse(JSON.stringify(user));
+            sendUser['password'] = undefined;
+            res.send(sendUser);
+          }).catch(err => {
+            res.status(400).json(err);
+          });
         }).catch(err => {
           res.status(400).json({ message: err.message });
         });
@@ -93,7 +99,13 @@ exports.dislikeUser = function (req, res, next) {
     usersDB.findUserById(req.params.userId).then(userFound => {
       if (userFound) {
         usersDB.likeUser("dislike", req.decoded.userID, req.params.userId).then(like => {
-          res.send(like);
+          usersDB.findUserById(req.params.userId).then(user => {
+            var sendUser = JSON.parse(JSON.stringify(user));
+            sendUser['password'] = undefined;
+            res.send(sendUser);
+          }).catch(err => {
+            res.status(400).json(err);
+          });
         }).catch(err => {
           res.status(400).json({ message: err.message });
         });
