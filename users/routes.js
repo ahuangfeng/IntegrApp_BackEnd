@@ -283,7 +283,7 @@ apiRoutes.put('/user/:id', tokenMiddleware.tokenCheck, controller.modifyUser);
  *         in: path
  *         type: string
  *         required: true
- *         description: Id de l'usuari que es vol fer like
+ *         description: Id de l'usuari que es vol fer like, l'usuari qui fa like el agafem del token
  *     produces:
  *       - "application/json"
  *     responses:
@@ -317,7 +317,7 @@ apiRoutes.post('/like/:userId', tokenMiddleware.tokenCheck, controller.likeUser)
  *         in: path
  *         type: string
  *         required: true
- *         description: Id de l'usuari que es vol fer dislike
+ *         description: Id de l'usuari que es vol fer dislike, l'usuari qui fa dislike el agafem del token
  *     produces:
  *       - "application/json"
  *     responses:

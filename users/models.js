@@ -195,6 +195,25 @@ var UserSchema = new mongoose.Schema({
     }
 });
 
+/**
+* @swagger
+* definitions:
+*   LikeSchema:
+*     properties:
+*       type:
+*         type: string
+*       userId:
+*         type: string
+*       likedUser:
+*         type: string
+*/
+var LikesSchema = new mongoose.Schema({
+    type: String, //like | dislike
+    userId: String,
+    likedUser: String
+});
+
 exports.UserSchema = UserSchema;
+exports.LikesSchema = LikesSchema;
 
 

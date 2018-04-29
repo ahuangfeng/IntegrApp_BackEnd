@@ -10,8 +10,11 @@ var models = require('./models');
 
 // Register the schema
 var User = mongoose.model('User', models.UserSchema);
+var Like = mongoose.model('Like', models.LikesSchema);
 
+exports.Like = Like;
 exports.User = User;
+
 exports.saveUser = function (userData) {
   var user = new User(userData);
   return new Promise(function (resolve, reject) {
@@ -58,11 +61,11 @@ exports.modifyUser = function (user, content) {
     }
     if (!content.type) {
       content.type = user.type;
-      if (user.type=="association") {
+      if (user.type == "association") {
         if (!content.CIF) {
           content.CIF = user.CIF;
         }
-      } 
+      }
       else content.CIF = "";
     }
 
@@ -120,5 +123,34 @@ exports.findUserById = function (id) {
     } else {
       reject({ message: "UserId no vàlido." })
     }
+  });
+}
+
+exports.likeUser = function (type, userId, likedUser) {
+  return new Promise(function (resolve, reject) {
+    Like.findOne({ type: type, userId: userId, likedUser: likedUser }, function (err, like) {
+      if (err) {
+        reject(err);
+      }
+      if (like) {
+        if (type == "like") {
+          resolve(like);
+        } else {
+          Like.findByIdAndUpdate(like._id, { $set: { type: type } }, function (err, res) {
+            if (err) {
+              reject(err);
+            }
+            resolve(res);
+          });
+        }
+      } else {
+        var likeObj = new Like({ type: type, userId: userId, likedUser: likedUser });
+        likeObj.save().then(likeResult => {
+          resolve(likeResult);
+        }).catch(error => {
+          reject(error);
+        });
+      }
+    });
   });
 }

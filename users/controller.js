@@ -74,8 +74,19 @@ exports.likeUser = function (req, res, next) {
   if (!req.params.userId) {
     res.status(400).json({ message: "Es necesita un userId per fer like" });
   } else {
-    notImplemented(req, res, next);
-    
+    usersDB.findUserById(req.params.userId).then(userFound => {
+      if (userFound) {
+        usersDB.likeUser("like", req.decoded.userID, req.params.userId).then(like => {
+          res.send(like);
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      } else {
+        res.status(400).json({ message: "User not found" });
+      }
+    }).catch(error => {
+      res.status(400).json(error);
+    });
   }
 }
 
@@ -83,7 +94,19 @@ exports.dislikeUser = function (req, res, next) {
   if (!req.params.userId) {
     res.status(400).json({ message: "Es necesita un userId per fer like" });
   } else {
-    notImplemented(req, res, next);
+    usersDB.findUserById(req.params.userId).then(userFound => {
+      if (userFound) {
+        usersDB.likeUser("dislike", req.decoded.userID, req.params.userId).then(like => {
+          res.send(like);
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      } else {
+        res.status(400).json({ message: "User not found" });
+      }
+    }).catch(error => {
+      res.status(400).json(error);
+    });
   }
 }
 
