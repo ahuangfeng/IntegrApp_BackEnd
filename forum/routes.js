@@ -151,4 +151,38 @@ apiRoutes.get('/forums', tokenMiddleware.tokenCheck, forumController.getForums);
  */
 apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getFullForum);
 
+/**
+ * @swagger
+ * /commentForum/{id}:
+ *   delete:
+ *     summary: Esborra un comentari del forum si es seu
+ *     tags: [Not Implemented]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del comentari del forum
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumController.deleteCommentforum);
+
 exports.apiRoutes = apiRoutes;

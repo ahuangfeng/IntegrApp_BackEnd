@@ -45,6 +45,18 @@ exports.getForums = function (req, res, next) {
   })
 }
 
+exports.deleteCommentforum = function(req, res, next){
+  if(!req.params.id){
+    res.status(400).json({ message: "Falta un id del comentario"});
+  }else{
+    forumDB.deleteEntry(req.params.id, req.decoded.userID).then(result => {
+      res.send(result);
+    }).catch(err => {
+      res.status(400).send(err);
+    })
+  }
+}
+
 exports.commentForum = function (req, res, next) {
   verifyForumEntry(req.body, req.decoded).then(forum => {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
