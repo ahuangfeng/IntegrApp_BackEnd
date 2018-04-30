@@ -108,23 +108,15 @@ exports.findUserByName = function (name) {
         console.log("Error finding user", name);
         reject(err);
       }
-      Like.find({ likedUser: user._id }, function (err, likes) {
-        if (err) {
-          reject(err);
-        }
-        var userLikes = 0;
-        var userDislikes = 0;
-        likes.forEach(like => {
-          if (like.type == "like") {
-            userLikes++;
-          } else {
-            userDislikes++;
-          }
+      if (user) {
+        this.findLikes(user._id).then(rate => {
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['rate'] = rate;
+          resolve(userToSend);
         });
-        var userToSend = JSON.parse(JSON.stringify(user));
-        userToSend['rate'] = { likes: userLikes, dislikes: userDislikes };
-        resolve(userToSend);
-      });
+      } else {
+        resolve(user);
+      }
     });
   });
 }
@@ -136,27 +128,40 @@ exports.findUserById = function (id) {
         if (err) {
           reject(err);
         }
-        Like.find({ likedUser: id }, function (err, likes) {
-          if (err) {
-            reject(err);
-          }
-          var userLikes = 0;
-          var userDislikes = 0;
-          likes.forEach(like => {
-            if (like.type == "like") {
-              userLikes++;
-            } else {
-              userDislikes++;
-            }
+        if (user) {
+          this.findLikes(id).then(rate => {
+            var userToSend = JSON.parse(JSON.stringify(user));
+            userToSend['rate'] = rate;
+            resolve(userToSend);
           });
-          var userToSend = JSON.parse(JSON.stringify(user));
-          userToSend['rate'] = { likes: userLikes, dislikes: userDislikes };
-          resolve(userToSend);
-        });
+        } else {
+          resolve(user);
+        }
       });
     } else {
       reject({ message: "UserId no vàlido." })
     }
+  });
+}
+
+findLikes = function (userId) {
+  return new Promise((resolve, reject) => {
+    Like.find({ likedUser: userId }, function (err, likes) {
+      if (err) {
+        reject(err);
+      }
+      var userLikes = 0;
+      var userDislikes = 0;
+      likes.forEach(like => {
+        if (like.type == "like") {
+          userLikes++;
+        } else {
+          userDislikes++;
+        }
+      });
+      var rate = { likes: userLikes, dislikes: userDislikes };
+      resolve(rate);
+    });
   });
 }
 

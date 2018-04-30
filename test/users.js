@@ -294,6 +294,7 @@ describe('DELETE /user by id', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
+        console.log("DELETING:", res.body.message);
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
