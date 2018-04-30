@@ -71,7 +71,7 @@ exports.modifyUser = function (user, content) {
       else content.CIF = "";
     }
 
-    User.findOneAndUpdate({ _id: user.id }, {
+    User.findOneAndUpdate({ _id: user._id }, {
       $set: {
         username: content.username, password: content.password,
         name: content.name, email: content.email, phone: content.phone,

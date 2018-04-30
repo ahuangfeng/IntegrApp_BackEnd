@@ -25,7 +25,7 @@ describe('All tests', function() {
       }).then(response => {
         response.should.be.an('object');
         expect(response.username, configTest.username);
-        configTest.setUserId(response.id);
+        configTest.setUserId(response._id);
         done();
       }).catch(err => { 
         console.error("Error found in login tests",err);

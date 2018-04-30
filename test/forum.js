@@ -27,6 +27,7 @@ describe('POST /forum', () => {
         "type": "documentation",
       })
       .end(function (err, res) {
+        console.log("[DEBUG]: RES", res.body);
         res.should.have.status(200);
         res.should.be.an('object');
         res.body.should.have.property('title');
