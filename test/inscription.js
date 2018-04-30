@@ -40,19 +40,19 @@ describe('POST /inscription', function () {
     }).then(response => {
       response.should.be.an('object');
       expect(response.username, configTest.username);
-      secondUserID = response.id;
+      secondUserID = response._id;
       return usersDB.saveUser({
         'username': "advertUsername2",
         "password": "password",
         "type": "voluntary"
       });
     }).then(res => {
-      thirdUserID = res.id;
+      thirdUserID = res._id;
       return advertDB.saveAdvert(mockAdvert);
     }).then(res => {
       expect(res.title, "title");
       expect(res.description, "description");
-      advertId = res.id;
+      advertId = res._id;
       done();
     }).catch(err => {
       console.error("Error found in login tests", err);
@@ -242,7 +242,6 @@ describe('GET /inscription/{advertId}', function () {
       });
   });
 
-  //TODO: preguntar a Sergi si es aixi?
   it('should not get the inscriptions if invalid id', function (done) {
     chai.request(server)
       .get('/api/inscription/' + "invalidOne")

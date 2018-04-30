@@ -7,9 +7,7 @@ var forumDB = require('./forumDB');
 var userDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
-  var verifyFields = verifyFieldForum(req.body, req.decoded);
-  verifyFields.then(verif => {
-
+  verifyFieldForum(req.body, req.decoded).then(verif => {
     var forumDocument = createForumDocument(req.body, req.decoded);
 
     forumDB.saveForum(forumDocument)
@@ -109,6 +107,7 @@ verifyForumEntry = function (forumEntry, decoded) {
 }
 
 verifyFieldForum = function (forumData, decoded) {
+  // console.log("DECODED:", decoded);
   return new Promise((resolve, reject) => {
     var validTypes = ["documentation", "entertainment", "language", "various"];
     if (!forumData.title || !forumData.description || !forumData.type) {

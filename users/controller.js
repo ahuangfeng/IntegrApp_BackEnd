@@ -127,7 +127,7 @@ exports.login = function (req, res) {
         res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         const payload = {
-          userID: user.id,
+          userID: user._id,
           username: user.username
         }
         var token = jwt.sign(payload, config.secret, {
