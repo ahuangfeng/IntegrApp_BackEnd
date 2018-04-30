@@ -7,11 +7,14 @@ GET /userInfo/username
 GET /userinfoById/id 
 DELETE /user --> fet
 PUT /user --> fet
+POST /like/userId --> fet
+POST /dislike/userId --> fet
 
 POST /forum --> fet
 POST /commentForum --> fet
 GET /forums --> fet
 GET /fullForum/id --> fet
+DELETE /commentForum/id
 
 POST /advert --> fet
 GET /advert -->fet

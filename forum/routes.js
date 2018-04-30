@@ -156,7 +156,7 @@ apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getF
  * /commentForum/{id}:
  *   delete:
  *     summary: Esborra un comentari del forum si es seu
- *     tags: [Not Implemented]
+ *     tags: [Forum]
  *     security:
  *       - user: []
  *     consumes:

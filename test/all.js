@@ -14,10 +14,10 @@ var configTest = require('./configTest');
 
 chai.use(chaiHttp);
 //Our parent block
-describe('All tests', function() {
+describe('All tests', function () {
 
   before(function (done) {
-    usersDB.User.remove({}, (err) => { 
+    usersDB.User.remove({}, (err) => {
       usersDB.saveUser({
         "username": configTest.username,
         "password": configTest.password,
@@ -27,25 +27,28 @@ describe('All tests', function() {
         expect(response.username, configTest.username);
         configTest.setUserId(response._id);
         done();
-      }).catch(err => { 
-        console.error("Error found in login tests",err);
+      }).catch(err => {
+        console.error("Error found in login tests", err);
       });
     });
   });
 
-  describe('Login', function() {
+  describe('Login', function () {
     require('./login');
   });
-  describe('Users', function() {
+  describe('Users', function () {
     require('./users');
   });
-  describe('Forum', function() {
+  describe('Forum', function () {
     require('./forum');
   });
-  describe('Advert', function(){
+  describe('Advert', function () {
     require('./advert');
   });
-  describe('Inscription', function(){
+  describe('Inscription', function () {
     require('./inscription');
+  });
+  describe('Likes/Dislikes', function () {
+    require('./like');
   });
 })
