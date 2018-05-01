@@ -148,15 +148,18 @@ addUsersToAdvert = function (adverts) {
     adverts.forEach((item, index, array) => {
       usersDB.User.findById(item.userId, (err, user) => {
         var advertToSent = JSON.parse(JSON.stringify(item));
-        advertToSent['user'] = user;
+        advertToSent['user'] = JSON.parse(JSON.stringify(user));
         if (user) {
           advertToSent['user'].password = undefined;
         }
-        advertArray.push(advertToSent);
-        itemsProcessed++;
-        if (itemsProcessed === array.length) {
-          resolve(advertArray);
-        }
+        usersDB.findLikes(item.userId).then(rate => {
+          advertToSent['user'].rate = rate;
+          advertArray.push(advertToSent);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            resolve(advertArray);
+          }
+        });
       });
     });
   });

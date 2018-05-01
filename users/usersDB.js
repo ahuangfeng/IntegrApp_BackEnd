@@ -164,6 +164,7 @@ findLikes = function (userId) {
     });
   });
 }
+exports.findLikes = findLikes;
 
 exports.likeUser = function (type, userId, likedUser) {
   return new Promise(function (resolve, reject) {
