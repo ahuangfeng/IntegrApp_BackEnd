@@ -31,7 +31,7 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-GET /adverts --> la variable rate que tambien se calcule
+GET /adverts --> la variable rate que tambien se calcule -->fet
 GET /users --> calcular rate tambien ? lo utilizan para debug en swagger
 
 S'ha de verificar la doc!

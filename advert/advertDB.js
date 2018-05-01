@@ -30,13 +30,6 @@ exports.deleteAdvert = function (id) {
   });
 }
 
-// TODO: utilizar findByIdAndUpdate
-// Tank.findByIdAndUpdate(id, { $set: { size: 'large' }}, { new: true }, function (err, tank) {
-//   if (err) return handleError(err);
-//   res.send(tank);
-// });
-
-
 exports.modifyStateAdvert = function (id, state) {
   return new Promise(function (resolve, reject) {
     var validValues = ['opened', 'closed'];
@@ -146,20 +139,20 @@ addUsersToAdvert = function (adverts) {
     var advertArray = [];
     var itemsProcessed = 0;
     adverts.forEach((item, index, array) => {
-      usersDB.User.findById(item.userId, (err, user) => {
-        var advertToSent = JSON.parse(JSON.stringify(item));
+      var advertToSent = JSON.parse(JSON.stringify(item));
+
+      usersDB.findUserById(item.userId).then(user => {
         advertToSent['user'] = JSON.parse(JSON.stringify(user));
         if (user) {
           advertToSent['user'].password = undefined;
         }
-        usersDB.findLikes(item.userId).then(rate => {
-          advertToSent['user'].rate = rate;
-          advertArray.push(advertToSent);
-          itemsProcessed++;
-          if (itemsProcessed === array.length) {
-            resolve(advertArray);
-          }
-        });
+        advertArray.push(advertToSent);
+        itemsProcessed++;
+        if (itemsProcessed === array.length) {
+          resolve(advertArray);
+        }
+      }).catch(err => {
+        reject(err);
       });
     });
   });

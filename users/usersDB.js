@@ -94,7 +94,21 @@ exports.findAllUsers = function () { //Necesitas los likes?
         console.log("Error finding:", err);
         reject(err);
       }
-      resolve(users);
+      var usersToSent = [];
+      var itemsProcessed = 0;
+      users.forEach((item, index, array) => {
+        var currentUser = JSON.parse(JSON.stringify(item));
+        this.findLikes(item._id).then(rate => {
+          currentUser['rate'] = rate;
+          usersToSent.push(currentUser);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            resolve(usersToSent);
+          }
+        }).catch(err => {
+          reject({message: "ha habido un error al poner los likes :" + err.message});
+        });
+      })
     });
   })
 }
