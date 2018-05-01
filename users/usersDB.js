@@ -55,12 +55,12 @@ exports.modifyUser = function (user, content) {
     if (!content.name) {
       content.name = user.name;
     }
-    if (!content.email) {
-      content.email = user.email;
-    }
-    if (!content.phone) {
-      content.phone = user.phone;
-    }
+    // if (!content.email) {
+    //   content.email = user.email;
+    // }
+    // if (!content.phone) {
+    //   content.phone = user.phone;
+    // }
     if (!content.type) {
       content.type = user.type;
       if (user.type == "association") {
