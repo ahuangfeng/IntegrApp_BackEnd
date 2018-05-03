@@ -170,7 +170,8 @@ exports.findAdvertByIdUser = function (userId) {
   });
 }
 
-exports.addRegisteredUser = function (advertId, userId) {
+exports.addRegisteredUser = function (advertId, user, state) {
+  var register = { userId: user._id, username: user.username, status: state };
   return new Promise(function (resolve, reject) {
     Advert.findOne({
       _id: advertId
@@ -182,7 +183,7 @@ exports.addRegisteredUser = function (advertId, userId) {
       else {
         Advert.updateOne({
           _id: advertId
-        }, { $push: { registered: userId } },
+        }, { $push: { registered: register } },
           function (err, advert) {
             if (err) {
               console.log("Error updating advert", advertId);

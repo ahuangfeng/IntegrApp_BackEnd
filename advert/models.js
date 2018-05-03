@@ -57,7 +57,7 @@ var mongoose = require('mongoose');
 *         type: string
 *         enum: [lookFor, offer]
 *       registered:
-*         type: [string]
+*         $ref: "#/definitions/Registered"
 */
 
 /**
@@ -141,6 +141,20 @@ var mongoose = require('mongoose');
 *         type: number
 */
 
+/**
+ * @swagger
+ * definitions:
+ *   Registered:
+ *     properties:
+ *       userId:
+ *         type: string
+ *       username:
+ *         type: string
+ *       status:
+ *         type: string
+ *         enum: [pending, refused, completed, accepted]
+ */
+
 var AdvertSchema = new mongoose.Schema({
   userId: String,
   createdAt: String,
@@ -163,7 +177,11 @@ var AdvertSchema = new mongoose.Schema({
     enum: ['lookFor', 'offer'],
     default: 'offer'
   },
-  registered: [String]
+  registered: {
+    userId: String,
+    username: String,
+    status: String
+  }
 });
 
 exports.AdvertSchema = AdvertSchema;
