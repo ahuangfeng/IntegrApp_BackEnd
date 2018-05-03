@@ -134,7 +134,7 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *     consumes:
  *       - "application/json"
  *     parameters:
- *       - name: id
+ *       - name: idAdvert
  *         in: path
  *         type: string
  *         required: true
