@@ -122,4 +122,43 @@ apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionC
  *           $ref: "#/definitions/InscriptionFailed"
  */
 apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptionsUser);
+
+/**
+ * @swagger
+ * /inscription/{id}:
+ *   put:
+ *     summary: Resoldre inscripció a un anunci
+ *     tags: [Inscription]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'anunci que es vol resoldre inscripció
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/SolveInscriptionBody"
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/InscriptionInfo"
+ *       400:
+ *         description: No s'ha trobat l'anunci
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.solveInscriptionUser);
+
 exports.apiRoutes = apiRoutes;

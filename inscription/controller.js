@@ -89,6 +89,42 @@ exports.getInscriptionsUser = function (req, res, next) {
 
 }
 
+exports.solveInscriptionUser = function (req, res, next) {
+  var inscriptionData = req.body;
+  
+  var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id);
+  if (!verify.success) {
+    res.status(400).json({ message: verify.message });
+    return;
+  }
+
+  userDB.findUserById(inscriptionData.userId).then(user => {
+    advertDB.findAdvertById(req.params.id).then(advert => {
+      inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription=> {
+        
+        if(inscription.length == 0) {
+          res.status(400).json({ message: "Inscription doesn't exists"})
+        }
+        
+        else {
+          inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
+            res.send(inscription);
+          }).catch(err => {
+            res.status(400).json({ message: err.message });
+          })
+        }
+      }).catch(err => {
+        res.status(400).json({ message: err.message });
+      })
+      
+    }).catch(err => {
+    res.status(400).json({ message: err.message });
+  })
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  })
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
@@ -99,5 +135,18 @@ verifyFieldsInscription = function (inscriptionData) {
     return { success: false, message: "Faltan datos obligatorios: userId, advertId" };
   }
 
+  return { success: true };
+}
+
+verifyFieldsSolveInscription = function (inscriptionData) {
+  if (!inscriptionData.userId || !inscriptionData.status) {
+    return { success: false, message: "Faltan datos obligatorios: userId, status" };
+  }
+  var validTypes = ["pending", "refused", "completed", "accepted"];
+  if (inscriptionData.status) {
+    if (validTypes.indexOf(inscriptionData.status) == -1) {
+      return { success: false, message: "type tiene que ser: [pending, refused, completed, accepted]" };
+    }
+  }
   return { success: true };
 }

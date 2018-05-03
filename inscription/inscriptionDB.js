@@ -60,3 +60,22 @@ exports.findInscriptionsAdvert = function (idAdvert) {
       });
     })
   }
+
+  exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
+    return new Promise(function (resolve, reject) {
+      
+      Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
+        $set: {
+          status: newStatus
+        }
+      }, { new: true }, function (err, doc) {
+        if (!err) {
+          resolve(doc);
+        } else {
+          reject({ message: "Error solving inscription" });
+        }
+      })
+      
+      
+    });
+  }

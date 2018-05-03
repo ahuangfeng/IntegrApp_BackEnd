@@ -67,6 +67,18 @@ var mongoose = require('mongoose');
 *         type: string
 */
 
+/**
+* @swagger
+* definitions:
+*   SolveInscriptionBody:
+*     properties:
+*       userId:
+*         type: string
+*       status:
+*         type: string
+*         enum: [pending, refused, completed, accepted]
+*/
+
 var InscriptionSchema = new mongoose.Schema({
     inscriptionId: String,
     userId: String,
