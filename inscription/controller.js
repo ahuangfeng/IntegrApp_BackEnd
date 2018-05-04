@@ -36,7 +36,7 @@ exports.createInscription = function (req, res, next) {
               } else {
                 var ret = countAcceptedUsers(foundAdvert);
                 if(!ret.success) {
-                  res.status(400).json({ message: "manda mi polla nen" });
+                  res.status(400).json({ message: "Probant funcions" });
                   return;
                 }
                 var newStatus = "pending";
@@ -68,8 +68,11 @@ exports.createInscription = function (req, res, next) {
 }
 
 countAcceptedUsers = function (advert) {
-  var a = advert.registered;
-  console.log(advert);
+  var a = new Array(advert.registered);
+  console.log(a[0]);
+  /*for(let i=0; i<advert.registered; i++) {
+    console.log(advert.registered[i]);
+  }*/
   return {success: false};
 }
 
