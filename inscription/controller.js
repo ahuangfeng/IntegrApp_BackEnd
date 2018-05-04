@@ -35,7 +35,7 @@ exports.createInscription = function (req, res, next) {
                 res.status(400).json({ message: "El usuario ya está inscrito a este anuncio" });
               } else {
                 var ret = countAcceptedUsers(foundAdvert);
-                if(!ret.success) {
+                if (!ret.success) {
                   res.status(400).json({ message: "Probant funcions" });
                   return;
                 }
@@ -55,7 +55,7 @@ exports.createInscription = function (req, res, next) {
                 });
               }
             }
-          )
+          );
 
         }
       }).catch(err => {
@@ -68,12 +68,12 @@ exports.createInscription = function (req, res, next) {
 }
 
 countAcceptedUsers = function (advert) {
-  var a = new Array(advert.registered);
-  console.log(a[0]);
-  /*for(let i=0; i<advert.registered; i++) {
-    console.log(advert.registered[i]);
-  }*/
-  return {success: false};
+  var regist = JSON.parse(JSON.stringify(advert.registered));
+  console.log("[DEBUG] Advert registered ", regist.length);
+  for (var i = 0; i < regist.length; i++) {
+    console.log("Registered " + i + " ", regist[i]);
+  }
+  return { success: false };
 }
 
 exports.getInscriptions = function (req, res, next) {
@@ -106,7 +106,7 @@ exports.getInscriptionsUser = function (req, res, next) {
 
 exports.solveInscriptionUser = function (req, res, next) {
   var inscriptionData = req.body;
-  
+
   var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
@@ -115,14 +115,14 @@ exports.solveInscriptionUser = function (req, res, next) {
 
   userDB.findUserById(inscriptionData.userId).then(user => {
     advertDB.findAdvertById(req.params.id).then(advert => {
-      inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription=> {
-        
-        if(inscription.length == 0) {
-          res.status(400).json({ message: "Inscription doesn't exists"})
+      inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
+
+        if (inscription.length == 0) {
+          res.status(400).json({ message: "Inscription doesn't exists" })
         }
-        
+
         else {
-          if(advert.registered.length >= advert.places) {
+          if (advert.registered.length >= advert.places) {
             res.status(400).json({ message: "El anuncio ya tiene sus plazas llenas" });
           }
           inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
@@ -134,10 +134,10 @@ exports.solveInscriptionUser = function (req, res, next) {
       }).catch(err => {
         res.status(400).json({ message: err.message });
       })
-      
+
     }).catch(err => {
-    res.status(400).json({ message: err.message });
-  })
+      res.status(400).json({ message: err.message });
+    })
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
