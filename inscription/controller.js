@@ -34,11 +34,11 @@ exports.createInscription = function (req, res, next) {
               if (inscription.length > 0) {
                 res.status(400).json({ message: "El usuario ya está inscrito a este anuncio" });
               } else {
-                var ret = countAcceptedUsers(foundAdvert);
+                /*var ret = countAcceptedUsers(foundAdvert);
                 if (!ret.success) {
                   res.status(400).json({ message: "Probant funcions" });
                   return;
-                }
+                }*/
                 var newStatus = "pending";
                 advertDB.addRegisteredUser(inscriptionData.advertId, foundUser, newStatus).then(advert => {
                   inscriptionDB.saveInscription(inscriptionData)
@@ -68,11 +68,14 @@ exports.createInscription = function (req, res, next) {
 }
 
 countAcceptedUsers = function (advert) {
+  var count = 0;
   var regist = JSON.parse(JSON.stringify(advert.registered));
-  console.log("[DEBUG] Advert registered ", regist.length);
   for (var i = 0; i < regist.length; i++) {
-    console.log("Registered " + i + " ", regist[i]);
+    if(regist[i].status == 'accepted') {
+      count = count + 1;
+    }
   }
+  console.log(count);
   return { success: false };
 }
 
@@ -114,6 +117,7 @@ exports.solveInscriptionUser = function (req, res, next) {
   }
 
   userDB.findUserById(inscriptionData.userId).then(user => {
+    
     advertDB.findAdvertById(req.params.id).then(advert => {
       inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
 
@@ -122,9 +126,7 @@ exports.solveInscriptionUser = function (req, res, next) {
         }
 
         else {
-          if (advert.registered.length >= advert.places) {
-            res.status(400).json({ message: "El anuncio ya tiene sus plazas llenas" });
-          }
+          
           inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
             res.send(inscription);
           }).catch(err => {

@@ -158,6 +158,24 @@ addUsersToAdvert = function (adverts) {
   });
 }
 
+exports.solveInscriptionAdvertUser = function(idAdvert, idUser, newStatus) {
+  return new Promise(function (resolve, reject) {
+      Advert.findOneAndUpdate({_id: idAdvert, "registered.userId": idUser}, {
+        $set: {
+          "registered.$.status":newStatus
+        }
+      }, { new: true },
+        function (err, doc) {
+          if (!err) {
+            console.log(doc);
+            resolve(doc);
+          } else {
+            reject({ message: "Error modifying advert" });
+          }
+        });
+    })
+}
+
 exports.findAdvertByIdUser = function (userId) {
   return new Promise(function (resolve, reject) {
     Advert.find({ userId: userId }, function (err, advert) {

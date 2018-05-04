@@ -1,5 +1,8 @@
+
+
 var mongoose = require('mongoose');
 var models = require('./models');
+var advertDB = require('../advert/advertDB');
 
 /**
  * @swagger
@@ -20,7 +23,6 @@ exports.saveInscription = function (inscriptionData) {
         resolve(inscription);
       })
       .catch(err => {
-        console.log("Error saving Inscription: " + err.message);
         reject(err);
       })
   });
@@ -63,7 +65,11 @@ exports.findInscriptionsAdvert = function (idAdvert) {
 
   exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
     return new Promise(function (resolve, reject) {
-      
+      advertDB.solveInscriptionAdvertUser(idAdvert, idUser, newStatus).then(advert => {
+
+      }).catch(err => {
+        reject(err);
+      })
       Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
         $set: {
           status: newStatus
