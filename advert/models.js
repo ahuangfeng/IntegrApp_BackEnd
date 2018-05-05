@@ -141,6 +141,16 @@ var mongoose = require('mongoose');
 *         type: number
 */
 
+/**
+* @swagger
+* definitions:
+*   ModifStateBody:
+*     properties:
+*       state:
+*         type: string
+*         enum: [opened, closed]
+*/
+
 var AdvertSchema = new mongoose.Schema({
   userId: String,
   createdAt: String,

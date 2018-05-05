@@ -145,6 +145,10 @@ apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.dele
  *         type: string
  *         required: true
  *         description: Id de l'anunci que es vol modificar el seu estat
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ModifStateBody"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
