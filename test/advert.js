@@ -573,7 +573,6 @@ describe('PUT /advertState', () => {
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');
@@ -594,7 +593,6 @@ describe('PUT /advertState', () => {
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');
