@@ -44,9 +44,7 @@ exports.deleteUser = function (id) {
 
 exports.updateUser = function (userId, userData){
   return new Promise((resolve, reject) => {
-    
     User.findById(userId, function(err, user){
-      console.log("user", user);
       user["username"] = userData["username"];
       user["password"] = userData["password"];
       user["name"] = userData["name"];

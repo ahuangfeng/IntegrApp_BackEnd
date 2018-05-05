@@ -167,7 +167,7 @@ exports.deleteUser = function (req, res, next) {
 exports.modifyUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFieldsModify(userData);
+  var verify = verifyFieldsUser(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
@@ -252,32 +252,6 @@ verifyFieldsUser = function (userData) {
   }
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
   if (!(!userData.email)) {
-    if (!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado" };
-    }
-  }
-
-  return { success: true };
-}
-
-verifyFieldsModify = function (userData) {
-  if (!userData.username || !userData.password || !userData.name || !userData.type) {
-    return { success: false, message: "Faltan datos obligatorios: username, password, name, type" };
-  }
-  var validTypes = ["voluntary", "admin", "newComer", "association"];
-  if (userData.type) {
-    if (validTypes.indexOf(userData.type) == -1) {
-      return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
-    }
-    if (userData.type == "association") {
-      if (!userData.CIF) {
-        return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
-      }
-    }
-  }
-
-  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if (userData.email) {
     if (!regex.test(userData.email)) {
       return { success: false, message: "Email mal formado" };
     }
