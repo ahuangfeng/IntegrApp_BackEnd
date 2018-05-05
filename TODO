@@ -33,7 +33,6 @@ GET /inscriptionUser/userId
 TODO:Alex
 GET /adverts --> la variable rate que tambien se calcule -->fet
 GET /users --> calcular rate tambien, lo utilizan para debug en swagger -->fet
-
 DELETE /user no funciona --> fet
 registered --> {userId, username y status} --> Sergi
 
@@ -43,6 +42,3 @@ S'ha de verificar la doc!
 
 TODO: 
 Un tiu pot inscriures dos cops? ara si xD
-
-
-DELETE /commentForum

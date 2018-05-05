@@ -66,7 +66,7 @@ exports.updateUser = function (userId, userData){
   });
 }
 
-exports.findAllUsers = function () { //Necesitas los likes?
+exports.findAllUsers = function () { 
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {
       if (err) {
