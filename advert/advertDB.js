@@ -3,6 +3,7 @@ var models = require('./models');
 
 var Advert = mongoose.model('Advert', models.AdvertSchema);
 var usersDB = require('../users/usersDB');
+var inscriptionDB = require('../inscription/inscriptionDB');
 
 exports.Advert = Advert;
 exports.saveAdvert = function (advertData) {
@@ -136,7 +137,7 @@ exports.getAdvert = function (types) {
 
 addUsersToAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
-    if(adverts.length > 0){
+    if (adverts.length > 0) {
       var advertArray = [];
       var itemsProcessed = 0;
       adverts.forEach((item, index, array) => {
@@ -155,11 +156,29 @@ addUsersToAdvert = function (adverts) {
           reject(err);
         });
       });
-    }else{
+    } else {
       resolve(adverts);
     }
   });
 }
+
+// addRegisteredUserToAdvert = function(adverts){
+//   return new Promise((resolve,reject) => {
+//     if(adverts > 0){
+//       var copyAdverts = JSON.parse(JSON.stringify(adverts));
+//       copyAdverts.forEach(element => {
+//         inscriptionDB.findInscriptionsAdvert(element._id).then(inscriptions => {
+//           var inscr = {}
+//           element['registered'] = inscriptions
+//         }).catch(err => {
+//           console.error("Got an error getting registered user To adverts", err);
+//         });
+//       });
+//     }else{
+//       resolve(adverts);
+//     }
+//   });
+// }
 
 exports.findAdvertByIdUser = function (userId) {
   return new Promise(function (resolve, reject) {
@@ -175,24 +194,19 @@ exports.findAdvertByIdUser = function (userId) {
 
 exports.addRegisteredUser = function (advertId, userId) {
   return new Promise(function (resolve, reject) {
-    Advert.findOne({
-      _id: advertId
-    }, function (err, advert) {
+    Advert.findOne({ _id: advertId }, function (err, advert) {
       if (err) {
         console.log("Error finding advert", advertId);
         reject(err);
-      }
-      else {
-        Advert.updateOne({
-          _id: advertId
-        }, { $push: { registered: userId } },
-          function (err, advert) {
-            if (err) {
-              console.log("Error updating advert", advertId);
-              reject(err);
-            }
-            else resolve(advert);
-          });
+      } else {
+        Advert.updateOne({ _id: advertId }, { $push: { registered: userId } }, function (err, advert) {
+          if (err) {
+            console.log("Error updating advert", advertId);
+            reject(err);
+          } else {
+            resolve(advert);
+          }
+        });
       }
     });
   });

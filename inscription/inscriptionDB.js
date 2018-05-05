@@ -27,55 +27,55 @@ exports.saveInscription = function (inscriptionData) {
 }
 
 exports.findInscriptionsAdvert = function (idAdvert) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({advertId: idAdvert}, function (err, inscriptions) {
-        if (err) {
-          console.log("Error finding:", err);
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
-
-  exports.findInscriptionsUser = function (idUser) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({userId: idUser}, function (err, inscriptions) {
-        if (err) {
-          console.log("Error finding:", err);
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
-
-  exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({userId: idUser, advertId: idAdvert}, function (err, inscriptions) {
-        if(err) {
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
-
-  exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
-    return new Promise(function (resolve, reject) {
-      
-      Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
-        $set: {
-          status: newStatus
-        }
-      }, { new: true }, function (err, doc) {
-        if (!err) {
-          resolve(doc);
-        } else {
-          reject({ message: "Error solving inscription" });
-        }
-      })
-      
-      
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ advertId: idAdvert }, function (err, inscriptions) {
+      if (err) {
+        console.log("Error finding:", err);
+        reject(err)
+      }
+      resolve(inscriptions);
     });
-  }
+  })
+}
+
+exports.findInscriptionsUser = function (idUser) {
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ userId: idUser }, function (err, inscriptions) {
+      if (err) {
+        console.log("Error finding:", err);
+        reject(err)
+      }
+      resolve(inscriptions);
+    });
+  })
+}
+
+exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ userId: idUser, advertId: idAdvert }, function (err, inscriptions) {
+      if (err) {
+        reject(err)
+      }
+      resolve(inscriptions);
+    });
+  })
+}
+
+exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
+  return new Promise(function (resolve, reject) {
+
+    Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
+      $set: {
+        status: newStatus
+      }
+    }, { new: true }, function (err, doc) {
+      if (!err) {
+        resolve(doc);
+      } else {
+        reject({ message: "Error solving inscription" });
+      }
+    })
+
+
+  });
+}
