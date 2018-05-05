@@ -33,13 +33,11 @@ exports.saveUser = function (userData) {
 
 exports.deleteUser = function (id) {
   return new Promise(function (resolve, reject) {
-
-    User.deleteOne({ _id: id }, function (err) {
-      if (!err) {
-        resolve("User deleted");
-      } else {
+    User.findOneAndRemove({ _id: id }, function (err,doc) {
+      if(err){
         reject("Se ha producido un error al eliminar usuario");
       }
+      resolve("User '" + doc.username + "' deleted");
     });
   });
 }
