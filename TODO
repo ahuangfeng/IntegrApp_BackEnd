@@ -32,7 +32,11 @@ GET /inscriptionUser/userId
 
 TODO:Alex
 GET /adverts --> la variable rate que tambien se calcule -->fet
-GET /users --> calcular rate tambien ? lo utilizan para debug en swagger
+GET /users --> calcular rate tambien, lo utilizan para debug en swagger -->fet
+
+DELETE /user no funciona
+registered --> {userId, username y status}
+
 
 S'ha de verificar la doc!
 
