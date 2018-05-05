@@ -298,7 +298,7 @@ describe('DELETE /user by id', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql('User deleted');
+        res.body.message.should.be.eql("User 'prova1' deleted");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 2);
@@ -337,7 +337,7 @@ describe('DELETE /user by id', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql('User deleted');
+        res.body.message.should.be.eql("User 'prova2' deleted");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 1);

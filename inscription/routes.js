@@ -125,7 +125,7 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
 
 /**
  * @swagger
- * /inscription/{id}:
+ * /inscription/{idAdvert}:
  *   put:
  *     summary: Resoldre inscripció a un anunci
  *     tags: [Inscription]

@@ -204,7 +204,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "2018-05-05 13:20:30",
+        "date": "2018-09-05 13:20:30",
         "title": "title1",
         "description": "description",
         "places": 2,
@@ -230,7 +230,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "2018-05-05 13:20:00",
+        "date": "2018-09-05 13:20:00",
         "title": "title1",
         "description": "description",
         "places": 2,

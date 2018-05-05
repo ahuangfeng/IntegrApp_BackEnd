@@ -150,14 +150,18 @@ exports.login = function (req, res) {
 exports.deleteUser = function (req, res, next) {
   usersDB.findUserById(req.params.id).then(user => {
     //TODO: antes de eliminar, verificar datos asociados al usuario!
-    usersDB.deleteUser(user.id).then(deletedMessage => {
-      res.send({ message: deletedMessage });
-    }).catch(err => {
-      res.status(400).json({ message: err.message });
-    });
+    if (user) {
+      usersDB.deleteUser(user._id).then(deletedMessage => {
+        res.send({ message: deletedMessage });
+      }).catch(err => {
+        res.status(400).json({ message: err.message });
+      });
+    } else {
+      res.status(400).json({ message: "No existe el usuario" });
+    }
   }).catch(err => {
     res.status(400).json({ message: err.message });
-  })
+  });
 }
 
 exports.modifyUser = function (req, res, next) {

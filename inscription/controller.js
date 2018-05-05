@@ -9,24 +9,24 @@ var advertDB = require('../advert/advertDB');
 
 exports.createInscription = function (req, res, next) {
   var inscriptionData = req.body;
-
-  var verify = verifyFieldsInscription(inscriptionData);
+  console.log("Inscription data", inscriptionData);
+  var verify = verifyFieldsInscription(inscriptionData); //verifica que existe userId y advertId
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
   }
 
-  if (inscriptionData.userId == req.decoded.userID) {
-    res.status(400).json({ message: "No te puedes inscribir a tu propio anuncio" });
-    return;
-  }
+  // if (inscriptionData.userId == req.decoded.userID) {
+  //   res.status(400).json({ message: "No te puedes inscribir a tu propio anuncio" });
+  //   return;
+  // }
 
-  userDB.findUserById(inscriptionData.userId).then(foundUser => {
-    if (foundUser == null) {
+  userDB.findUserById(inscriptionData.userId).then(found => {
+    if (!found) {
       res.status(400).json({ message: "Este userId no existe." });
     } else {
-      advertDB.findAdvertById(inscriptionData.advertId).then(foundAdvert => {
-        if (foundAdvert == null) {
+      advertDB.findAdvertById(inscriptionData.advertId).then(found => {
+        if (!found) {
           res.status(400).json({ message: "Este advertId no existe." });
         } else {
           inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, inscriptionData.advertId).then(
@@ -56,7 +56,6 @@ exports.createInscription = function (req, res, next) {
               }
             }
           );
-
         }
       }).catch(err => {
         res.status(400).json({ message: "Error en verificación de identificador de advert: " + err.message });
@@ -71,7 +70,7 @@ countAcceptedUsers = function (advert) {
   var count = 0;
   var regist = JSON.parse(JSON.stringify(advert.registered));
   for (var i = 0; i < regist.length; i++) {
-    if(regist[i].status == 'accepted') {
+    if (regist[i].status == 'accepted') {
       count = count + 1;
     }
   }
@@ -86,6 +85,7 @@ exports.getInscriptions = function (req, res, next) {
     inscriptionDB.findInscriptionsAdvert(req.params.advertId).then(data => {
       res.send(data);
     }).catch(err => {
+      // console.log("EO:", err);
       res.status(400).send(err);
     });
   } else {
@@ -117,7 +117,7 @@ exports.solveInscriptionUser = function (req, res, next) {
   }
 
   userDB.findUserById(inscriptionData.userId).then(user => {
-    
+
     advertDB.findAdvertById(req.params.id).then(advert => {
       inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
 
@@ -126,7 +126,7 @@ exports.solveInscriptionUser = function (req, res, next) {
         }
 
         else {
-          
+
           inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
             res.send(inscription);
           }).catch(err => {
@@ -154,7 +154,6 @@ verifyFieldsInscription = function (inscriptionData) {
   if (!inscriptionData.userId || !inscriptionData.advertId) {
     return { success: false, message: "Faltan datos obligatorios: userId, advertId" };
   }
-
   return { success: true };
 }
 

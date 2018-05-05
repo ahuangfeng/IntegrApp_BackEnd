@@ -3,6 +3,7 @@ var models = require('./models');
 
 var Advert = mongoose.model('Advert', models.AdvertSchema);
 var usersDB = require('../users/usersDB');
+var inscriptionDB = require('../inscription/inscriptionDB');
 
 exports.Advert = Advert;
 exports.saveAdvert = function (advertData) {
@@ -136,25 +137,28 @@ exports.getAdvert = function (types) {
 
 addUsersToAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
-    var advertArray = [];
-    var itemsProcessed = 0;
-    adverts.forEach((item, index, array) => {
-      var advertToSent = JSON.parse(JSON.stringify(item));
-
-      usersDB.findUserById(item.userId).then(user => {
-        advertToSent['user'] = JSON.parse(JSON.stringify(user));
-        if (user) {
-          advertToSent['user'].password = undefined;
-        }
-        advertArray.push(advertToSent);
-        itemsProcessed++;
-        if (itemsProcessed === array.length) {
-          resolve(advertArray);
-        }
-      }).catch(err => {
-        reject(err);
+    if (adverts.length > 0) {
+      var advertArray = [];
+      var itemsProcessed = 0;
+      adverts.forEach((item, index, array) => {
+        var advertToSent = JSON.parse(JSON.stringify(item));
+        usersDB.findUserById(item.userId).then(user => {
+          advertToSent['user'] = JSON.parse(JSON.stringify(user));
+          if (user) {
+            advertToSent['user'].password = undefined;
+          }
+          advertArray.push(advertToSent);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            resolve(advertArray);
+          }
+        }).catch(err => {
+          reject(err);
+        });
       });
-    });
+    } else {
+      resolve(adverts);
+    }
   });
 }
 
@@ -175,6 +179,23 @@ exports.solveInscriptionAdvertUser = function(idAdvert, idUser, newStatus) {
         });
     })
 }
+// addRegisteredUserToAdvert = function(adverts){
+//   return new Promise((resolve,reject) => {
+//     if(adverts > 0){
+//       var copyAdverts = JSON.parse(JSON.stringify(adverts));
+//       copyAdverts.forEach(element => {
+//         inscriptionDB.findInscriptionsAdvert(element._id).then(inscriptions => {
+//           var inscr = {}
+//           element['registered'] = inscriptions
+//         }).catch(err => {
+//           console.error("Got an error getting registered user To adverts", err);
+//         });
+//       });
+//     }else{
+//       resolve(adverts);
+//     }
+//   });
+// }
 
 exports.findAdvertByIdUser = function (userId) {
   return new Promise(function (resolve, reject) {
@@ -191,9 +212,7 @@ exports.findAdvertByIdUser = function (userId) {
 exports.addRegisteredUser = function (advertId, user, state) {
   var register = { userId: user._id, username: user.username, status: state };
   return new Promise(function (resolve, reject) {
-    Advert.findOne({
-      _id: advertId
-    }, function (err, advert) {
+    Advert.findOne({ _id: advertId }, function (err, advert) {
       if (err) {
         console.log("Error finding advert", advertId);
         reject(err);

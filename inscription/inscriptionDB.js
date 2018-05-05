@@ -1,8 +1,5 @@
-
-
 var mongoose = require('mongoose');
 var models = require('./models');
-var advertDB = require('../advert/advertDB');
 
 /**
  * @swagger
@@ -23,47 +20,49 @@ exports.saveInscription = function (inscriptionData) {
         resolve(inscription);
       })
       .catch(err => {
+        console.log("Error saving Inscription: " + err.message);
         reject(err);
       })
   });
 }
 
 exports.findInscriptionsAdvert = function (idAdvert) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({advertId: idAdvert}, function (err, inscriptions) {
-        if (err) {
-          console.log("Error finding:", err);
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ advertId: idAdvert }, function (err, inscriptions) {
+      if (err) {
+        console.log("Error finding:", err);
+        reject(err)
+      }
+      resolve(inscriptions);
+    });
+  })
+}
 
-  exports.findInscriptionsUser = function (idUser) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({userId: idUser}, function (err, inscriptions) {
-        if (err) {
-          console.log("Error finding:", err);
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
+exports.findInscriptionsUser = function (idUser) {
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ userId: idUser }, function (err, inscriptions) {
+      if (err) {
+        console.log("Error finding:", err);
+        reject(err)
+      }
+      resolve(inscriptions);
+    });
+  })
+}
 
-  exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
-    return new Promise(function (resolve, reject) {
-      Inscription.find({userId: idUser, advertId: idAdvert}, function (err, inscriptions) {
-        if(err) {
-          reject(err)
-        }
-        resolve(inscriptions);
-      });
-    })
-  }
+exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
+  return new Promise(function (resolve, reject) {
+    Inscription.find({ userId: idUser, advertId: idAdvert }, function (err, inscriptions) {
+      if (err) {
+        reject(err)
+      }
+      resolve(inscriptions);
+    });
+  })
+}
 
-  exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
+exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
+  return new Promise(function (resolve, reject) {
     return new Promise(function (resolve, reject) {
       advertDB.solveInscriptionAdvertUser(idAdvert, idUser, newStatus).then(advert => {
 
@@ -81,7 +80,8 @@ exports.findInscriptionsAdvert = function (idAdvert) {
           reject({ message: "Error solving inscription" });
         }
       })
-      
-      
+
+
     });
-  }
+  });
+}
