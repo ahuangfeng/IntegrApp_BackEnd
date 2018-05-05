@@ -39,8 +39,10 @@ db_tools.DBConnectMongoose()
     var adverts = require('./advert');
     var inscriptions = require('./inscription');
     var swagger = require('./swagger/swagger');
+    var chat = require('./chat');
 
     app.use('/', express.static(__dirname + '/mainPage'));
+    app.use('/chat',express.static(__dirname + '/chat/public'));
 
     app.get('/api', function (req, res) {
       res.send("IntegrApp API Deployed!");
@@ -52,6 +54,7 @@ db_tools.DBConnectMongoose()
     forums.assignRoutes(app);
     adverts.assignRoutes(app);
     inscriptions.assignRoutes(app);
+    chat.assignRoutes(app);
 
     var port = process.env.PORT || 8080;
     app.listen(port);
