@@ -25,7 +25,6 @@ exports.createAdvert = function (req, res, next) {
 }
 
 exports.getAdverts = function (req, res, next) { 
-  //TODO: pasarte el user en atributo
   var types = req.query.type;
   var typesToGet = [];
   if (types != undefined) {

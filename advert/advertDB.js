@@ -136,25 +136,28 @@ exports.getAdvert = function (types) {
 
 addUsersToAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
-    var advertArray = [];
-    var itemsProcessed = 0;
-    adverts.forEach((item, index, array) => {
-      var advertToSent = JSON.parse(JSON.stringify(item));
-
-      usersDB.findUserById(item.userId).then(user => {
-        advertToSent['user'] = JSON.parse(JSON.stringify(user));
-        if (user) {
-          advertToSent['user'].password = undefined;
-        }
-        advertArray.push(advertToSent);
-        itemsProcessed++;
-        if (itemsProcessed === array.length) {
-          resolve(advertArray);
-        }
-      }).catch(err => {
-        reject(err);
+    if(adverts.length > 0){
+      var advertArray = [];
+      var itemsProcessed = 0;
+      adverts.forEach((item, index, array) => {
+        var advertToSent = JSON.parse(JSON.stringify(item));
+        usersDB.findUserById(item.userId).then(user => {
+          advertToSent['user'] = JSON.parse(JSON.stringify(user));
+          if (user) {
+            advertToSent['user'].password = undefined;
+          }
+          advertArray.push(advertToSent);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            resolve(advertArray);
+          }
+        }).catch(err => {
+          reject(err);
+        });
       });
-    });
+    }else{
+      resolve(adverts);
+    }
   });
 }
 
