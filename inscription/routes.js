@@ -73,9 +73,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           type: array
- *           items:
- *             $ref: "#/definitions/Inscription"
+ *           $ref: "#/definitions/ResponseGetInscriptions"
  *       400:
  *         description: Error
  *         schema:
