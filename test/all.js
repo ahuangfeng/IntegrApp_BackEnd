@@ -45,5 +45,8 @@ describe('All tests', function() {
   describe('Advert', function(){
     require('./advert');
   });
+  describe('Report', function(){
+    require('./report');
+  });
 
 })
