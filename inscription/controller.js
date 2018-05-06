@@ -62,11 +62,30 @@ exports.getInscriptions = function (req, res, next) {
   if (!req.params.advertId) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un advert." });
   } else if (req.params.advertId.match(/^[0-9a-fA-F]{24}$/)) {
-    inscriptionDB.findInscriptionsAdvert(req.params.advertId).then(data => {
-      res.send(data);
+    var result = {}
+    var advertId = req.params.advertId;
+    advertDB.findAdvertById(advertId).then(advert => {
+      result['advert'] = advert;
+      return inscriptionDB.findInscriptionsAdvert(advertId);
+    }).then(data => {
+      var itemsProcessed = 0;
+      var inscriptionProcessed = [];
+      data.forEach((item, index, array) => {
+        var inscription = JSON.parse(JSON.stringify(item));
+        userDB.findUserById(inscription.userId).then(user => {
+          inscription['user'] = user;
+          inscriptionProcessed.push(inscription);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            result['inscriptions'] = inscriptionProcessed;
+            res.send(result);
+          }
+        }).catch(err => {
+          res.status(400).json(err);
+        });
+      });
     }).catch(err => {
-      // console.log("EO:", err);
-      res.status(400).send(err);
+      res.status(400).json({ message: "Ha ocurrido un error: "+ err.message});
     });
   } else {
     res.status(400).json({ message: "advertId invalid" });
