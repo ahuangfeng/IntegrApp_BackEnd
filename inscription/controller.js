@@ -70,20 +70,25 @@ exports.getInscriptions = function (req, res, next) {
     }).then(data => {
       var itemsProcessed = 0;
       var inscriptionProcessed = [];
-      data.forEach((item, index, array) => {
-        var inscription = JSON.parse(JSON.stringify(item));
-        userDB.findUserById(inscription.userId).then(user => {
-          inscription['user'] = user;
-          inscriptionProcessed.push(inscription);
-          itemsProcessed++;
-          if (itemsProcessed === array.length) {
-            result['inscriptions'] = inscriptionProcessed;
-            res.send(result);
-          }
-        }).catch(err => {
-          res.status(400).json(err);
+      if(data.length > 0){
+        data.forEach((item, index, array) => {
+          var inscription = JSON.parse(JSON.stringify(item));
+          userDB.findUserById(inscription.userId).then(user => {
+            inscription['user'] = user;
+            inscriptionProcessed.push(inscription);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              result['inscriptions'] = inscriptionProcessed;
+              res.send(result);
+            }
+          }).catch(err => {
+            res.status(400).json(err);
+          });
         });
-      });
+      }else{
+        result['inscriptions'] = [];
+        res.send(result);
+      }
     }).catch(err => {
       res.status(400).json({ message: "Ha ocurrido un error: "+ err.message});
     });
