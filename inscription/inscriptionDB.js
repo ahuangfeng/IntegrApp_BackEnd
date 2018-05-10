@@ -26,6 +26,17 @@ exports.saveInscription = function (inscriptionData) {
   });
 }
 
+exports.deleteInscription = function(idAdvert) {
+  return new Promise(function(resolve, reject){
+    Inscription.findByIdAndRemove(idAdvert, function(err, document){
+      if(err){
+        reject(err);
+      }
+      resolve(document);
+    });
+  });
+}
+
 exports.findInscriptionsAdvert = function (idAdvert) {
   return new Promise(function (resolve, reject) {
     Inscription.find({ advertId: idAdvert }, function (err, inscriptions) {

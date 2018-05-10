@@ -70,7 +70,7 @@ exports.getInscriptions = function (req, res, next) {
     }).then(data => {
       var itemsProcessed = 0;
       var inscriptionProcessed = [];
-      if(data.length > 0){
+      if (data.length > 0) {
         data.forEach((item, index, array) => {
           var inscription = JSON.parse(JSON.stringify(item));
           userDB.findUserById(inscription.userId).then(user => {
@@ -85,12 +85,12 @@ exports.getInscriptions = function (req, res, next) {
             res.status(400).json(err);
           });
         });
-      }else{
+      } else {
         result['inscriptions'] = [];
         res.send(result);
       }
     }).catch(err => {
-      res.status(400).json({ message: "Ha ocurrido un error: "+ err.message});
+      res.status(400).json({ message: "Ha ocurrido un error: " + err.message });
     });
   } else {
     res.status(400).json({ message: "advertId invalid" });
@@ -147,10 +147,32 @@ exports.solveInscriptionUser = function (req, res, next) {
   })
 }
 
+exports.deleteInscription = function (req, res, next) {
+  // notImplemented(req, res, next);
+
+  if(!req.params.id){
+    res.status(400).json({ message: "Es necesita un identificador per a trobar una inscripció." });
+    return;
+  }
+
+  if(!req.params.id.match(/^[0-9a-fA-F]{24}$/)){
+    res.status(400).json( { message: "Id de inscripció invàlida"});
+    return;
+  }else{
+    inscriptionDB.deleteInscription(req.params.id).then(document => {
+      // res.send(document); //TODO: el delete Inscription --> depen de com estigui la implementació de 
+      return advertDB.deleteInscriptionOfAdvert(document._id, document.advertId);
+    }).then(resultat => {
+      res.send(document);
+    }).catch(err => {
+      res.status(400).json({ message: err.message});
+    }); 
+  }
+}
+
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
 }
-
 
 verifyFieldsInscription = function (inscriptionData) {
   if (!inscriptionData.userId || !inscriptionData.advertId) {

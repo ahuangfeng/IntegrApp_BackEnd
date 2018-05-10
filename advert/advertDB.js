@@ -135,6 +135,14 @@ exports.getAdvert = function (types) {
   })
 }
 
+exports.deleteInscriptionOfAdvert = function (inscriptionId, advertId) {
+  return new Promise((resolve, reject) => {
+    // update({_id: user._id}, {$unset: {field: 1 }}, callback);
+    // TODO: eliminar inscription de advert
+    resolve("hola");
+  });
+}
+
 addUsersToAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
     if (adverts.length > 0) {

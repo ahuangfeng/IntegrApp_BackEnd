@@ -123,7 +123,7 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
 
 /**
  * @swagger
- * /inscription/{idAdvert}:
+ * /inscription/{id}:
  *   put:
  *     summary: Resoldre inscripció a un anunci
  *     tags: [Inscription]
@@ -132,7 +132,7 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *     consumes:
  *       - "application/json"
  *     parameters:
- *       - name: idAdvert
+ *       - name: id
  *         in: path
  *         type: string
  *         required: true
@@ -158,5 +158,40 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.put('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.solveInscriptionUser);
+
+
+/**
+ * @swagger
+ * /inscription/{id}:
+ *   delete:
+ *     summary: Eliminar una inscripció a un anunci
+ *     tags: [Not Implemented]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de la inscripció
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Inscription"
+ *       400:
+ *         description: No s'ha trobat la inscripció
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.delete('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.deleteInscription);
 
 exports.apiRoutes = apiRoutes;
