@@ -160,41 +160,4 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
 apiRoutes.put('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.solveInscriptionUser);
 
 
-<<<<<<< HEAD
-/**
- * @swagger
- * /inscription/{id}:
- *   delete:
- *     summary: Eliminar una inscripció a un anunci
- *     tags: [Not Implemented]
- *     security:
- *       - user: []
- *     consumes:
- *       - "application/json"
- *     parameters:
- *       - name: id
- *         in: path
- *         type: string
- *         required: true
- *         description: Id de la inscripció
- *     produces:
- *       - "application/json"
- *     responses:
- *       200:
- *         description: Operació executada amb éxit
- *         schema:
- *           $ref: "#/definitions/Inscription"
- *       400:
- *         description: No s'ha trobat la inscripció
- *         schema:
- *           $ref: "#/definitions/Error"
- *       403:
- *         description: No porta el token en la request
- *         schema:
- *           $ref: "#/definitions/LoginFailed"
- */
-apiRoutes.delete('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.deleteInscription);
-
-=======
->>>>>>> sergidevelopment
 exports.apiRoutes = apiRoutes;

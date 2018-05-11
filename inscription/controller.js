@@ -93,38 +93,6 @@ countAcceptedUsers = function (advert) {
 exports.getAdvertWithInscriptions = function (req, res, next) {
   if (!req.params.advertId) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un advert." });
-<<<<<<< HEAD
-  } else if (req.params.advertId.match(/^[0-9a-fA-F]{24}$/)) {
-    var result = {}
-    var advertId = req.params.advertId;
-    advertDB.findAdvertById(advertId).then(advert => {
-      result['advert'] = advert;
-      return inscriptionDB.findInscriptionsAdvert(advertId);
-    }).then(data => {
-      var itemsProcessed = 0;
-      var inscriptionProcessed = [];
-      if (data.length > 0) {
-        data.forEach((item, index, array) => {
-          var inscription = JSON.parse(JSON.stringify(item));
-          userDB.findUserById(inscription.userId).then(user => {
-            inscription['user'] = user;
-            inscriptionProcessed.push(inscription);
-            itemsProcessed++;
-            if (itemsProcessed === array.length) {
-              result['inscriptions'] = inscriptionProcessed;
-              res.send(result);
-            }
-          }).catch(err => {
-            res.status(400).json(err);
-          });
-        });
-      } else {
-        result['inscriptions'] = [];
-        res.send(result);
-      }
-    }).catch(err => {
-      res.status(400).json({ message: "Ha ocurrido un error: " + err.message });
-=======
   } 
   else if (req.params.advertId.match(/^[0-9a-fA-F]{24}$/)) {
     advertDB.findAdvertById(req.params.advertId).then(advert => {
@@ -135,7 +103,6 @@ exports.getAdvertWithInscriptions = function (req, res, next) {
       });
     }).catch(err => {
     res.status(400).send(err);
->>>>>>> sergidevelopment
     });
   }
   else {
