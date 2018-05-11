@@ -55,7 +55,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  * @swagger
  * /inscription/{advertId}:
  *   get:
- *     summary: Retorna les inscripcions a l'anunci
+ *     summary: Retorna l'anunci amb les inscripcions
  *     tags: [Inscription]
  *     security:
  *       - user: []
@@ -85,7 +85,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *         schema:
  *           $ref: "#/definitions/InscriptionFailed"
  */
-apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptions);
+apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getAdvertWithInscriptions);
 
 /**
  * @swagger
@@ -160,5 +160,6 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.put('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.solveInscriptionUser);
+
 
 exports.apiRoutes = apiRoutes;

@@ -10,6 +10,7 @@ var models = require('./models');
 
 // Register the schema
 var Inscription = mongoose.model('Inscription', models.InscriptionSchema);
+var advertDB = require('../advert/advertDB');
 
 exports.Inscription = Inscription;
 exports.saveInscription = function (inscriptionData) {
@@ -52,7 +53,7 @@ exports.findInscriptionsUser = function (idUser) {
 
 exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
   return new Promise(function (resolve, reject) {
-    Inscription.find({ userId: idUser, advertId: idAdvert }, function (err, inscriptions) {
+    Inscription.findOne({ userId: idUser, advertId: idAdvert }, function (err, inscriptions) {
       if (err) {
         reject(err)
       }
@@ -62,26 +63,22 @@ exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
 }
 
 exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
-  return new Promise(function (resolve, reject) {
     return new Promise(function (resolve, reject) {
       advertDB.solveInscriptionAdvertUser(idAdvert, idUser, newStatus).then(advert => {
-
+        Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
+          $set: {
+            status: newStatus
+          }
+        }, { new: true }, function (err, doc) {
+          if (!err) {
+            resolve(doc);
+          } else {
+            reject({ message: "Error solving inscription" });
+          }
+        })
       }).catch(err => {
         reject(err);
       })
-      Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
-        $set: {
-          status: newStatus
-        }
-      }, { new: true }, function (err, doc) {
-        if (!err) {
-          resolve(doc);
-        } else {
-          reject({ message: "Error solving inscription" });
-        }
-      })
-
-
+      
     });
-  });
 }

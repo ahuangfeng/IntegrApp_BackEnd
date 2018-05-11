@@ -91,7 +91,7 @@ exports.modifyAdvert = function (req, res, next) {
     res.status(400).json({ message: verify.message });
     return;
   }
-
+  
   advertDB.findAdvertById(req.params.id).then(advert => {
     advertDB.modifyAdvert(advert, advertData).then(modifiedMessage => {
       res.send({ message: modifiedMessage });

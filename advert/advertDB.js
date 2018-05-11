@@ -162,6 +162,37 @@ addUsersToAdvert = function (adverts) {
   });
 }
 
+exports.getAdvertsWithRegistered = function(advert) {
+  return new Promise(function (resolve, reject) {
+    var arrayNew = [];
+    var advertToSent = JSON.parse(JSON.stringify(advert));
+    inscriptionDB.findInscriptionsAdvert(advert._id).then(ins => {
+      if(ins.length==0) {
+        advertToSent['registered'] = JSON.parse(JSON.stringify(arrayNew));
+        resolve(advertToSent);
+      }
+      else {
+        var itemsProcessed = 0;
+        ins.forEach((item, index, array) => {
+        usersDB.findUserById(item.userId).then(user => {
+          var aux = {"userId" : item.userId, "username" : user.username, "status" : item.status};
+          arrayNew.push((aux));
+          ++itemsProcessed;
+          if(itemsProcessed === array.length) {
+            advertToSent['registered'] = JSON.parse(JSON.stringify(arrayNew));
+            resolve(advertToSent);
+          }
+        }).catch(err => {
+        reject(err);
+        });
+      });
+    }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
+
 exports.solveInscriptionAdvertUser = function(idAdvert, idUser, newStatus) {
   return new Promise(function (resolve, reject) {
       Advert.findOneAndUpdate({_id: idAdvert, "registered.userId": idUser}, {
@@ -171,7 +202,6 @@ exports.solveInscriptionAdvertUser = function(idAdvert, idUser, newStatus) {
       }, { new: true },
         function (err, doc) {
           if (!err) {
-            console.log(doc);
             resolve(doc);
           } else {
             reject({ message: "Error modifying advert" });
