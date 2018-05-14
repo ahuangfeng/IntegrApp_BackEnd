@@ -149,10 +149,10 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  // advertDB.deleteAdvertByUserId(req.params.id).then(ho => res.send(ho)).catch(err => res.send(err))
   usersDB.deleteUser(req.params.id).then(user => {
     return advertDB.deleteAdvertByUserId(user._id);
   }).then(deletedMessage => {
+    // TODO: delte forums!
     res.send({ message: "Usuario eliminado y anuncios eliminados."});
   }).catch(err => {
     res.status(400).json({ message: err.message});

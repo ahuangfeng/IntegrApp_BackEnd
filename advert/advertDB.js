@@ -33,21 +33,19 @@ exports.deleteAdvert = function (id) {
 
 exports.deleteAdvertByUserId = function (userId) {
   return new Promise(function (resolve, reject) {
-    Advert.find({userId: userId}, function(err, adverts){
-      console.log("adverts:", adverts, userId);
-      if(err) reject(err);
-      if(adverts.length > 0){
+    Advert.find({ userId: userId }, function (err, adverts) {
+      if (err) reject(err);
+      if (adverts.length > 0) {
         var itemsProcessed = 0;
         adverts.forEach((element, index, array) => {
           inscriptionDB.deleteInscriptionByAdvertId(element._id).then(cb => {
-            console.log("Callback");
             itemsProcessed++;
-            if(itemsProcessed == array.length){
-              Advert.deleteMany( { userId: userId }, function(err){
-                if(err){
+            if (itemsProcessed == array.length) {
+              Advert.deleteMany({ userId: userId }, function (err) {
+                if (err) {
                   reject(err);
-                }else{
-                  resolve({message: "Adverts deleted"});
+                } else {
+                  resolve({ message: "Adverts deleted" });
                 }
               });
             }
@@ -55,7 +53,7 @@ exports.deleteAdvertByUserId = function (userId) {
             reject(err);
           });
         })
-      }else{
+      } else {
         resolve([]);
       }
     });
