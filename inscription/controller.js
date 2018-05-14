@@ -110,6 +110,7 @@ exports.getAdvertWithInscriptions = function (req, res, next) {
   }
 }
 
+
 exports.getInscriptionsUser = function (req, res, next) {
   if (!req.params.userId) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar l'usuari." });

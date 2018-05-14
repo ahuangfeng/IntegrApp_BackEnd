@@ -170,6 +170,59 @@ addUsersToAdvert = function (adverts) {
   });
 }
 
+getRegistereds = function(advert) {
+  return new Promise(function (resolve, reject) {
+    var inscriptionsToSent = [];
+    var arrayNew = [];
+    inscriptionDB.findInscriptionsAdvert(advert._id).then(ins => {
+      if(ins.length==0) {
+        inscriptionsToSent = JSON.parse(JSON.stringify(arrayNew));
+        resolve(inscriptionsToSent);
+      }
+      else {
+        var itemsProcessed = 0;
+        ins.forEach((item, index, array) => {
+          usersDB.findUserById(item.userId).then(user => {
+            var aux = {"userId" : item.userId, "username" : user.username, "status" : item.status};
+            arrayNew.push((aux));
+            ++itemsProcessed;
+            if(itemsProcessed === array.length) {
+              advertToSent = JSON.parse(JSON.stringify(arrayNew));
+              resolve(advertToSent);
+            }
+          }).catch(err => {
+            reject(err);
+          });
+        });
+      }
+    });
+  });
+}
+
+exports.getFullAdvert = function(adverts) {
+  return new Promise((resolve, reject) => {
+    if (adverts.length > 0) {
+      var advertArray = [];
+      var itemsProcessed = 0;
+      adverts.forEach((item, index, array) => {
+        var advertToSent = JSON.parse(JSON.stringify(item));
+        getRegistereds(item).then(regs => {
+          advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
+          advertArray.push(advertToSent);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            resolve(advertArray);
+          }
+        }).catch(err => {
+          reject(err);
+        });
+      });
+    } else {
+      resolve(adverts);
+    }
+  });
+}
+
 exports.getAdvertsWithRegistered = function(advert) {
   return new Promise(function (resolve, reject) {
     var arrayNew = [];
