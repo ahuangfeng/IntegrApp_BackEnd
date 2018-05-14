@@ -3,7 +3,6 @@
  */
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
-var chatDB = require('./chatDB');
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });

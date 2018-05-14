@@ -42,19 +42,20 @@ db_tools.DBConnectMongoose()
     var chat = require('./chat');
 
     app.use('/', express.static(__dirname + '/mainPage'));
-    app.use('/chat',express.static(__dirname + '/chat/public'));
-
+    // app.use('/socket.io', express.static('node_modules/socket.io/index.js'))
+    
     app.get('/api', function (req, res) {
       res.send("IntegrApp API Deployed!");
     });
-
+    
     swagger.swaggerInit(app);
-
+    
     users.assignRoutes(app);
     forums.assignRoutes(app);
     adverts.assignRoutes(app);
     inscriptions.assignRoutes(app);
     chat.assignRoutes(app);
+    app.use('/chat',express.static(__dirname + '/chat/public'));
 
     var port = process.env.PORT || 8080;
     app.listen(port);
