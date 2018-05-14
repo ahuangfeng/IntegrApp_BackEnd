@@ -81,10 +81,13 @@ exports.getAdvertsUser = function(req,res,next) {
     if(!adverts) {
       res.status(400).json({ message: "Error with user"});
     } else {
-      res.send(adverts);
+      advertDB.getFullAdvert(adverts).then(full => {
+        res.send(full);
+      }).catch(err => {
+        res.status(400).send(err);
+      });
     }
   }).catch(err => {
-    console.log("Error", err);
     res.status(400).send(err);
   });
 }
