@@ -204,9 +204,6 @@ exports.deleteInscription = function (req, res, next) {
     return;
   }else{
     inscriptionDB.deleteInscription(req.params.id).then(document => {
-      // res.send(document); //TODO: el delete Inscription --> depen de com estigui la implementació de 
-      return advertDB.deleteInscriptionOfAdvert(document._id, document.advertId);
-    }).then(resultat => {
       res.send(document);
     }).catch(err => {
       res.status(400).json({ message: err.message});

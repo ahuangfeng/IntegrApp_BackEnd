@@ -37,7 +37,7 @@ exports.deleteUser = function (id) {
       if(err){
         reject("Se ha producido un error al eliminar usuario");
       }
-      resolve("User '" + doc.username + "' deleted");
+      resolve(doc);
     });
   });
 }
