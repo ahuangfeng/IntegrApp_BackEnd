@@ -37,6 +37,9 @@ exports.getForums = function (req, res, next) {
   forumDB.getForums(typesToGet).then(forums => {
     if (forums) {
       addUsers(forums).then(forumsWithUser => {
+        forumsWithUser.sort(function (a, b) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
         res.send(forumsWithUser);
       }).catch(err => {
         res.status(400).json({ message: err.message });
@@ -85,6 +88,9 @@ exports.getFullForum = function (req, res, next) {
         responseToSend['forum'] = forum;
         forumDB.getForumEntries(forum.id).then(entries => {
           responseToSend['entries'] = entries;
+          responseToSend['entries'].sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
           res.send(responseToSend);
         }).catch(err => {
           res.status(400).json(err);
