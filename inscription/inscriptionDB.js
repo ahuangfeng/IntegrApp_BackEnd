@@ -39,10 +39,9 @@ exports.deleteInscriptionByAdvertId = function (advertId){
   });
 }
 
-//TODO: WTF?
-exports.deleteInscription = function (idAdvert) {
+exports.deleteInscription = function (idInscription) {
   return new Promise(function (resolve, reject) {
-    Inscription.findByIdAndRemove(idAdvert, function (err, document) {
+    Inscription.findByIdAndRemove(idInscription, function (err, document) {
       if (err) {
         reject(err);
       }
@@ -82,6 +81,17 @@ exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
         reject(err)
       }
       resolve(inscriptions);
+    });
+  })
+}
+
+exports.existsInscription = function (idInscription) {
+  return new Promise(function (resolve, reject) {
+    Inscription.findOne({ _id: idInscription }, function (err, inscription) {
+      if (err) {
+        reject(err)
+      }
+      resolve(inscription);
     });
   })
 }

@@ -202,12 +202,22 @@ exports.deleteInscription = function (req, res, next) {
   if(!req.params.id.match(/^[0-9a-fA-F]{24}$/)){
     res.status(400).json( { message: "Id de inscripció invàlida"});
     return;
-  }else{
-    inscriptionDB.deleteInscription(req.params.id).then(document => {
-      res.send(document);
+  }
+  else {
+    inscriptionDB.existsInscription(req.params.id).then(ins => {
+      if(ins != null) {
+        inscriptionDB.deleteInscription(req.params.id).then(document => {
+          res.send({message: "Inscripció eliminada", document});
+        }).catch(err => {
+          res.status(400).json({ message: err.message});
+        }); 
+      }
+      else {
+        res.status(400).json({ message: "Inscription does not exist"});
+      } 
     }).catch(err => {
       res.status(400).json({ message: err.message});
-    }); 
+    });  
   }
 }
 
