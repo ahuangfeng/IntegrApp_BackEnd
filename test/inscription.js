@@ -235,7 +235,6 @@ describe('GET /inscription/{advertId}', function () {
       .set('x-access-token', configTest.token)
       .end(function (err, res) {
         res.should.have.status(200);
-        console.log("RER", res.body) // FIXME: Si nomes es un, envies un object?
         res.body.should.be.an('array');
         expect(res.body.length,1);
         res.body[0].should.have.property("userId");

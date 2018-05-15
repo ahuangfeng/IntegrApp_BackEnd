@@ -90,13 +90,13 @@ countAcceptedUsers = function (advert) {
   
 }
 
-exports.getAdvertWithInscriptions = function (req, res, next) {
+exports.getInscriptionsAdvert = function (req, res, next) {
   if (!req.params.advertId) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un advert." });
   } 
   else if (req.params.advertId.match(/^[0-9a-fA-F]{24}$/)) {
     advertDB.findAdvertById(req.params.advertId).then(advert => {
-      advertDB.getAdvertsWithRegistered(advert).then(data => {
+      inscriptionDB.findInscriptionsAdvert(advert._id).then(data => {
         res.send(data);
       }).catch(err => {
         res.status(400).send(err);
