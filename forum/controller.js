@@ -165,6 +165,7 @@ createForumDocument = function (forumData, decoded) {
 createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
+  forumEntry['username'] = decoded.username;
   forumEntry['createdAt'] = new Date().toLocaleString();
   forumEntry['content'] = entry.content;
   forumEntry['forumId'] = entry.forumId;

@@ -70,6 +70,8 @@ var ForumSchema = new mongoose.Schema({
 *     properties:
 *       userId:
 *         type: string
+*       username:
+*         type: string
 *       createdAt:
 *         type: string
 *       content:
