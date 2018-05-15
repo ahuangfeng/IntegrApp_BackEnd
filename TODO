@@ -33,10 +33,9 @@ GET /inscriptionUser/userId
 TODO:Alex
 DELETE /inscription
 borrar todos los forums de un user al borrar user
-cuando borrar advert --> borrar inscription
+cuando borrar advert --> borrar inscription --> fet
 GET /fullForum ordenar por createdAt --> done?
 
-hacer persistente en POST /commentForum
 
 
 TODO: 

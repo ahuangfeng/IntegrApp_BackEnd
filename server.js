@@ -38,6 +38,7 @@ db_tools.DBConnectMongoose()
     var forums = require('./forum');
     var adverts = require('./advert');
     var inscriptions = require('./inscription');
+    var reports = require('./report');
     var swagger = require('./swagger/swagger');
 
     app.use('/', express.static(__dirname + '/mainPage'));
@@ -52,6 +53,7 @@ db_tools.DBConnectMongoose()
     forums.assignRoutes(app);
     adverts.assignRoutes(app);
     inscriptions.assignRoutes(app);
+    reports.assignRoutes(app);
 
     var port = process.env.PORT || 8080;
     app.listen(port);
