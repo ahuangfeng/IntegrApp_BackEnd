@@ -3,32 +3,35 @@ const routesChat = require('./routes');
 
 exports.assignRoutes = function (app,server) {
   var io = require("socket.io").listen(server);
-  var nicknames = {};
+  var connectedUsers = {};
 
   io.sockets.on('connection', function (socket) {
-    socket.on('send message', function (data) {
-      io.sockets.emit('new message', { msg: data, nick: socket.nickname });
+    socket.on('send message', function (data, to) {
+      console.log("SENTD MESSAGE: ", data, to);
+      io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
+      //TODO: Guardar mensaje en BD
+      //TODO: Si el to no esta en connectedUsers --> poner flag de 'new'
     });
 
     socket.on('new user', function (data, callback) {
-      if (data in nicknames) {
+      if (data in connectedUsers) {
         callback(false);
       } else {
         callback(true);
-        socket.nickname = data;
-        nicknames[socket.nickname] = 1;
+        socket.username = data;
+        connectedUsers[socket.username] = 1;
         updateNickNames();
       }
     });
 
     socket.on('disconnect', function (data) {
-      if (!socket.nickname) return;
-      delete nicknames[socket.nickname];
+      if (!socket.username) return;
+      delete connectedUsers[socket.username];
       updateNickNames();
     });
 
     function updateNickNames() {
-      io.sockets.emit('usernames', nicknames);
+      io.sockets.emit('usernames', connectedUsers);
     }
   });
 

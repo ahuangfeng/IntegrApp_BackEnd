@@ -63,7 +63,7 @@
       <div class="col-md-2"></div>
       <div id="chatWrap" class="col-md-6">
         <div class="panel panel-success">
-          <div class="panel-heading">Chat</div>
+          <div id="panelHead" class="panel-heading">Chat</div>
           <div id="chat" class="panel-body"></div>
         </div>
 
@@ -73,6 +73,8 @@
             <span class="input-group-btn">
               <button class="btn btn-lg btn-primary" type="submit">Send</button>
             </span>
+            <select id="select">
+            </select> 
           </form>
         </div>
       </div>
@@ -102,20 +104,21 @@
       var $nickBox = $('#nickname');
       var $users = $('#users');
       var $closeAlert = $('#closeAlert');
-
-
+      var $myNickName = "";
 
       $nickForm.click(function (e) {
         e.preventDefault();
         socket.emit('new user', $nickBox.val(), function (data) {
+          $myNickName = $nickBox.val();
           if (data) {
             $('#nickWrap').hide();
             $('#contentWrap').show();
+            $('#panelHead').append(" " + $myNickName);
           } else {
             $("#login-error").show();
           }
         });
-        $nickBox.val('');
+        // $nickBox.val('');
       });
 
       $closeAlert.click(function (e) {
@@ -124,19 +127,35 @@
 
       $messageForm.submit(function (e) {
         e.preventDefault();
-        if ($messageBox.val() != '') socket.emit('send message', $messageBox.val());
+        if ($messageBox.val() != '') socket.emit('send message', $messageBox.val(), $("#select option:selected").text());
         $messageBox.val('');
       });
 
       socket.on('new message', function (data) {
-        $chat.append('<b>' + data.nick + ":</b> " + data.msg + "<br/>");
+        if(data.to == $nickBox.val() || data.from == $nickBox.val()){
+          $chat.append('<b>' + data.from + ":</b> " + data.msg + "<br/>");
+        } else if ( data.to == 'all'){
+          $chat.append('<b>' + data.from + " - To all:</b> " + data.msg + "<br/>");
+        }
       });
 
       socket.on('usernames', function (data) {
         var html = '';
+        $('#select').find('option')
+          .remove()
+          .end();
+        
         for (var username in data) {
           html += username + '<br/>';
+          $('#select').append($('<option>', {
+            value: username,
+            text: username
+          }));
         }
+        $('#select').append($('<option>', {
+            value: "all",
+            text: "all"
+          }));
         $users.html(html);
       });
 
