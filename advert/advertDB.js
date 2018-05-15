@@ -21,12 +21,16 @@ exports.saveAdvert = function (advertData) {
 
 exports.deleteAdvert = function (id) {
   return new Promise(function (resolve, reject) {
-    Advert.deleteOne({ _id: id }, function (err) {
-      if (!err) {
-        resolve("Advert deleted");
-      } else {
-        reject("Error deleting advert");
-      }
+    inscriptionDB.deleteInscriptionByAdvertId(id).then(cb => {
+      Advert.deleteOne({ _id: id }, function (err) {
+        if (!err) {
+          resolve({message: "Advert deleted"});
+        } else {
+          reject({message: "Error deleting advert"});
+        }
+      });
+    }).catch(err => {
+      reject(err);
     });
   });
 }

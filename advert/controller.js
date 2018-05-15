@@ -53,8 +53,8 @@ exports.getAdverts = function (req, res, next) {
 
 exports.deleteAdvert = function (req, res, next) {
   advertDB.findAdvertById(req.params.id).then(advert => {
-    advertDB.deleteAdvert(advert._id).then(deleted => {
-      res.send({ message: deleted });
+    advertDB.deleteAdvert(advert._id).then(deletedMessage => {
+      res.send({ message: deletedMessage.message });
     }).catch(err => {
       res.status(400).json({ message: err.message });
     })
