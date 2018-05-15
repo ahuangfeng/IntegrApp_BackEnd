@@ -27,10 +27,23 @@ exports.saveInscription = function (inscriptionData) {
   });
 }
 
-exports.deleteInscription = function(idAdvert) {
-  return new Promise(function(resolve, reject){
-    Inscription.findByIdAndRemove(idAdvert, function(err, document){
+exports.deleteInscriptionByAdvertId = function (advertId){
+  return new Promise((resolve, reject) => {
+    Inscription.deleteMany({advertId: advertId}, function(err){
       if(err){
+        reject(err);
+      }else{
+        resolve({message: "Inscriptions deleted"});
+      }
+    });
+  });
+}
+
+//TODO: WTF?
+exports.deleteInscription = function (idAdvert) {
+  return new Promise(function (resolve, reject) {
+    Inscription.findByIdAndRemove(idAdvert, function (err, document) {
+      if (err) {
         reject(err);
       }
       resolve(document);
@@ -74,22 +87,22 @@ exports.existsInscriptionUserAdvert = function (idUser, idAdvert) {
 }
 
 exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
-    return new Promise(function (resolve, reject) {
-      advertDB.solveInscriptionAdvertUser(idAdvert, idUser, newStatus).then(advert => {
-        Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
-          $set: {
-            status: newStatus
-          }
-        }, { new: true }, function (err, doc) {
-          if (!err) {
-            resolve(doc);
-          } else {
-            reject({ message: "Error solving inscription" });
-          }
-        })
-      }).catch(err => {
-        reject(err);
+  return new Promise(function (resolve, reject) {
+    advertDB.solveInscriptionAdvertUser(idAdvert, idUser, newStatus).then(advert => {
+      Inscription.findOneAndUpdate({ userId: idUser, advertId: idAdvert }, {
+        $set: {
+          status: newStatus
+        }
+      }, { new: true }, function (err, doc) {
+        if (!err) {
+          resolve(doc);
+        } else {
+          reject({ message: "Error solving inscription" });
+        }
       })
-      
-    });
+    }).catch(err => {
+      reject(err);
+    })
+
+  });
 }

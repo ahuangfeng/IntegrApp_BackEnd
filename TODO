@@ -31,17 +31,12 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-GET /adverts --> la variable rate que tambien se calcule -->fet
-GET /users --> calcular rate tambien, lo utilizan para debug en swagger -->fet
-DELETE /user no funciona --> fet
-registered --> {userId, username y status} --> Sergi
-
-
-S'ha de verificar la doc!
 DELETE /inscription
-borrar todos los anuncios del user
+borrar todos los forums de un user al borrar user
 cuando borrar advert --> borrar inscription
-GET /fullForum ordenar por createdAt
+GET /fullForum ordenar por createdAt --> done?
+
+hacer persistente en POST /commentForum
 
 
 TODO: 

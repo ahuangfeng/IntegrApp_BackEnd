@@ -3,6 +3,7 @@
  */
 var usersDB = require('./usersDB');
 var advertDB = require('../advert/advertDB');
+var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
@@ -148,19 +149,13 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  usersDB.findUserById(req.params.id).then(user => {
-    //TODO: antes de eliminar, verificar datos asociados al usuario!
-    if (user) {
-      usersDB.deleteUser(user._id).then(deletedMessage => {
-        res.send({ message: deletedMessage });
-      }).catch(err => {
-        res.status(400).json({ message: err.message });
-      });
-    } else {
-      res.status(400).json({ message: "No existe el usuario" });
-    }
+  usersDB.deleteUser(req.params.id).then(user => {
+    return advertDB.deleteAdvertByUserId(user._id);
+  }).then(deletedMessage => {
+    // TODO: delte forums!
+    res.send({ message: "Usuario eliminado y anuncios eliminados."});
   }).catch(err => {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message});
   });
 }
 

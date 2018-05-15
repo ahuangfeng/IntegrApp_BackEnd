@@ -298,7 +298,7 @@ describe('DELETE /user by id', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql("User 'prova1' deleted");
+        res.body.message.should.be.eql("Usuario eliminado y anuncios eliminados.");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 2);
@@ -317,6 +317,7 @@ describe('DELETE /user by id', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.an('object');
+        // console.log("res.body:", res.body);
         res.body.should.have.property('message');
         expect(res.body.message, "UserId no vàlido.");
         usersDB.findAllUsers().then(all => {
@@ -337,7 +338,7 @@ describe('DELETE /user by id', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql("User 'prova2' deleted");
+        res.body.message.should.be.eql("Usuario eliminado y anuncios eliminados.");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 1);
