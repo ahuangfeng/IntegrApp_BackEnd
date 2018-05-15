@@ -25,7 +25,7 @@ var apiRoutes = express.Router();
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserInfo"
  *       400:
  *         description: Ha hagut un error amb la operació
  *         schema:
@@ -51,7 +51,7 @@ apiRoutes.post('/register', controller.createUser);
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/User"
+ *             $ref: "#/definitions/UserInfo"
  *       400:
  *         description: Ha hagut un error amb la operació
  *         schema:
@@ -149,7 +149,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/UserInfo"
+ *           $ref: "#/definitions/User"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -183,7 +183,7 @@ apiRoutes.get('/userInfo/:username', tokenMiddleware.tokenCheck, controller.getU
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/UserInfo"
+ *           $ref: "#/definitions/User"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -227,7 +227,7 @@ apiRoutes.get('/userInfoById/:userID', tokenMiddleware.tokenCheck, controller.ge
  *         schema:
  *           $ref: "#/definitions/LoginFailed"
  */
-apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
+apiRoutes.delete('/user/:id', tokenMiddleware.tokenCheck, controller.deleteUser);
 
 /**
  * @swagger
@@ -255,7 +255,7 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserInfo"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -266,5 +266,74 @@ apiRoutes.delete('/user/:id',tokenMiddleware.tokenCheck, controller.deleteUser);
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.put('/user/:id', tokenMiddleware.tokenCheck, controller.modifyUser);
+
+
+/**
+ * @swagger
+ * /like/{userId}:
+ *   post:
+ *     summary: Fer like a un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'usuari que es vol fer like, l'usuari qui fa like el agafem del token
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Es retorna el User del userId
+ *         schema:
+ *           $ref: "#/definitions/UserInfo"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.post('/like/:userId', tokenMiddleware.tokenCheck, controller.likeUser);
+
+/**
+ * @swagger
+ * /dislike/{userId}:
+ *   post:
+ *     summary: Fer dislike a un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'usuari que es vol fer dislike, l'usuari qui fa dislike el agafem del token
+ *     produces:
+ *       - "application/json"
+ *     responses:
+ *       200:
+ *         description: Es retorna el User del userId
+ *         schema:
+ *           $ref: "#/definitions/UserInfo"
+ *       400:
+ *         description: No s'ha trobat l'usuari
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.post('/dislike/:userId', tokenMiddleware.tokenCheck, controller.dislikeUser);
 
 exports.apiRoutes = apiRoutes;

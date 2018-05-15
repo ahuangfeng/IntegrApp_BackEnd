@@ -2,6 +2,8 @@
  * Controller of users
  */
 var usersDB = require('./usersDB');
+var advertDB = require('../advert/advertDB');
+var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
@@ -19,8 +21,7 @@ exports.createUser = function (req, res, next) {
       usersDB.saveUser(userData)
         .then(user => {
           res.send(user);
-        })
-        .catch(err => {
+        }).catch(err => {
           console.log("error on saving userData:", err);
           var response = { message: err.message };
           res.status(400).json(response);
@@ -49,11 +50,71 @@ exports.getUserByUsername = function (req, res, next) {
       if (!user) {
         res.status(400).json({ message: "User not found in database" });
       } else {
-        res.send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          user['adverts'] = adverts;
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
       res.status(400).send(err);
+    });
+  }
+}
+
+exports.likeUser = function (req, res, next) {
+  if (!req.params.userId) {
+    res.status(400).json({ message: "Es necesita un userId per fer like" });
+  } else {
+    usersDB.findUserById(req.params.userId).then(userFound => {
+      if (userFound) {
+        usersDB.likeUser("like", req.decoded.userID, req.params.userId).then(like => {
+          usersDB.findUserById(req.params.userId).then(user => {
+            var sendUser = JSON.parse(JSON.stringify(user));
+            sendUser['password'] = undefined;
+            res.send(sendUser);
+          }).catch(err => {
+            res.status(400).json(err);
+          });
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      } else {
+        res.status(400).json({ message: "User not found" });
+      }
+    }).catch(error => {
+      res.status(400).json(error);
+    });
+  }
+}
+
+exports.dislikeUser = function (req, res, next) {
+  if (!req.params.userId) {
+    res.status(400).json({ message: "Es necesita un userId per fer like" });
+  } else {
+    usersDB.findUserById(req.params.userId).then(userFound => {
+      if (userFound) {
+        usersDB.likeUser("dislike", req.decoded.userID, req.params.userId).then(like => {
+          usersDB.findUserById(req.params.userId).then(user => {
+            var sendUser = JSON.parse(JSON.stringify(user));
+            sendUser['password'] = undefined;
+            res.send(sendUser);
+          }).catch(err => {
+            res.status(400).json(err);
+          });
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      } else {
+        res.status(400).json({ message: "User not found" });
+      }
+    }).catch(error => {
+      res.status(400).json(error);
     });
   }
 }
@@ -67,7 +128,7 @@ exports.login = function (req, res) {
         res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         const payload = {
-          userID: user.id,
+          userID: user._id,
           username: user.username
         }
         var token = jwt.sign(payload, config.secret, {
@@ -88,40 +149,34 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  usersDB.findUserById(req.params.id).then(user => {
-    //TODO: antes de eliminar, verificar datos asociados al usuario!
-    usersDB.deleteUser(user.id).then(deletedMessage => {
-      res.send({ message: deletedMessage });
-    }).catch(err => {
-      res.status(400).json({ message: err.message });
-    });
+  usersDB.deleteUser(req.params.id).then(user => {
+    return advertDB.deleteAdvertByUserId(user._id);
+  }).then(deletedMessage => {
+    // TODO: delte forums!
+    res.send({ message: "Usuario eliminado y anuncios eliminados."});
   }).catch(err => {
-    res.status(400).json({ message: err.message });
-  })
+    res.status(400).json({ message: err.message});
+  });
 }
 
 exports.modifyUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFieldsModify(userData);
+  var verify = verifyFieldsUser(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
   }
 
-  usersDB.findUserById(req.params.id).then(user => {
-    usersDB.modifyUser(user, userData).then(modifiedMessage => {
-      res.send(modifiedMessage);
-    }).catch(err => {
-      res.status(400).json({ message: err.message });
-    });
+  usersDB.updateUser(req.params.id, userData).then(user => {
+    res.send(user);
   }).catch(err => {
-    res.status(400).json({ message: err.message });
-  })
+    res.status(400).json({message: err.message});
+  });
 }
 
 
-exports.getUserInfo = function(req, res, next){
+exports.getUserInfo = function (req, res, next) {
   if (!req.params.username) {
     res.status(400).json({ message: "Es necesita un username per a trobar un usuari." });
   } else {
@@ -131,7 +186,14 @@ exports.getUserInfo = function(req, res, next){
       } else {
         user.password = undefined;
         user.CIF = undefined;
-        res.status(200).send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
@@ -140,7 +202,7 @@ exports.getUserInfo = function(req, res, next){
   }
 }
 
-exports.getUserInfoById = function(req, res, next){
+exports.getUserInfoById = function (req, res, next) {
   if (!req.params.userID) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un usuari." });
   } else {
@@ -150,7 +212,14 @@ exports.getUserInfoById = function(req, res, next){
       } else {
         user.password = undefined;
         user.CIF = undefined;
-        res.status(200).send(user);
+        advertDB.findAdvertByIdUser(user._id).then(adverts => {
+          var userToSend = JSON.parse(JSON.stringify(user));
+          userToSend['adverts'] = adverts;
+          res.send(userToSend);
+        }).catch(err => {
+          console.log("Error", err);
+          res.status(400).send(err);
+        });
       }
     }).catch(err => {
       console.log("Error", err);
@@ -158,7 +227,6 @@ exports.getUserInfoById = function(req, res, next){
     });
   }
 }
-
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
@@ -178,37 +246,11 @@ verifyFieldsUser = function (userData) {
     }
   }
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if(!(!userData.email)) {
-    if(!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado"};
+  if (!(!userData.email)) {
+    if (!regex.test(userData.email)) {
+      return { success: false, message: "Email mal formado" };
     }
   }
-  
-  return { success: true };
-}
 
-verifyFieldsModify = function (userData) {
-  if(!userData.username || !userData.password || !userData.name || !userData.email || !userData.phone || !userData.type) {
-    return { success: false, message: "Faltan datos obligatorios: username, password, name, email, phone, type" };
-  }
-  var validTypes = ["voluntary", "admin", "newComer", "association"];
-  if(userData.type) {
-    if (validTypes.indexOf(userData.type) == -1) {
-      return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
-    }
-    if (userData.type == "association") {
-      if (!userData.CIF) {
-        return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
-      }
-    }
-  }
-  
-  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if(userData.email) {
-    if(!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado"};
-    }
-  }
-  
   return { success: true };
 }

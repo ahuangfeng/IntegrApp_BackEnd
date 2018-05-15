@@ -56,8 +56,46 @@ var mongoose = require('mongoose');
 *       typeAdvert:
 *         type: string
 *         enum: [lookFor, offer]
-*       registered:
-*         type: [string]
+*/
+
+/**
+* @swagger
+* definitions:
+*   AdvertResponse:
+*     required:
+*       - date
+*       - title
+*       - description
+*       - places
+*       - typeAdvert
+*     properties:
+*       id:
+*         type: string
+*       userId:
+*         type: string
+*       createdAt:
+*         type: string
+*       date:
+*         type: string
+*       state:
+*         type: string
+*         enum: [opened, closed]
+*       title:
+*         type: string
+*       description:
+*         type: string
+*       places:
+*         type: number
+*       premium:
+*         type: boolean
+*       typeUser:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       typeAdvert:
+*         type: string
+*         enum: [lookFor, offer]
+*       user:
+*         $ref: "#/definitions/User"
 */
 
 /**
@@ -99,6 +137,17 @@ var mongoose = require('mongoose');
 *         type: number
 */
 
+/**
+* @swagger
+* definitions:
+*   ModifStateBody:
+*     properties:
+*       state:
+*         type: string
+*         enum: [opened, closed]
+*/
+
+
 var AdvertSchema = new mongoose.Schema({
   userId: String,
   createdAt: String,
@@ -120,8 +169,7 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
-  },
-  registered: [String]
+  }
 });
 
 exports.AdvertSchema = AdvertSchema;

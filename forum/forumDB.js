@@ -48,17 +48,42 @@ exports.saveForumEntry = function (forumEntry) {
   });
 }
 
-exports.getForumEntries = function(forumId) {
+exports.getForumEntries = function (forumId) {
   return new Promise((resolve, reject) => {
     if (forumId.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida
-      ForumEntry.find({ forumId: forumId }, function(err, entries){
-        if(err){ 
+      ForumEntry.find({ forumId: forumId }, function (err, entries) {
+        if (err) {
           reject(err);
         }
         resolve(entries);
       });
     } else {
       reject({ message: "forumId no vàlido." })
+    }
+  });
+}
+
+exports.deleteEntry = function (id, userId) {
+  return new Promise((resolve, reject) => {
+    if (userId.match(/^[0-9a-fA-F]{24}$/) && id.match(/^[0-9a-fA-F]{24}$/)) {
+      ForumEntry.findById(id, function (err, res) {
+        if (res) {
+          if (res.userId == userId) {
+            ForumEntry.remove({ _id: id }, function (err) {
+              if (err) {
+                reject(err);
+              }
+              resolve({ message: "Comentario eliminado" });
+            });
+          } else {
+            reject({ message: "No eres el autor del comentario" });
+          }
+        } else {
+          reject({ message: "Comentario no encontrado" });
+        }
+      });
+    } else {
+      reject({ message: "userId o advertId invalid" });
     }
   });
 }

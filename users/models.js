@@ -16,9 +16,9 @@ var mongoose = require('mongoose');
  * definitions:
  *   UserRate:
  *     properties:
- *       totalVotes:
+ *       likes:
  *         type: number
- *       rate:
+ *       dislikes:
  *         type: number
  */
 
@@ -170,6 +170,10 @@ var mongoose = require('mongoose');
 *         $ref: "#/definitions/UserRate"
 *       CIF:
 *         type: string
+*       adverts:
+*         type: array
+*         items:
+*           $ref: "#/definitions/Advert"
 */
 var UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, dropDups: true },
@@ -184,9 +188,28 @@ var UserSchema = new mongoose.Schema({
             if (this.type == "association") return true;
             else return false;
         }
-    },
+    }
+});
+
+/**
+* @swagger
+* definitions:
+*   LikeSchema:
+*     properties:
+*       type:
+*         type: string
+*       userId:
+*         type: string
+*       likedUser:
+*         type: string
+*/
+var LikesSchema = new mongoose.Schema({
+    type: String, //like | dislike
+    userId: String,
+    likedUser: String
 });
 
 exports.UserSchema = UserSchema;
+exports.LikesSchema = LikesSchema;
 
 

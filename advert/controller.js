@@ -24,7 +24,7 @@ exports.createAdvert = function (req, res, next) {
   });
 }
 
-exports.getAdverts = function (req, res, next) {
+exports.getAdverts = function (req, res, next) { 
   var types = req.query.type;
   var typesToGet = [];
   if (types != undefined) {
@@ -36,8 +36,16 @@ exports.getAdverts = function (req, res, next) {
       return;
     }
   }
-  advertDB.getAdvert(typesToGet).then(advert => {
-    res.send(advert);
+
+   
+  advertDB.getAdvert(typesToGet).then(adverts => {
+    advertDB.getFullAdvert(adverts).then(full => {
+      res.send(full);
+    }).catch(err => {
+      res.status(400).json({ message: err.message});
+    });
+    // console.log("adverts", adverts);
+    
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
@@ -57,7 +65,6 @@ exports.deleteAdvert = function (req, res, next) {
 
 exports.modifyStateAdvert = function (req, res, next) {
   advertDB.findAdvertById(req.params.id).then(advert => {
-    //TODO: 
     var stateToModify = req.body.state;
     advertDB.modifyStateAdvert(advert._id, stateToModify).then(modified => {
       res.send(modified);
@@ -74,10 +81,13 @@ exports.getAdvertsUser = function(req,res,next) {
     if(!adverts) {
       res.status(400).json({ message: "Error with user"});
     } else {
-      res.send(adverts);
+      advertDB.getFullAdvert(adverts).then(full => {
+        res.send(full);
+      }).catch(err => {
+        res.status(400).send(err);
+      });
     }
   }).catch(err => {
-    console.log("Error", err);
     res.status(400).send(err);
   });
 }
@@ -89,7 +99,7 @@ exports.modifyAdvert = function (req, res, next) {
     res.status(400).json({ message: verify.message });
     return;
   }
-
+  
   advertDB.findAdvertById(req.params.id).then(advert => {
     advertDB.modifyAdvert(advert, advertData).then(modifiedMessage => {
       res.send({ message: modifiedMessage });

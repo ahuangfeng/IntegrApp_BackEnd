@@ -246,28 +246,28 @@ describe('DELETE /user by id', () => {
       "username": "prova1",
       "password": "prova1",
       "type": "voluntary"
-    }).then(response => {
-      response.should.be.an('object');
-      expect(response.username, "prova1");
-      userIds.push(response.id);
+    }).then(response1 => {
+      response1.should.be.an('object');
+      expect(response1.username, "prova1");
+      userIds.push(response1._id);
       return usersDB.saveUser({
         "username": "prova2",
         "password": "prova2",
         "type": "voluntary"
       });
-    }).then(response => {
-      response.should.be.an('object');
-      expect(response.username, "prova2");
-      userIds.push(response.id);
+    }).then(response2 => {
+      response2.should.be.an('object');
+      expect(response2.username, "prova2");
+      userIds.push(response2._id);
       return usersDB.saveUser({
         "username": "prova3",
         "password": "prova3",
         "type": "voluntary"
       });
-    }).then(response => {
-      response.should.be.an('object');
-      expect(response.username, "prova3");
-      userIds.push(response.id);
+    }).then(response3 => {
+      response3.should.be.an('object');
+      expect(response3.username, "prova3");
+      userIds.push(response3._id);
       userIds.length.should.be.eql(3);
       done();
     }).catch(err => {
@@ -294,10 +294,11 @@ describe('DELETE /user by id', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .end((err, res) => {
+        // console.log("DELETING:", res.body.message);
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql('User deleted');
+        res.body.message.should.be.eql("Usuario eliminado y anuncios eliminados.");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 2);
@@ -316,6 +317,7 @@ describe('DELETE /user by id', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.an('object');
+        // console.log("res.body:", res.body);
         res.body.should.have.property('message');
         expect(res.body.message, "UserId no vàlido.");
         usersDB.findAllUsers().then(all => {
@@ -336,7 +338,7 @@ describe('DELETE /user by id', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
-        res.body.message.should.be.eql('User deleted');
+        res.body.message.should.be.eql("Usuario eliminado y anuncios eliminados.");
         usersDB.findAllUsers().then(all => {
           all.should.be.an('array');
           expect(all.length, 1);

@@ -133,6 +133,8 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(2);
+        res.body[0].should.have.property('user');
+        res.body[1].should.have.property('user');
         done();
       });
   });
@@ -147,6 +149,7 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(1);
+        res.body[0].should.have.property('user');
         done();
       });
   });
@@ -161,6 +164,9 @@ describe('GET /advert', () => {
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.length.should.be.eql(3);
+        res.body[0].should.have.property('user');
+        res.body[1].should.have.property('user');
+        res.body[2].should.have.property('user');
         done();
       });
   });
@@ -198,7 +204,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "2018-05-05 13:20:30",
+        "date": "2018-09-05 13:20:30",
         "title": "title1",
         "description": "description",
         "places": 2,
@@ -224,7 +230,7 @@ describe('POST /advert', () => {
     chai.request(server)
       .post('/api/advert/')
       .send({
-        "date": "2018-05-05 13:20:00",
+        "date": "2018-09-05 13:20:00",
         "title": "title1",
         "description": "description",
         "places": 2,
@@ -509,7 +515,7 @@ describe('GET /advertsUser', () => {
   });
 });
 
-describe('PATCH /advert', () => {
+describe('PUT /advertState', () => {
 
   before(function (done) {
     advertIds = [];
@@ -548,7 +554,7 @@ describe('PATCH /advert', () => {
 
   it('it should not modify any advert if there is no token', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[0])
+      .put('/api/advertState/' + advertIds[0])
       .set('Accept', 'application/json')
       .send({ "state": "opened" })
       .end((err, res) => {
@@ -562,12 +568,11 @@ describe('PATCH /advert', () => {
 
   it('it should modify the state of the advert', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[0])
+      .put('/api/advertState/' + advertIds[0])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');
@@ -583,12 +588,11 @@ describe('PATCH /advert', () => {
 
   it('it should modify the state of the advert', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[1])
+      .put('/api/advertState/' + advertIds[1])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');

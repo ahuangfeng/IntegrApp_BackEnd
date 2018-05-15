@@ -4,12 +4,10 @@
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var forumDB = require('./forumDB');
-var userDB = require('../users/usersDB');
+var usersDB = require('../users/usersDB');
 
 exports.createForum = function (req, res, next) {
-  var verifyFields = verifyFieldForum(req.body, req.decoded);
-  verifyFields.then(verif => {
-
+  verifyFieldForum(req.body, req.decoded).then(verif => {
     var forumDocument = createForumDocument(req.body, req.decoded);
 
     forumDB.saveForum(forumDocument)
@@ -38,13 +36,33 @@ exports.getForums = function (req, res, next) {
   }
   forumDB.getForums(typesToGet).then(forums => {
     if (forums) {
-      res.send(forums);
+      addUsers(forums).then(forumsWithUser => {
+        forumsWithUser.sort(function (a, b) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        res.send(forumsWithUser);
+      }).catch(err => {
+        res.status(400).json({ message: err.message });
+      });
+      // res.send(forums);
     } else {
       res.status(404).json({ message: "No se han encontrado forums." });
     }
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
+}
+
+exports.deleteCommentforum = function(req, res, next){
+  if(!req.params.id){
+    res.status(400).json({ message: "Falta un id del comentario"});
+  }else{
+    forumDB.deleteEntry(req.params.id, req.decoded.userID).then(result => {
+      res.send(result);
+    }).catch(err => {
+      res.status(400).send(err);
+    })
+  }
 }
 
 exports.commentForum = function (req, res, next) {
@@ -70,6 +88,9 @@ exports.getFullForum = function (req, res, next) {
         responseToSend['forum'] = forum;
         forumDB.getForumEntries(forum.id).then(entries => {
           responseToSend['entries'] = entries;
+          responseToSend['entries'].sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
           res.send(responseToSend);
         }).catch(err => {
           res.status(400).json(err);
@@ -90,7 +111,7 @@ verifyForumEntry = function (forumEntry, decoded) {
     if (!forumEntry.forumId || !forumEntry.content) {
       reject({ message: "Faltan datos obligatorios: forumId, content" });
     }
-    userDB.findUserById(decoded.userID).then(res => {
+    usersDB.findUserById(decoded.userID).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
       } else {
@@ -109,6 +130,7 @@ verifyForumEntry = function (forumEntry, decoded) {
 }
 
 verifyFieldForum = function (forumData, decoded) {
+  // console.log("DECODED:", decoded);
   return new Promise((resolve, reject) => {
     var validTypes = ["documentation", "entertainment", "language", "various"];
     if (!forumData.title || !forumData.description || !forumData.type) {
@@ -117,7 +139,7 @@ verifyFieldForum = function (forumData, decoded) {
     if (validTypes.indexOf(forumData.type) == -1) {
       reject({ message: "type tiene que ser uno o varios de estos valores: [documentation, entertainment, language, various]" });
     }
-    userDB.findUserById(decoded.userID).then(res => {
+    usersDB.findUserById(decoded.userID).then(res => {
       if (res == null) {
         reject({ message: "El usuario no existe" });
       } else {
@@ -143,6 +165,7 @@ createForumDocument = function (forumData, decoded) {
 createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
+  forumEntry['username'] = decoded.username;
   forumEntry['createdAt'] = new Date().toLocaleString();
   forumEntry['content'] = entry.content;
   forumEntry['forumId'] = entry.forumId;
@@ -160,4 +183,32 @@ verifyTypeForum = function (typesToVerify) {
     });
   }
   return result;
+}
+
+addUsers = function(forums){
+  return new Promise((resolve, reject) => {
+    if(forums.length > 0){
+      var forumArray = [];
+      var itemsProcessed = 0;
+      forums.forEach((item, index, array) => {
+        var forumToSent = JSON.parse(JSON.stringify(item));
+        usersDB.findUserById(item.userId).then(user => {
+          forumToSent['user'] = JSON.parse(JSON.stringify(user));
+          if (user) {
+            forumToSent['user'].password = undefined;
+          }
+          forumArray.push(forumToSent);
+          itemsProcessed++;
+          if (itemsProcessed === array.length) {
+            // console.log("PROCESSED:", forumArray);
+            resolve(forumArray);
+          }
+        }).catch(err => {
+          reject(err);
+        });
+      });
+    }else{
+      resolve(forums);
+    }
+  });
 }
