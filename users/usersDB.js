@@ -35,9 +35,13 @@ exports.deleteUser = function (id) {
   return new Promise(function (resolve, reject) {
     User.findOneAndRemove({ _id: id }, function (err,doc) {
       if(err){
-        reject("Se ha producido un error al eliminar usuario");
+        reject(err);
       }
-      resolve(doc);
+      if(doc){
+        resolve(doc);
+      }else{
+        reject({message: "Este usuario no existe."});
+      }
     });
   });
 }

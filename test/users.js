@@ -317,7 +317,7 @@ describe('DELETE /user by id', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.an('object');
-        console.log("res.body:", res.body);
+        // console.log("res.body:", res.body);
         res.body.should.have.property('message');
         expect(res.body.message, "UserId no vàlido.");
         usersDB.findAllUsers().then(all => {

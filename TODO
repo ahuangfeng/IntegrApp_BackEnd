@@ -36,7 +36,7 @@ borrar todos los forums de un user al borrar user
 cuando borrar advert --> borrar inscription
 GET /fullForum ordenar por createdAt --> done?
 
-
+hacer persistente en POST /commentForum
 
 
 TODO: 
