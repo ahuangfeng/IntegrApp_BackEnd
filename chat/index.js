@@ -1,8 +1,7 @@
 var tokenVerification = require('../middleware/tokenVerification');
 const routesChat = require('./routes');
 
-exports.assignRoutes = function (app) {
-  var server = require('http').createServer(app);
+exports.assignRoutes = function (app,server) {
   var io = require("socket.io").listen(server);
   var nicknames = {};
 
