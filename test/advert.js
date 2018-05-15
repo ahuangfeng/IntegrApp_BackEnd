@@ -515,7 +515,7 @@ describe('GET /advertsUser', () => {
   });
 });
 
-describe('PATCH /advert', () => {
+describe('PUT /advertState', () => {
 
   before(function (done) {
     advertIds = [];
@@ -554,7 +554,7 @@ describe('PATCH /advert', () => {
 
   it('it should not modify any advert if there is no token', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[0])
+      .put('/api/advertState/' + advertIds[0])
       .set('Accept', 'application/json')
       .send({ "state": "opened" })
       .end((err, res) => {
@@ -568,12 +568,11 @@ describe('PATCH /advert', () => {
 
   it('it should modify the state of the advert', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[0])
+      .put('/api/advertState/' + advertIds[0])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');
@@ -589,12 +588,11 @@ describe('PATCH /advert', () => {
 
   it('it should modify the state of the advert', (done) => {
     chai.request(server)
-      .patch('/api/advert/' + advertIds[1])
+      .put('/api/advertState/' + advertIds[1])
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({ "state": "opened" })
       .end((err, res) => {
-        //TODO: por estado no? y que devuelva el advert mismo
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('date');

@@ -73,9 +73,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           type: array
- *           items:
- *             $ref: "#/definitions/Inscription"
+ *           $ref: "#/definitions/ResponseGetInscriptions"
  *       400:
  *         description: Error
  *         schema:
@@ -85,7 +83,7 @@ apiRoutes.post('/inscription', tokenMiddleware.tokenCheck, inscriptionController
  *         schema:
  *           $ref: "#/definitions/InscriptionFailed"
  */
-apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptions);
+apiRoutes.get('/inscription/:advertId', tokenMiddleware.tokenCheck, inscriptionController.getInscriptionsAdvert);
 
 /**
  * @swagger
@@ -125,7 +123,41 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
 
 /**
  * @swagger
- * /inscription/{idAdvert}:
+ * /inscription/{id}:
+ *   delete:
+ *     summary: Esborrat d'una inscription
+ *     tags: [Inscription]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de la inscription que es vol eliminar
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
+ */
+apiRoutes.delete('/inscription/:id',tokenMiddleware.tokenCheck, inscriptionController.deleteInscription);
+
+/**
+ * @swagger
+ * /inscription/{id}:
  *   put:
  *     summary: Resoldre inscripció a un anunci
  *     tags: [Inscription]
@@ -134,7 +166,7 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *     consumes:
  *       - "application/json"
  *     parameters:
- *       - name: idAdvert
+ *       - name: id
  *         in: path
  *         type: string
  *         required: true
@@ -160,5 +192,6 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.put('/inscription/:id', tokenMiddleware.tokenCheck, inscriptionController.solveInscriptionUser);
+
 
 exports.apiRoutes = apiRoutes;

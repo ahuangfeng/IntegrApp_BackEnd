@@ -35,57 +35,42 @@ exports.deleteUser = function (id) {
   return new Promise(function (resolve, reject) {
     User.findOneAndRemove({ _id: id }, function (err,doc) {
       if(err){
-        reject("Se ha producido un error al eliminar usuario");
+        reject(err);
       }
-      resolve("User '" + doc.username + "' deleted");
-    });
-  });
-}
-
-exports.modifyUser = function (user, content) {
-  return new Promise(function (resolve, reject) {
-    if (!content.username) {
-      content.username = user.username;
-    }
-    if (!content.password) {
-      content.password = user.password;
-    }
-    if (!content.name) {
-      content.name = user.name;
-    }
-    // if (!content.email) {
-    //   content.email = user.email;
-    // }
-    // if (!content.phone) {
-    //   content.phone = user.phone;
-    // }
-    if (!content.type) {
-      content.type = user.type;
-      if (user.type == "association") {
-        if (!content.CIF) {
-          content.CIF = user.CIF;
-        }
-      }
-      else content.CIF = "";
-    }
-
-    User.findOneAndUpdate({ _id: user._id }, {
-      $set: {
-        username: content.username, password: content.password,
-        name: content.name, email: content.email, phone: content.phone,
-        type: content.type, CIF: content.CIF
-      }
-    }, { new: true }, function (err, doc) {
-      if (!err) {
+      if(doc){
         resolve(doc);
-      } else {
-        reject({ message: "Error modifying user" });
+      }else{
+        reject({message: "Este usuario no existe."});
       }
     });
   });
 }
 
-exports.findAllUsers = function () { //Necesitas los likes?
+exports.updateUser = function (userId, userData){
+  return new Promise((resolve, reject) => {
+    User.findById(userId, function(err, user){
+      user["username"] = userData["username"];
+      user["password"] = userData["password"];
+      user["name"] = userData["name"];
+      user["phone"] = userData["phone"];
+      user["type"] = userData["type"];
+      user["email"] = userData["email"];
+      if(userData['type'] == "association"){
+        user["CIF"] = userData['CIF'];
+      }else{
+        user["CIF"] = undefined;
+      }
+      user.save(function(err, doc){
+        if(err){
+          reject(err);
+        }
+        resolve(doc);
+      });
+    });
+  });
+}
+
+exports.findAllUsers = function () { 
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {
       if (err) {

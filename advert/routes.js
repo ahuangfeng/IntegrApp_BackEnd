@@ -129,8 +129,8 @@ apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.dele
 
 /**
  * @swagger
- * /advert/{id}:
- *   patch:
+ * /advertState/{id}:
+ *   put:
  *     summary: Modificació de l'estat d'un anunci
  *     tags: [Advert]
  *     security:
@@ -145,6 +145,10 @@ apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.dele
  *         type: string
  *         required: true
  *         description: Id de l'anunci que es vol modificar el seu estat
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ModifStateBody"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
@@ -159,7 +163,7 @@ apiRoutes.delete('/advert/:id',tokenMiddleware.tokenCheck, advertController.dele
  *         schema:
  *           $ref: "#/definitions/AdvertFailed"
  */
-apiRoutes.patch('/advert/:id', tokenMiddleware.tokenCheck, advertController.modifyStateAdvert);
+apiRoutes.put('/advertState/:id', tokenMiddleware.tokenCheck, advertController.modifyStateAdvert);
 
 /**
  * @swagger

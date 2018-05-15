@@ -31,18 +31,8 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-GET /adverts --> la variable rate que tambien se calcule -->fet
-GET /users --> calcular rate tambien, lo utilizan para debug en swagger -->fet
+GET /fullForum ordenar por createdAt --> done?
+borrar todos los forums de un user al borrar user --> no se implementa
+cuando borrar advert --> borrar inscription --> fet
+Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
-DELETE /user no funciona
-registered --> {userId, username y status}
-
-
-S'ha de verificar la doc!
-
-
-TODO: 
-Un tiu pot inscriures dos cops? ara si xD
-
-
-DELETE /commentForum

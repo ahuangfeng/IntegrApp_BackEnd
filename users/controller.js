@@ -3,6 +3,7 @@
  */
 var usersDB = require('./usersDB');
 var advertDB = require('../advert/advertDB');
+var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
@@ -148,40 +149,30 @@ exports.login = function (req, res) {
 }
 
 exports.deleteUser = function (req, res, next) {
-  usersDB.findUserById(req.params.id).then(user => {
-    //TODO: antes de eliminar, verificar datos asociados al usuario!
-    if (user) {
-      usersDB.deleteUser(user._id).then(deletedMessage => {
-        res.send({ message: deletedMessage });
-      }).catch(err => {
-        res.status(400).json({ message: err.message });
-      });
-    } else {
-      res.status(400).json({ message: "No existe el usuario" });
-    }
+  usersDB.deleteUser(req.params.id).then(user => {
+    return advertDB.deleteAdvertByUserId(user._id);
+  }).then(deletedMessage => {
+    // TODO: delte forums!
+    res.send({ message: "Usuario eliminado y anuncios eliminados."});
   }).catch(err => {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message});
   });
 }
 
 exports.modifyUser = function (req, res, next) {
   var userData = req.body;
 
-  var verify = verifyFieldsModify(userData);
+  var verify = verifyFieldsUser(userData);
   if (!verify.success) {
     res.status(400).json({ message: verify.message });
     return;
   }
 
-  usersDB.findUserById(req.params.id).then(user => {
-    usersDB.modifyUser(user, userData).then(modifiedMessage => {
-      res.send(modifiedMessage);
-    }).catch(err => {
-      res.status(400).json({ message: err.message });
-    });
+  usersDB.updateUser(req.params.id, userData).then(user => {
+    res.send(user);
   }).catch(err => {
-    res.status(400).json({ message: err.message });
-  })
+    res.status(400).json({message: err.message});
+  });
 }
 
 
@@ -256,32 +247,6 @@ verifyFieldsUser = function (userData) {
   }
   var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
   if (!(!userData.email)) {
-    if (!regex.test(userData.email)) {
-      return { success: false, message: "Email mal formado" };
-    }
-  }
-
-  return { success: true };
-}
-
-verifyFieldsModify = function (userData) {
-  if (!userData.username || !userData.password || !userData.name || !userData.type) {
-    return { success: false, message: "Faltan datos obligatorios: username, password, name, type" };
-  }
-  var validTypes = ["voluntary", "admin", "newComer", "association"];
-  if (userData.type) {
-    if (validTypes.indexOf(userData.type) == -1) {
-      return { success: false, message: "type tiene que ser: [voluntary, admin, newComer, association]" };
-    }
-    if (userData.type == "association") {
-      if (!userData.CIF) {
-        return { success: false, message: "si type=association el parámetro CIF tiene que ser obligatorio" };
-      }
-    }
-  }
-
-  var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-  if (userData.email) {
     if (!regex.test(userData.email)) {
       return { success: false, message: "Email mal formado" };
     }

@@ -42,6 +42,44 @@ var mongoose = require('mongoose');
 /**
 * @swagger
 * definitions:
+*   ResponseGetInscriptions:
+*     required:
+*       - advert
+*       - inscriptions
+*     properties:
+*       advert:
+*         $ref: "#/definitions/Advert"
+*       inscriptions:
+*         type: array
+*         items: 
+*           $ref: "#/definitions/InscriptionWithUser"
+*/
+
+/**
+* @swagger
+* definitions:
+*   InscriptionWithUser:
+*     required:
+*       - userId
+*       - advertId
+*     properties:
+*       _id:
+*         type: string
+*       userId:
+*         type: string
+*       advertId:
+*         type: string
+*       status:
+*         type: string
+*         enum: [pending, refused, completed, accepted]
+*       user:
+*         type: string
+*         $ref: "#/definitions/UserInfo"
+*/
+
+/**
+* @swagger
+* definitions:
 *   InscriptionBody:
 *     required:
 *       - userId

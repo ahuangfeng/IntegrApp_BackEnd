@@ -155,21 +155,23 @@ describe('POST /inscription', function () {
         res.should.have.status(400);
         res.body.should.be.an('object');
         res.body.should.have.property('message');
+
         done();
       });
   });
 
-  //TODO: comentar con el gruppo!
-  it('should not register to a ad if there are no places', function (done) {
+  it('should register to a ad if there are no places', function (done) {
     chai.request(server)
       .post('/api/inscription')
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({ "userId": thirdUserID, "advertId": advertId })
       .end(function (err, res) {
-        res.should.have.status(400);
+        res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property('message');
+        res.body.should.have.property('userId');
+        res.body.should.have.property('advertId');
+        res.body.should.have.property('status');
         done();
       });
   });
