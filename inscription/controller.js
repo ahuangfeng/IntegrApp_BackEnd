@@ -128,66 +128,65 @@ exports.getInscriptionsUser = function (req, res, next) {
 exports.solveInscriptionUser = function (req, res, next) {
   var inscriptionData = req.body;
 
-  var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id);
-  if (!verify.success) {
-    res.status(400).json({ message: verify.message });
-  }
-
-  userDB.findUserById(inscriptionData.userId).then(user => {
-    if(user.length == 0) {
-      res.status(400).json({ message: "User doesn't exists" })
-    }
-    else {
-      advertDB.findAdvertById(req.params.id).then(advert => {
-        if(advert.length == 0) {
-          res.status(400).json({ message: "Advert doesn't exists" })
-        }
-        else {
-          inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
-  
-            if (inscription == null) {
-              res.status(400).json({ message: "Inscription doesn't exists" })
-            }
-            
-            else {
-              if(inscription.status == inscriptionData.status) {
-                res.status(400).json({ message : "La inscripción ya está en este mismo estado"});
-              }
-              else if(inscriptionData.status == "accepted") {
-                countAcceptedUsers(advert).then(acc => {
-                  if(acc >= advert.places) {
-                    res.status(400).json({ message: "Plazas máximas aceptadas alcanzadas." })
-                  }
-                  else {
-                      inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
-                        res.send(inscription);
-                      }).catch(err => {
-                        res.status(400).json({ message: err.message });
-                      })
-                  }
-                }).catch(err => {
-                  res.status(400).json({ message: "Error en la suma de accepted users: " + err.message });
-                });
+  var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id).then(resultat=> {
+    userDB.findUserById(inscriptionData.userId).then(user => {
+      if(user.length == 0) {
+        res.status(400).json({ message: "User doesn't exists" })
+      }
+      else {
+        advertDB.findAdvertById(req.params.id).then(advert => {
+          if(advert.length == 0) {
+            res.status(400).json({ message: "Advert doesn't exists" })
+          }
+          else {
+            inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
+    
+              if (inscription == null) {
+                res.status(400).json({ message: "Inscription doesn't exists" })
               }
               
               else {
-                inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
-                  res.send(inscription);
-                }).catch(err => {
-                  res.status(400).json({ message: err.message });
-                })
+                if(inscription.status == inscriptionData.status) {
+                  res.status(400).json({ message : "La inscripción ya está en este mismo estado"});
+                }
+                else if(inscriptionData.status == "accepted") {
+                  countAcceptedUsers(advert).then(acc => {
+                    if(acc >= advert.places) {
+                      res.status(400).json({ message: "Plazas máximas aceptadas alcanzadas." })
+                    }
+                    else {
+                        inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
+                          res.send(inscription);
+                        }).catch(err => {
+                          res.status(400).json({ message: err.message });
+                        })
+                    }
+                  }).catch(err => {
+                    res.status(400).json({ message: "Error en la suma de accepted users: " + err.message });
+                  });
+                }
+                
+                else {
+                  inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
+                    res.send(inscription);
+                  }).catch(err => {
+                    res.status(400).json({ message: err.message });
+                  })
+                }
               }
-            }
-          }).catch(err => {
-            res.status(400).json({ message: err.message });
-          })
-        }
-      }).catch(err => {
-        res.status(400).json({ message: err.message });
-      })
-    }
-  }).catch(err => {
-    res.status(400).json({ message: err.message });
+            }).catch(err => {
+              res.status(400).json({ message: err.message });
+            })
+          }
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        })
+      }
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    })  
+  }).catch(err=> {
+    res.status(400).json({message: err});
   })
 }
 
@@ -233,15 +232,18 @@ verifyFieldsInscription = function (inscriptionData) {
 }
 
 verifyFieldsSolveInscription = function (inscriptionData) {
-  if (!inscriptionData.userId || !inscriptionData.status) {
-    return { success: false, message: "Faltan datos obligatorios: userId, status" };
-  }
-  var validTypes = ["pending", "refused", "completed", "accepted"];
-  if (inscriptionData.status) {
-    if (validTypes.indexOf(inscriptionData.status) == -1) {
-      return { success: false, message: "type tiene que ser: [pending, refused, completed, accepted]" };
+  return new Promise(function (resolve, reject) {
+    if (!inscriptionData.userId || !inscriptionData.status) {
+      reject("Faltan datos obligatorios: userId, status");
     }
-  }
-  return { success: true };
+    var validTypes = ["pending", "refused", "completed", "accepted"];
+    if (inscriptionData.status) {
+      if (validTypes.indexOf(inscriptionData.status) == -1) {
+        reject("type tiene que ser: [pending, refused, completed, accepted]");
+      }
+    }
+    resolve("OK");
+  });
+  
 }
 
