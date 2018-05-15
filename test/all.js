@@ -51,4 +51,7 @@ describe('All tests', function () {
   describe('Likes/Dislikes', function () {
     require('./like');
   });
+  describe('Report', function(){
+    require('./report');
+  });
 })
