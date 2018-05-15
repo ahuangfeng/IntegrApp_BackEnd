@@ -95,6 +95,7 @@ var ForumSchema = new mongoose.Schema({
 */
 var ForumEntrySchema = new mongoose.Schema({
   userId: String,
+  username: String,
   createdAt: String,
   content: String,
   forumId: String,
