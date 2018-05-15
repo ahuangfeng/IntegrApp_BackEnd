@@ -124,6 +124,40 @@ apiRoutes.get('/inscriptionsUser/:userId', tokenMiddleware.tokenCheck, inscripti
 /**
  * @swagger
  * /inscription/{id}:
+ *   delete:
+ *     summary: Esborrat d'una inscription
+ *     tags: [Inscription]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de la inscription que es vol eliminar
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
+ */
+apiRoutes.delete('/inscription/:id',tokenMiddleware.tokenCheck, inscriptionController.deleteInscription);
+
+/**
+ * @swagger
+ * /inscription/{id}:
  *   put:
  *     summary: Resoldre inscripció a un anunci
  *     tags: [Inscription]
