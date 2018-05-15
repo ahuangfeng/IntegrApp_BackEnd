@@ -31,12 +31,8 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-DELETE /inscription
-borrar todos los forums de un user al borrar user
-cuando borrar advert --> borrar inscription --> fet
 GET /fullForum ordenar por createdAt --> done?
+borrar todos los forums de un user al borrar user --> no se implementa
+cuando borrar advert --> borrar inscription --> fet
+Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
-
-
-TODO: 
-Un tiu pot inscriures dos cops? ara si xD
