@@ -8,9 +8,19 @@ exports.assignRoutes = function (app, server) {
   var connectedUsers = {};
 
   io.sockets.on('connection', function (socket) {
+    // console.log("SOCKET:", socket.id);
+
     socket.on('send message', function (data, to) {
       console.log("SENT MESSAGE: ", data, to);
-      io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
+      usersDB.findUserByName(to).then(userTo => {
+        if(userTo){
+          io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
+        }else{
+
+        }
+      }).catch(err => {
+        console.log("Error", err);
+      });
       //TODO: Guardar mensaje en BD
       //TODO: Si el 'to' no esta en connectedUsers --> poner flag de 'new'
     });
@@ -21,9 +31,11 @@ exports.assignRoutes = function (app, server) {
       } else {
         usersDB.findUserByName(data).then(user => {
           if(user){
-            callback(true);
+            callback(true); //TODO: Devolver historial en callback
             socket.username = data;
-            connectedUsers[socket.username] = 1;
+            socket.userId = user._id;
+            connectedUsers[socket.username] = socket.id;
+            // console.log("EO:", connectedUsers);
             updateNickNames();
           }else{
             callback(false);
