@@ -36,3 +36,5 @@ borrar todos los forums de un user al borrar user --> no se implementa
 cuando borrar advert --> borrar inscription --> fet
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
+Android:
+https://socket.io/blog/native-socket-io-and-android/#

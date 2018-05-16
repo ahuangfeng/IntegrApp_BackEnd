@@ -52,4 +52,40 @@ var apiRoutes = express.Router();
  */
 apiRoutes.get('/chat', tokenMiddleware.tokenCheck, chatController.getChat);
 
+
+/**
+ * @swagger
+ * /chat/{userId}:
+ *   get:
+ *     summary: Retorna els missatges del usuari
+ *     tags: [Chat]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         description: userId dels missatges del remitent
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: "#/definitions/Chat"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/chat/:id', tokenMiddleware.tokenCheck, chatController.getChatByUserId);
+
 exports.apiRoutes = apiRoutes;

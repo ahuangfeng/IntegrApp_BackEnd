@@ -30,7 +30,9 @@ var mongoose = require('mongoose');
 var ChatSchema = new mongoose.Schema({
   new: Boolean,
   content: String,
+  fromUsername: String,
   from: String,
+  toUsername: String,
   to: String,
   createdAt: String
 });

@@ -1,5 +1,7 @@
 var tokenVerification = require('../middleware/tokenVerification');
 const routesChat = require('./routes');
+var chatDB = require('./chatDB');
+var usersDB = require('../users/usersDB');
 
 exports.assignRoutes = function (app, server) {
   var io = require("socket.io").listen(server);
@@ -7,7 +9,7 @@ exports.assignRoutes = function (app, server) {
 
   io.sockets.on('connection', function (socket) {
     socket.on('send message', function (data, to) {
-      console.log("SENTD MESSAGE: ", data, to);
+      console.log("SENT MESSAGE: ", data, to);
       io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
       //TODO: Guardar mensaje en BD
       //TODO: Si el 'to' no esta en connectedUsers --> poner flag de 'new'
@@ -17,10 +19,18 @@ exports.assignRoutes = function (app, server) {
       if (data in connectedUsers) {
         callback(false);
       } else {
-        callback(true);
-        socket.username = data;
-        connectedUsers[socket.username] = 1;
-        updateNickNames();
+        usersDB.findUserByName(data).then(user => {
+          if(user){
+            callback(true);
+            socket.username = data;
+            connectedUsers[socket.username] = 1;
+            updateNickNames();
+          }else{
+            callback(false);
+          }
+        }).catch(err => {
+          callback(false);
+        });
       }
     });
 
