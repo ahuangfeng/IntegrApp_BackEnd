@@ -1,7 +1,7 @@
 var tokenVerification = require('../middleware/tokenVerification');
 const routesChat = require('./routes');
 
-exports.assignRoutes = function (app,server) {
+exports.assignRoutes = function (app, server) {
   var io = require("socket.io").listen(server);
   var connectedUsers = {};
 
@@ -10,10 +10,10 @@ exports.assignRoutes = function (app,server) {
       console.log("SENTD MESSAGE: ", data, to);
       io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
       //TODO: Guardar mensaje en BD
-      //TODO: Si el to no esta en connectedUsers --> poner flag de 'new'
+      //TODO: Si el 'to' no esta en connectedUsers --> poner flag de 'new'
     });
 
-    socket.on('new user', function (data, callback) {
+    socket.on('new user', function (data, callback) { //TODO: podria enviarle todo el historial aqui...!
       if (data in connectedUsers) {
         callback(false);
       } else {
