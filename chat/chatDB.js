@@ -19,10 +19,10 @@ exports.saveChat = function (chatData) {
   });
 }
 
-exports.getChat = function(from, to){
+exports.getChat = function (from, to) {
   return new Promise((resolve, reject) => {
-    Chat.find({from: from, to: to}, function(err, res){
-      if(err){
+    Chat.find({ $or: [{ from: from, to: to }, { from: to, to: from }] }, function (err, res) {
+      if (err) {
         reject(err);
       }
       resolve(res);
