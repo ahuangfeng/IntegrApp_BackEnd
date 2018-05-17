@@ -11,45 +11,55 @@ exports.assignRoutes = function (app, server) {
   io.sockets.on('connection', function (socket) {
     // console.log("SOCKET:", socket.id);
 
-    socket.on('send message', function (data, to) {
-      console.log("SENT MESSAGE: ", data, to);
-      io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
-      // usersDB.findUserByName(to).then(userTo => {
-      //   if(userTo){
-      //   }else{
-
-      //   }
-      // }).catch(err => {
-      //   console.log("Error", err);
-      // });
-      //TODO: Guardar mensaje en BD
-      //TODO: Si el 'to' no esta en connectedUsers --> poner flag de 'new'
+    socket.on('send message', function (message, to) {
+      console.log("SENT MESSAGE: ", message, to);
+      var isNew = true;
+      if (connectedUsers[to] != undefined) {
+        isNew = false;
+      }
+      chatDB.saveChat(message, socket.userId, to, isNew).then(chatCreated => {
+        if (connectedUsers[to] != undefined) {
+          io.sockets.connected[connectedUsers[to].socketId].emit('new message', { msg: message, from: socket.userId, to: to });
+        }
+        if(socket.userId != to){
+          socket.emit('new message', { msg: message, from: socket.userId, to: to });
+        }
+        console.log("Created chat history:", chatCreated._id);
+      }).catch(err => {
+        console.log("ERROR: on socket chat", err);
+      });
     });
 
-    socket.on('new user', function (data, callback) { //TODO: podria enviarle todo el historial aqui...!
-      if (data in connectedUsers) {
+    socket.on('new user', function (from, to, callback) { //TODO: podria enviarle todo el historial aqui...!
+      console.log("NEW USER:", from, to);
+      if (from in connectedUsers) {
         callback(false);
       } else {
-        usersDB.findUserByName(data).then(user => {
-          if(user){
-            callback(true); //TODO: Devolver historial en callback
-            socket.username = data;
+        usersDB.findUserByName(from).then(user => {
+          if (user) {
+            socket.username = from;
             socket.userId = user._id;
-            connectedUsers[socket.username] = socket.id;
+            connectedUsers[socket.userId] = { 'username': socket.username, 'socketId': socket.id };
             // console.log("EO:", connectedUsers);
+            chatDB.getChat(from, to).then(chats => {
+              callback({ success: true, userId: socket.userId, chats: chats });
+            }).catch(err => {
+              console.log("Error ocurred:", err);
+            });
+            // callback({success: true}); //TODO: Devolver historial en callback
             updateNickNames();
-          }else{
-            callback(false);
+          } else {
+            callback({ success: false });
           }
         }).catch(err => {
-          callback(false);
+          callback({ success: false });
         });
       }
     });
 
     socket.on('disconnect', function (data) {
-      if (!socket.username) return;
-      delete connectedUsers[socket.username];
+      if (!socket.userId) return;
+      delete connectedUsers[socket.userId];
       updateNickNames();
     });
 

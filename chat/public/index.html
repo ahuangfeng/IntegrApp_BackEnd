@@ -42,14 +42,15 @@
 
     <div class="page-header">
       <h1>Node.js Chat
-        <small> Developed by 
+        <small> Developed by
           <a href="http://geekytheory.com" target="_blank">Geeky Theory</a>
         </small>
       </h1>
     </div>
 
     <div class="input-group" style="width:300px;text-align:center;margin:0 auto;" id="nickWrap">
-      <input id="nickname" class="form-control input-lg" type="text" placeholder="Enter your username">
+      <input id="nicknameFrom" class="form-control input-lg" type="text" placeholder="From user">
+      <input id="nicknameTo" class="form-control input-lg" type="text" placeholder="To user">
       <span class="input-group-btn">
         <button class="btn btn-lg btn-primary" type="submit" id="setNick">OK</button>
       </span>
@@ -74,7 +75,7 @@
               <button class="btn btn-lg btn-primary" type="submit">Send</button>
             </span>
             <select id="select">
-            </select> 
+            </select>
           </form>
         </div>
       </div>
@@ -101,19 +102,22 @@
       var $buttonSend = $('#send');
 
       var $nickForm = $('#setNick');
-      var $nickBox = $('#nickname');
+      var $nickBox = $('#nicknameFrom');
+      var $nickBox2 = $('#nicknameTo');
       var $users = $('#users');
       var $closeAlert = $('#closeAlert');
       var $myNickName = "";
+      var $myUserId = "";
 
       $nickForm.click(function (e) {
         e.preventDefault();
-        socket.emit('new user', $nickBox.val(), function (data) {
+        socket.emit('new user', $nickBox.val(), $nickBox2.val(), function (data) {
           $myNickName = $nickBox.val();
-          if (data) {
+          if (data.success) {
             $('#nickWrap').hide();
             $('#contentWrap').show();
-            $('#panelHead').append(" " + $myNickName);
+            $('#panelHead').append(" " + $myNickName + ' : ' + data.userId);
+            $myUserId = data.userId;
           } else {
             $("#login-error").show();
           }
@@ -132,9 +136,10 @@
       });
 
       socket.on('new message', function (data) {
-        if(data.to == $nickBox.val() || data.from == $nickBox.val()){
+        console.log("new message:", data);
+        if (data.to == $myUserId || data.from == $myUserId) {
           $chat.append('<b>' + data.from + ":</b> " + data.msg + "<br/>");
-        } else if ( data.to == 'all'){
+        } else if (data.to == 'all') {
           $chat.append('<b>' + data.from + " - To all:</b> " + data.msg + "<br/>");
         }
       });
@@ -144,7 +149,7 @@
         $('#select').find('option')
           .remove()
           .end();
-        
+
         for (var username in data) {
           html += username + '<br/>';
           $('#select').append($('<option>', {
@@ -153,9 +158,9 @@
           }));
         }
         $('#select').append($('<option>', {
-            value: "all",
-            text: "all"
-          }));
+          value: "all",
+          text: "all"
+        }));
         $users.html(html);
       });
 
