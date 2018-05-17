@@ -22,6 +22,10 @@ exports.createForum = function (req, res, next) {
   });
 }
 
+exports.modifyForum = function (req, res, next) {
+  notImplemented(req, res, next);
+}
+
 exports.getForums = function (req, res, next) {
   var types = req.query.type;
   var typesToGet = [];
@@ -53,10 +57,10 @@ exports.getForums = function (req, res, next) {
   })
 }
 
-exports.deleteCommentforum = function(req, res, next){
-  if(!req.params.id){
-    res.status(400).json({ message: "Falta un id del comentario"});
-  }else{
+exports.deleteCommentforum = function (req, res, next) {
+  if (!req.params.id) {
+    res.status(400).json({ message: "Falta un id del comentario" });
+  } else {
     forumDB.deleteEntry(req.params.id, req.decoded.userID).then(result => {
       res.send(result);
     }).catch(err => {
@@ -185,9 +189,9 @@ verifyTypeForum = function (typesToVerify) {
   return result;
 }
 
-addUsers = function(forums){
+addUsers = function (forums) {
   return new Promise((resolve, reject) => {
-    if(forums.length > 0){
+    if (forums.length > 0) {
       var forumArray = [];
       var itemsProcessed = 0;
       forums.forEach((item, index, array) => {
@@ -207,7 +211,7 @@ addUsers = function(forums){
           reject(err);
         });
       });
-    }else{
+    } else {
       resolve(forums);
     }
   });
