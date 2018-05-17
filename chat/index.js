@@ -13,15 +13,15 @@ exports.assignRoutes = function (app, server) {
 
     socket.on('send message', function (data, to) {
       console.log("SENT MESSAGE: ", data, to);
-      usersDB.findUserByName(to).then(userTo => {
-        if(userTo){
-          io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
-        }else{
+      io.sockets.emit('new message', { msg: data, from: socket.username, to: to });
+      // usersDB.findUserByName(to).then(userTo => {
+      //   if(userTo){
+      //   }else{
 
-        }
-      }).catch(err => {
-        console.log("Error", err);
-      });
+      //   }
+      // }).catch(err => {
+      //   console.log("Error", err);
+      // });
       //TODO: Guardar mensaje en BD
       //TODO: Si el 'to' no esta en connectedUsers --> poner flag de 'new'
     });
