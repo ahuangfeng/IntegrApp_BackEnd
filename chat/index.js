@@ -3,6 +3,7 @@ const routesChat = require('./routes');
 var chatDB = require('./chatDB');
 var usersDB = require('../users/usersDB');
 
+//https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender/10099325#10099325
 exports.assignRoutes = function (app, server) {
   var io = require("socket.io").listen(server);
   var connectedUsers = {};
