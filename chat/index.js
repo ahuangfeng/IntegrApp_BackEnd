@@ -9,20 +9,19 @@ exports.assignRoutes = function (app, server) {
   var connectedUsers = {};
 
   io.sockets.on('connection', function (socket) {
-    // console.log("SOCKET:", socket.id);
 
     socket.on('send message', function (message, to) {
-      console.log("SENT MESSAGE: ", message, to);
+      console.log("Sending message: ", socket.id + ' to ' + to + ': ' + message);
       var isNew = true;
       if (connectedUsers[to] != undefined) {
         isNew = false;
       }
       chatDB.saveChat(message, socket.userId, to, isNew).then(chatCreated => {
         if (connectedUsers[to] != undefined) {
-          io.sockets.connected[connectedUsers[to].socketId].emit('new message', { msg: message, from: socket.userId, to: to });
+          io.sockets.connected[connectedUsers[to].socketId].emit('new message', chatCreated);
         }
-        if(socket.userId != to){
-          socket.emit('new message', { msg: message, from: socket.userId, to: to });
+        if (socket.userId != to) {
+          socket.emit('new message', chatCreated);
         }
         console.log("Created chat history:", chatCreated._id);
       }).catch(err => {
@@ -31,23 +30,29 @@ exports.assignRoutes = function (app, server) {
     });
 
     socket.on('new user', function (from, to, callback) { //TODO: podria enviarle todo el historial aqui...!
-      console.log("NEW USER:", from, to);
+      console.log("New user connected:", from, to);
       if (from in connectedUsers) {
         callback(false);
       } else {
-        usersDB.findUserByName(from).then(user => {
+        usersDB.findUserById(from).then(user => {
           if (user) {
-            socket.username = from;
-            socket.userId = user._id;
-            connectedUsers[socket.userId] = { 'username': socket.username, 'socketId': socket.id };
-            // console.log("EO:", connectedUsers);
-            chatDB.getChat(from, to).then(chats => {
-              callback({ success: true, userId: socket.userId, chats: chats });
+            usersDB.findUserById(to).then(userTo => {
+              if (userTo) {
+                socket.username = user.username;
+                socket.userId = user._id;
+                connectedUsers[socket.userId] = { 'username': socket.username, 'socketId': socket.id };
+                chatDB.getChat(from, to).then(chats => {
+                  callback({ success: true, userId: socket.userId,username: socket.username, chats: chats });
+                }).catch(err => {
+                  console.log("Error ocurred:", err);
+                });
+                updateNickNames();
+              } else {
+                callback({ success: false });
+              }
             }).catch(err => {
-              console.log("Error ocurred:", err);
+              callback({ success: false });
             });
-            // callback({success: true}); //TODO: Devolver historial en callback
-            updateNickNames();
           } else {
             callback({ success: false });
           }

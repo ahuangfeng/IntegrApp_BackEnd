@@ -116,8 +116,15 @@
           if (data.success) {
             $('#nickWrap').hide();
             $('#contentWrap').show();
-            $('#panelHead').append(" " + $myNickName + ' : ' + data.userId);
+            $('#panelHead').append(" " + data.username + ' : ' + data.userId);
             $myUserId = data.userId;
+            console.log("new user:",data.chats);
+            if(data.chats.length > 0){
+              for (let i = 0; i < data.chats.length; i++) {
+                const element = data.chats[i];
+                $('#chat').append('<b>' + element.fromUsername + ":</b> " + element.content + "<br/>");
+              }
+            }
           } else {
             $("#login-error").show();
           }
@@ -138,9 +145,9 @@
       socket.on('new message', function (data) {
         console.log("new message:", data);
         if (data.to == $myUserId || data.from == $myUserId) {
-          $chat.append('<b>' + data.from + ":</b> " + data.msg + "<br/>");
+          $chat.append('<b>' + data.fromUsername + ":</b> " + data.content + "<br/>");
         } else if (data.to == 'all') {
-          $chat.append('<b>' + data.from + " - To all:</b> " + data.msg + "<br/>");
+          $chat.append('<b>' + data.fromUsername + " - To all:</b> " + data.content + "<br/>");
         }
       });
 
