@@ -57,7 +57,7 @@ exports.deleteAdvert = function (req, res, next) {
       res.send({ message: deletedMessage.message });
     }).catch(err => {
       res.status(400).json({ message: err.message });
-    })
+    });
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
