@@ -31,7 +31,6 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-when advert completed setStatus--> inscription a completed 
 votacions forum --> arnau
 calcul de reports --> arnau
 

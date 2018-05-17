@@ -84,7 +84,7 @@ apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, forumController.comm
  * /forum/{id}:
  *   put:
  *     summary: Modificar el contingut de la descripció del forum
- *     tags: [Forum]
+ *     tags: [Not Implemented]
  *     security:
  *       - user: []
  *     consumes:
