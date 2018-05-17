@@ -70,11 +70,19 @@ exports.modifyStateAdvert = function (id, state) {
     if (validValues.indexOf(state) == -1) {
       reject({ message: "state no válido" });
     } else {
-      Advert.findByIdAndUpdate(id, { $set: { state: state } }, function (err, advert) {
+      Advert.findByIdAndUpdate(id, { $set: { state: state } },{new: true}, function (err, advert) {
         if (err) {
           reject(err);
         }
-        resolve(advert);
+        if(state == 'closed'){
+          inscriptionDB.closeInscriptions(id).then(allInscriptions => {
+            resolve(advert);
+          }).catch(err => {
+            reject(err);
+          });
+        }else{
+          resolve(advert);
+        }
       });
     }
   });

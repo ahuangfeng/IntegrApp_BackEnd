@@ -116,3 +116,12 @@ exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
 
   });
 }
+
+exports.closeInscriptions = function(advertId){
+  return new Promise((resolve,reject) => {
+    Inscription.updateMany({advertId: advertId},{ $set: { status: 'closed' } },function(err,raw){
+      if(err) reject(err);
+      resolve(raw);
+    });
+  });
+}
