@@ -15,45 +15,46 @@ exports.createInscription = function (req, res, next) {
     return;
   }
 
-  userDB.findUserById(inscriptionData.userId).then(foundUser => {
+  var dataToSave = JSON.parse(JSON.stringify(inscriptionData));
+  userDB.findUserById(dataToSave.userId).then(foundUser => {
     if (!foundUser) {
       res.status(400).json({ message: "Este userId no existe." });
     } else {
-      advertDB.findAdvertById(inscriptionData.advertId).then(foundAdvert => {
+      dataToSave['username'] = foundUser.username;
+      advertDB.findAdvertById(dataToSave.advertId).then(foundAdvert => {
         if (!foundAdvert) {
           res.status(400).json({ message: "Este advertId no existe." });
         } else {
-          if(foundAdvert.userId == inscriptionData.userId) {
+          if (foundAdvert.userId == dataToSave.userId) {
             res.status(400).json({ message: "No puedes inscribirte a tu propio anuncio." });
           }
           else {
-            inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, inscriptionData.advertId).then(
+            inscriptionDB.existsInscriptionUserAdvert(dataToSave.userId, dataToSave.advertId).then(
               inscription => {
                 if (inscription != null) {
                   res.status(400).json({ message: "El usuario ya está inscrito a este anuncio" });
                 } else {
                   countAcceptedUsers(foundAdvert).then(acc => {
-                    if(acc >= foundAdvert.places) {
-                      var response = { message: "Número de plazas aceptadas alcanzado."}
+                    if (acc >= foundAdvert.places) {
+                      var response = { message: "Número de plazas aceptadas alcanzado." }
                       res.status(400).json(response);
                     }
                     else {
-                      inscriptionDB.saveInscription(inscriptionData)
-                      .then(inscription => {
-                        res.send(inscription);
-                      })
-                      .catch(err => {
-                        var response = { message: err.message };
-                        res.status(400).json(response);
-                      });
-                    }  
+                      inscriptionDB.saveInscription(dataToSave)
+                        .then(inscription => {
+                          res.send(inscription);
+                        }).catch(err => {
+                          var response = { message: err.message };
+                          res.status(400).json(response);
+                        });
+                    }
                   }).catch(err => {
                     res.status(400).json({ message: "Error en la suma de accepted users. " + err.message });
                   });
                 }
               });
           }
-          
+
         }
       }).catch(err => {
         res.status(400).json({ message: "Error en verificación de identificador de advert: " + err.message });
@@ -69,16 +70,16 @@ countAcceptedUsers = function (advert) {
     var count = 0;
     var itemsProcessed = 0;
     inscriptionDB.findInscriptionsAdvert(advert._id).then(ins => {
-      if(ins.length == 0) {
+      if (ins.length == 0) {
         resolve(count);
       }
       else {
         ins.forEach((item, index, array) => {
-          if(item.status=="accepted") {
+          if (item.status == "accepted") {
             ++count;
           }
           ++itemsProcessed;
-          if(itemsProcessed === array.length) {
+          if (itemsProcessed === array.length) {
             resolve(count);
           }
         });
@@ -87,13 +88,13 @@ countAcceptedUsers = function (advert) {
       reject(err);
     });
   });
-  
+
 }
 
 exports.getInscriptionsAdvert = function (req, res, next) {
   if (!req.params.advertId) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar un advert." });
-  } 
+  }
   else if (req.params.advertId.match(/^[0-9a-fA-F]{24}$/)) {
     advertDB.findAdvertById(req.params.advertId).then(advert => {
       inscriptionDB.findInscriptionsAdvert(advert._id).then(data => {
@@ -102,7 +103,7 @@ exports.getInscriptionsAdvert = function (req, res, next) {
         res.status(400).send(err);
       });
     }).catch(err => {
-    res.status(400).send(err);
+      res.status(400).send(err);
     });
   }
   else {
@@ -128,44 +129,44 @@ exports.getInscriptionsUser = function (req, res, next) {
 exports.solveInscriptionUser = function (req, res, next) {
   var inscriptionData = req.body;
 
-  var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id).then(resultat=> {
+  var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id).then(resultat => {
     userDB.findUserById(inscriptionData.userId).then(user => {
-      if(user.length == 0) {
+      if (user.length == 0) {
         res.status(400).json({ message: "User doesn't exists" })
       }
       else {
         advertDB.findAdvertById(req.params.id).then(advert => {
-          if(advert.length == 0) {
+          if (advert.length == 0) {
             res.status(400).json({ message: "Advert doesn't exists" })
           }
           else {
             inscriptionDB.existsInscriptionUserAdvert(inscriptionData.userId, req.params.id).then(inscription => {
-    
+
               if (inscription == null) {
                 res.status(400).json({ message: "Inscription doesn't exists" })
               }
-              
+
               else {
-                if(inscription.status == inscriptionData.status) {
-                  res.status(400).json({ message : "La inscripción ya está en este mismo estado"});
+                if (inscription.status == inscriptionData.status) {
+                  res.status(400).json({ message: "La inscripción ya está en este mismo estado" });
                 }
-                else if(inscriptionData.status == "accepted") {
+                else if (inscriptionData.status == "accepted") {
                   countAcceptedUsers(advert).then(acc => {
-                    if(acc >= advert.places) {
+                    if (acc >= advert.places) {
                       res.status(400).json({ message: "Plazas máximas aceptadas alcanzadas." })
                     }
                     else {
-                        inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
-                          res.send(inscription);
-                        }).catch(err => {
-                          res.status(400).json({ message: err.message });
-                        })
+                      inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
+                        res.send(inscription);
+                      }).catch(err => {
+                        res.status(400).json({ message: err.message });
+                      })
                     }
                   }).catch(err => {
                     res.status(400).json({ message: "Error en la suma de accepted users: " + err.message });
                   });
                 }
-                
+
                 else {
                   inscriptionDB.solveInscriptionUser(inscriptionData.userId, req.params.id, inscriptionData.status).then(inscription => {
                     res.send(inscription);
@@ -184,39 +185,39 @@ exports.solveInscriptionUser = function (req, res, next) {
       }
     }).catch(err => {
       res.status(400).json({ message: err.message });
-    })  
-  }).catch(err=> {
-    res.status(400).json({message: err});
+    })
+  }).catch(err => {
+    res.status(400).json({ message: err });
   })
 }
 
 exports.deleteInscription = function (req, res, next) {
   // notImplemented(req, res, next);
 
-  if(!req.params.id){
+  if (!req.params.id) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar una inscripció." });
     return;
   }
 
-  if(!req.params.id.match(/^[0-9a-fA-F]{24}$/)){
-    res.status(400).json( { message: "Id de inscripció invàlida"});
+  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    res.status(400).json({ message: "Id de inscripció invàlida" });
     return;
   }
   else {
     inscriptionDB.existsInscription(req.params.id).then(ins => {
-      if(ins != null) {
+      if (ins != null) {
         inscriptionDB.deleteInscription(req.params.id).then(document => {
-          res.send({message: "Inscripció eliminada", document});
+          res.send({ message: "Inscripció eliminada", document });
         }).catch(err => {
-          res.status(400).json({ message: err.message});
-        }); 
+          res.status(400).json({ message: err.message });
+        });
       }
       else {
-        res.status(400).json({ message: "Inscription does not exist"});
-      } 
+        res.status(400).json({ message: "Inscription does not exist" });
+      }
     }).catch(err => {
-      res.status(400).json({ message: err.message});
-    });  
+      res.status(400).json({ message: err.message });
+    });
   }
 }
 
@@ -244,6 +245,6 @@ verifyFieldsSolveInscription = function (inscriptionData) {
     }
     resolve("OK");
   });
-  
+
 }
 
