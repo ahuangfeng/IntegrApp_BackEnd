@@ -159,7 +159,11 @@ createForumDocument = function (forumData, decoded) {
   var forum = {};
   forum['title'] = forumData.title;
   forum['description'] = forumData.description;
-  forum['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours()+2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  forum['createdAt'] = today;
   forum['type'] = forumData.type;
   forum['userId'] = decoded.userID;
   forum['rate'] = 0;
@@ -170,7 +174,11 @@ createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
   forumEntry['username'] = decoded.username;
-  forumEntry['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours()+2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  forumEntry['createdAt'] = today;
   forumEntry['content'] = entry.content;
   forumEntry['forumId'] = entry.forumId;
   return forumEntry;
