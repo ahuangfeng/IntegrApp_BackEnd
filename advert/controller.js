@@ -135,8 +135,11 @@ verifyFieldAdvert = function (advertData, decoded) {
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();
+    
 
-    var today = new Date().toLocaleString();
+    var today = new Date();
+    today.setHours(today.getHours()+2);
+    today.toLocaleString();
     today = new Date(today).getTime();
 
 
@@ -170,7 +173,9 @@ verifyFieldAdvertModify = function (advertData, decoded) {
       var dataAux = new Date(advertData.date).toLocaleString();
       dataAux = new Date(dataAux).getTime();
   
-      var today = new Date().toLocaleString();
+      var today = new Date();
+      today.setHours(today.getHours()+2);
+      today.toLocaleString();
       today = new Date(today).getTime();
   
   
@@ -194,7 +199,11 @@ verifyFieldAdvertModify = function (advertData, decoded) {
 createAdvertDocument = function (advertData, user, decoded) {
   var advert = {};
   advert['userId'] = decoded.userID;
-  advert['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours()+2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  advert['createdAt'] = today;
   advert['date'] = new Date(advertData.date).toLocaleString();
   advert['state'] = "opened";
   advert['title'] = advertData.title;
