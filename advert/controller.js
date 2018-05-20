@@ -24,6 +24,18 @@ exports.createAdvert = function (req, res, next) {
   });
 }
 
+exports.getAdvertId = function(req, res, next) {
+  advertDB.getOneAdvert(req.params.id).then(advert => {
+    advertDB.getOneFullAdvert(advert).then(fullAdd => {
+      res.send(fullAdd);
+    }).catch(err => {
+      res.status(400).json({ message: err.message});
+    });
+  }).catch(err => {
+    res.status(400).json({ message: err.message});
+  });
+}
+
 exports.getAdverts = function (req, res, next) { 
   var types = req.query.type;
   var typesToGet = [];

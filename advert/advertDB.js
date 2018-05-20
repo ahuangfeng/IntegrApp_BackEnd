@@ -136,6 +136,22 @@ exports.findAdvertById = function (idAdvert) {
   });
 }
 
+exports.getOneAdvert = function(advertId) {
+  return new Promise((resolve, reject) => {
+    Advert.findOne({_id: advertId},function (err, advert) {
+      if (err) {
+        reject(err)
+      }
+      addUserToOneAdvert(advert).then(advertFull => {
+        console.log(advertFull);
+        resolve(advertFull);
+      }).catch(err => {
+        reject(err);
+      })
+    });
+  })
+}
+
 exports.getAdvert = function (types) {
   return new Promise((resolve, reject) => {
     if (!Array.isArray(types)) {
@@ -173,6 +189,21 @@ exports.getAdvert = function (types) {
         });
       });
     }
+  })
+}
+
+addUserToOneAdvert = function (advert) {
+  return new Promise((resolve, reject) => {
+    var advertToSent = JSON.parse(JSON.stringify(advert));
+    usersDB.findUserById(advert.userId).then(user => {
+      advertToSent['user'] = JSON.parse(JSON.stringify(user));
+      if (user) {
+        advertToSent['user'].password = undefined;
+      }
+      resolve(advertToSent);
+    }).catch(err => {
+      reject(err);
+    });
   })
 }
 
@@ -228,6 +259,18 @@ getRegistereds = function (advert) {
           });
         });
       }
+    });
+  });
+}
+
+exports.getOneFullAdvert = function (advert) {
+  return new Promise((resolve, reject) => {
+    var advertToSent = JSON.parse(JSON.stringify(advert));
+    getRegistereds(advert).then(regs => {
+      advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
+      resolve(advertToSent);
+    }).catch(err => {
+      reject(err);
     });
   });
 }

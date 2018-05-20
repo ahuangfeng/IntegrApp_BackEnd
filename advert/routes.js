@@ -92,6 +92,39 @@ apiRoutes.post('/advert', tokenMiddleware.tokenCheck, advertController.createAdv
  */
 apiRoutes.get('/advert', tokenMiddleware.tokenCheck, advertController.getAdverts);
 
+/**
+ * @swagger
+ * /advert/{id}:
+ *   get:
+ *     summary: Obtenció d'un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id de l'anunci que es vol obtenir
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/AdvertFailed"
+ */
+apiRoutes.get('/advert/:id',tokenMiddleware.tokenCheck, advertController.getAdvertId);
 
 /**
  * @swagger
