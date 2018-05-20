@@ -117,11 +117,21 @@ exports.getInscriptionsUser = function (req, res, next) {
     res.status(400).json({ message: "Es necesita un identificador per a trobar l'usuari." });
   }
   else {
-    inscriptionDB.findInscriptionsUser(req.params.userId).then(data => {
-      res.send(data);
+    userDB.findUserById(req.params.userId).then(user => {
+      if(user!=null) {
+        inscriptionDB.findInscriptionsUser(req.params.userId).then(data => {
+          res.send(data);
+        }).catch(err => {
+          res.status(400).send(err);
+        });
+      }
+      else {
+        res.status(400).json({ message: "No existeix usuari amb aquest ID"});
+      }
     }).catch(err => {
       res.status(400).send(err);
     });
+    
   }
 
 }
