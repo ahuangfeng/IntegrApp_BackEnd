@@ -25,15 +25,25 @@ exports.createAdvert = function (req, res, next) {
 }
 
 exports.getAdvertId = function(req, res, next) {
-  advertDB.getOneAdvert(req.params.id).then(advert => {
-    advertDB.getOneFullAdvert(advert).then(fullAdd => {
-      res.send(fullAdd);
-    }).catch(err => {
-      res.status(400).json({ message: err.message});
-    });
+  advertDB.findAdvertById(req.params.id).then(ad => {
+    if(ad!= null) {
+      advertDB.getOneAdvert(req.params.id).then(advert => {
+        advertDB.getOneFullAdvert(advert).then(fullAdd => {
+          res.send(fullAdd);
+        }).catch(err => {
+          res.status(400).json({ message: err.message});
+        });
+      }).catch(err => {
+        res.status(400).json({ message: err.message});
+      });
+    }
+    else {
+      res.status(400).json({ message: "No existe ningún advert con este ID"});
+    }
   }).catch(err => {
     res.status(400).json({ message: err.message});
   });
+  
 }
 
 exports.getAdverts = function (req, res, next) { 
