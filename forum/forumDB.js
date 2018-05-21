@@ -20,6 +20,51 @@ exports.saveForum = function (forumData) {
   });
 }
 
+exports.voteForum = function(forumData, newRate) {
+  return new Promise((resolve, reject) => {
+    if(!forumData.numberRates) {
+      numRates = 0;
+    }
+    else {
+      var numRates = forumData.numberRates;
+    }
+    if(numRates == 0) {
+      Forum.findOneAndUpdate({ _id:forumData._id }, {
+        $set: {
+          rate: newRate,
+          numberRates: 1
+        }
+      }, { new: true }, function (err, doc) {
+        if (!err) {
+          resolve(doc);
+        } else {
+          reject({ message: "Error rating Forum" });
+        }
+      })
+    }
+
+    else {
+      var rateActual = forumData.rate;
+      rateActual = rateActual * numRates;
+      rateActual = rateActual + newRate;
+      numRates = numRates + 1;
+      rateActual = rateActual / numRates;
+      Forum.findOneAndUpdate({ _id:forumData._id }, {
+        $set: {
+          rate: rateActual,
+          numberRates: numRates
+        }
+      }, { new: true }, function (err, doc) {
+        if (!err) {
+          resolve(doc);
+        } else {
+          reject({ message: "Error rating Forum" });
+        }
+      })
+    }
+  })
+}
+
 exports.findForumById = function (id) {
   return new Promise(function (resolve, reject) {
     if (id.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida

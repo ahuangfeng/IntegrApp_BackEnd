@@ -69,6 +69,29 @@ exports.deleteCommentforum = function (req, res, next) {
   }
 }
 
+exports.voteForum = function(req, res, next) {
+  if(!req.body.rate || req.body.rate > 5 || req.body.rate < 0) {
+    res.status(400).json({ message: "Necesita puntuar con un número entre 0 y 5." });
+  }
+  if(!req.params.id) {
+    res.status(400).json({ message: "Es necesita un id del forum." });
+  }
+  forumDB.findForumById(req.params.id).then(forum => {
+    if(forum.userId == req.decoded.userID) {
+      res.status(400).json({ message: "No pots votar al teu propi forum." });
+    }
+    else {
+      forumDB.voteForum(forum, req.body.rate).then(forumVoted => {
+        res.send(forumVoted);
+      }).catch(err => {
+        res.status(400).json({ message: err.message });
+      });
+    }
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  });
+}
+
 exports.commentForum = function (req, res, next) {
   verifyForumEntry(req.body, req.decoded).then(forum => {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
@@ -124,6 +147,8 @@ exports.getFullForum = function (req, res, next) {
     });
   }
 }
+
+
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });

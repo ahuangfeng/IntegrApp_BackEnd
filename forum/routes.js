@@ -224,4 +224,42 @@ apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getF
  */
 apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumController.deleteCommentforum);
 
+/**
+ * @swagger
+ * /forum/{id}/vote:
+ *   put:
+ *     summary: Votar un forum
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumVotation"
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Forum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/forum/:id/vote', tokenMiddleware.tokenCheck, forumController.voteForum);
+
 exports.apiRoutes = apiRoutes;
