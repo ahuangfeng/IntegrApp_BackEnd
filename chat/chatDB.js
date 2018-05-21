@@ -19,6 +19,31 @@ exports.saveChat = function (content, fromId, toId, newFlag) {
   });
 }
 
+exports.getChatByUserId = function(userId){
+  return new Promise((resolve, reject) => {
+    var allChats = [];
+    Chat.find({ $or: [{ from: userId }, { to: userId }]}, function(err, res){
+      console.log("Chat_", res);
+      res.forEach((element, index,array)=> {
+        if(element.from == userId){
+          if(allChats.find(x => x._id == element.to) == undefined){
+            allChats.push(element.to);
+          }
+        }else{
+          if(allChats.find( x => x._id == element.from) == undefined){
+            allChats.push(element.from);
+          }
+        }
+      });
+      usersDB.findUsersByIds(allChats).then(all => {
+        resolve(all);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  });
+}
+
 exports.getChat = function (from, to) {
   return new Promise((resolve, reject) => {
     Chat.find({ $or: [{ from: from, to: to }, { from: to, to: from }] }, function (err, res) {

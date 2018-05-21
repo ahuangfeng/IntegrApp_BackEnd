@@ -31,6 +31,21 @@ exports.saveUser = function (userData) {
   });
 }
 
+exports.findUsersByIds = function(ids){
+  return new Promise((resolve,reject) => {
+    var findIds = [];
+    ids.forEach(element => {
+      findIds.push({_id: element});
+    });
+    User.find({ $or: findIds}, (err,doc) => {
+      if(err){
+        reject(err);
+      }
+      resolve(doc);
+    });
+  }); 
+}
+
 exports.deleteUser = function (id) {
   return new Promise(function (resolve, reject) {
     User.findOneAndRemove({ _id: id }, function (err,doc) {

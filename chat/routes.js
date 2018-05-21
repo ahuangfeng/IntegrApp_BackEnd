@@ -58,7 +58,7 @@ apiRoutes.get('/chat', tokenMiddleware.tokenCheck, chatController.getChat);
  * /chat/{userId}:
  *   get:
  *     summary: Retorna els missatges del usuari
- *     tags: [Chat]
+ *     tags: [Not Implemented]
  *     security:
  *       - user: []
  *     consumes:

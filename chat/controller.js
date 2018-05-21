@@ -10,7 +10,17 @@ notImplemented = function (req, res, next) {
 }
 
 exports.getChatByUserId = function (req, res, next) {
-  notImplemented(res, res, next);
+  if(req.params.id == undefined){
+    res.status(400).json({ message: "Id necesario"});
+    return;
+  }
+
+  chatDB.getChatByUserId(req.params.id).then(chats => {
+    res.send(chats);
+  }).catch(err => {
+    res.status(400).send(err);
+  });
+  // notImplemented(res, res, next);
 }
 
 exports.getChat = function (req, res, next) {
