@@ -222,7 +222,7 @@ apiRoutes.put('/advertState/:id', tokenMiddleware.tokenCheck, advertController.m
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/Advert"
+ *             $ref: "#/definitions/AdvertRegistered"
  *       400:
  *         description: Error
  *         schema:
