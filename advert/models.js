@@ -96,6 +96,10 @@ var mongoose = require('mongoose');
 *         enum: [lookFor, offer]
 *       user:
 *         $ref: "#/definitions/User"
+*       registered:
+*         type: array
+*         items:
+*           $ref: "#/definitions/Inscription"
 */
 
 /**

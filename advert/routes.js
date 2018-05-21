@@ -114,7 +114,7 @@ apiRoutes.get('/advert', tokenMiddleware.tokenCheck, advertController.getAdverts
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/Error"
+ *           $ref: "#/definitions/AdvertResponse"
  *       400:
  *         description: Error
  *         schema:

@@ -170,6 +170,35 @@ var mongoose = require('mongoose');
 *         $ref: "#/definitions/UserRate"
 *       CIF:
 *         type: string
+*/
+
+/**
+* @swagger
+* definitions:
+*   UserWithAdverts:
+*     required:
+*       - username
+*       - password
+*       - name
+*       - type
+*     properties:
+*       username:
+*         type: string
+*       password:
+*         type: string
+*       name:
+*         type: string
+*       email:
+*         type: string
+*       phone:
+*         type: number
+*       type:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       rate:
+*         $ref: "#/definitions/UserRate"
+*       CIF:
+*         type: string
 *       adverts:
 *         type: array
 *         items:
