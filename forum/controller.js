@@ -95,7 +95,26 @@ exports.getFullForum = function (req, res, next) {
           responseToSend['entries'].sort(function (a, b) {
             return new Date(b.createdAt) - new Date(a.createdAt);
           });
-          res.send(responseToSend);
+          if (responseToSend['entries'].length > 0){
+            var entriesArray = [];
+            var itemsProcessed = 0;
+            responseToSend['entries'].forEach((element, index, array) => {
+              usersDB.findUserById(element.userId).then(user => {
+                itemsProcessed++;
+                var elementCopy = JSON.parse(JSON.stringify(element));
+                elementCopy['username'] = user.username;
+                entriesArray.push(elementCopy);
+                if(itemsProcessed == array.length){
+                  responseToSend['entries'] = entriesArray;
+                  res.send(responseToSend);
+                }
+              }).catch(err => {
+                res.status(500).send(err);
+              });
+            });
+          }else{
+            res.send(responseToSend);
+          }
         }).catch(err => {
           res.status(400).json(err);
         });
@@ -173,7 +192,6 @@ createForumDocument = function (forumData, decoded) {
 createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
-  forumEntry['username'] = decoded.username;
   var today = new Date();
   today.setHours(today.getHours()+2);
   today.toLocaleString();
