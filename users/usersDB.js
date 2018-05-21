@@ -82,6 +82,11 @@ exports.findAllUsers = function () {
       var itemsProcessed = 0;
       users.forEach((item, index, array) => {
         var currentUser = JSON.parse(JSON.stringify(item));
+        reportDB.findNumReports(item._id).then(numReports => {
+          currentUser['numReports'] = numReports;
+        }).catch(err => {
+          reject({message: "ha habido un error al contar los reports: " + err.message});
+        });
         this.findLikes(item._id).then(rate => {
           currentUser['rate'] = rate;
           usersToSent.push(currentUser);
@@ -130,11 +135,14 @@ exports.findUserById = function (id) {
           reject(err);
         }
         if (user) {
-          this.findLikes(id).then(rate => {
-            var userToSend = JSON.parse(JSON.stringify(user));
+          var userToSend = JSON.parse(JSON.stringify(user));
+          this.findLikes(user._id).then(rate => {
             userToSend['rate'] = rate;
-            resolve(userToSend);
           });
+          reportDB.findNumReports(user._id).then(numReports => {
+            userToSend['numReports'] = numReports;
+          });
+          resolve(userToSend);
         } else {
           resolve(user);
         }
