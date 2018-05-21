@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var models = require('./models');
+var reportDB = require('../report/reportDB');
 
 /**
  * @swagger
@@ -11,11 +12,9 @@ var models = require('./models');
 // Register the schema
 var User = mongoose.model('User', models.UserSchema);
 var Like = mongoose.model('Like', models.LikesSchema);
-var Report = mongoose.model('Report', models.ReportSchema);
 
 exports.Like = Like;
 exports.User = User;
-exports.Report = Report;
 
 exports.saveUser = function (userData) {
   var user = new User(userData);
@@ -108,11 +107,14 @@ exports.findUserByName = function (name) {
         reject(err);
       }
       if (user) {
+        var userToSend = JSON.parse(JSON.stringify(user));
         this.findLikes(user._id).then(rate => {
-          var userToSend = JSON.parse(JSON.stringify(user));
           userToSend['rate'] = rate;
-          resolve(userToSend);
         });
+        reportDB.findNumReports(user._id).then(numReports => {
+          userToSend['numReports'] = numReports;
+        });
+        resolve(userToSend);
       } else {
         resolve(user);
       }
@@ -164,22 +166,6 @@ findLikes = function (userId) {
   });
 }
 exports.findLikes = findLikes;
-
-findNumReports = function (userId) {
-  return new Promise((resolve, reject) => {
-    Report.find({
-      type: 'user',
-      typeId: userId
-    }, function (err, reports) {
-      if (err) {
-        reject(err);
-      }
-      var numReports = reports.length;
-      resolve(numReports);
-    });
-  });
-}
-exports.findNumReports = findNumReports;
 
 exports.likeUser = function (type, userId, likedUser) {
   return new Promise(function (resolve, reject) {

@@ -18,3 +18,18 @@ exports.saveReport = function (reportData) {
             });
     });
 }
+
+exports.findNumReports = function (userId) {
+    return new Promise((resolve, reject) => {
+      Report.find({
+        type: 'user',
+        typeId: userId
+      }, function (err, reports) {
+        if (err) {
+          reject(err);
+        }
+        var numReports = reports.length;
+        resolve(numReports);
+      });
+    });
+  }
