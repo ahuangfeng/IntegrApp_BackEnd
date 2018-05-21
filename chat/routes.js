@@ -57,8 +57,8 @@ apiRoutes.get('/chat', tokenMiddleware.tokenCheck, chatController.getChat);
  * @swagger
  * /chat/{userId}:
  *   get:
- *     summary: Retorna els missatges del usuari
- *     tags: [Not Implemented]
+ *     summary: Retorna els usuaris amb qui ha contactat un usuari
+ *     tags: [Chat]
  *     security:
  *       - user: []
  *     consumes:
@@ -69,14 +69,14 @@ apiRoutes.get('/chat', tokenMiddleware.tokenCheck, chatController.getChat);
  *       - name: userId
  *         in: path
  *         type: string
- *         description: userId dels missatges del remitent
+ *         description: userId del usuari remitent
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/Chat"
+ *             $ref: "#/definitions/User"
  *       400:
  *         description: Error
  *         schema:

@@ -23,7 +23,6 @@ exports.getChatByUserId = function(userId){
   return new Promise((resolve, reject) => {
     var allChats = [];
     Chat.find({ $or: [{ from: userId }, { to: userId }]}, function(err, res){
-      console.log("Chat_", res);
       res.forEach((element, index,array)=> {
         if(element.from == userId){
           if(allChats.find(x => x._id == element.to) == undefined){
