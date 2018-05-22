@@ -66,10 +66,28 @@ exports.findInscriptionsUser = function (idUser) {
   return new Promise(function (resolve, reject) {
     Inscription.find({ userId: idUser }, function (err, inscriptions) {
       if (err) {
-        console.log("Error finding:", err);
         reject(err)
       }
-      resolve(inscriptions);
+      if(inscriptions.length > 0) {
+        var inscriptionArray = [];
+        var itemsProcessed = 0;
+        inscriptions.forEach((item, index, array) => {
+          var inscriptionToSent = JSON.parse(JSON.stringify(item));
+          advertDB.findAdvertById(item.advertId).then(ad => {
+            inscriptionToSent['titleAdvert'] = JSON.parse(JSON.stringify(ad.title))
+            inscriptionArray.push(inscriptionToSent);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              resolve(inscriptionArray);
+            }
+          }).catch(err => {
+            reject(err);
+          });
+        });
+      }
+      else {
+        resolve(inscriptions);
+      }
     });
   })
 }
@@ -114,5 +132,14 @@ exports.solveInscriptionUser = function (idUser, idAdvert, newStatus) {
       reject(err);
     })
 
+  });
+}
+
+exports.closeInscriptions = function(advertId){
+  return new Promise((resolve,reject) => {
+    Inscription.updateMany({advertId: advertId},{ $set: { status: 'closed' } },function(err,raw){
+      if(err) reject(err);
+      resolve(raw);
+    });
   });
 }

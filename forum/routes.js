@@ -78,6 +78,45 @@ apiRoutes.post('/forum', tokenMiddleware.tokenCheck, forumController.createForum
  */
 apiRoutes.post('/commentForum', tokenMiddleware.tokenCheck, forumController.commentForum);
 
+
+/**
+ * @swagger
+ * /forum/{id}:
+ *   put:
+ *     summary: Modificar el contingut de la descripció del forum
+ *     tags: [Not Implemented]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumBody"
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Forum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/forum/:id', tokenMiddleware.tokenCheck, forumController.modifyForum);
+
 /**
  * @swagger
  * /forums:
@@ -184,5 +223,43 @@ apiRoutes.get('/fullForum/:id', tokenMiddleware.tokenCheck, forumController.getF
  *           $ref: "#/definitions/LoginFailed"
  */
 apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumController.deleteCommentforum);
+
+/**
+ * @swagger
+ * /forum/{id}/vote:
+ *   put:
+ *     summary: Votar un forum
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumVotation"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Forum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.put('/forum/:id/vote', tokenMiddleware.tokenCheck, forumController.voteForum);
 
 exports.apiRoutes = apiRoutes;

@@ -22,12 +22,16 @@ exports.saveAdvert = function (advertData) {
 
 exports.deleteAdvert = function (id) {
   return new Promise(function (resolve, reject) {
-    Advert.deleteOne({ _id: id }, function (err) {
-      if (!err) {
-        resolve("Advert deleted");
-      } else {
-        reject("Error deleting advert");
-      }
+    inscriptionDB.deleteInscriptionByAdvertId(id).then(cb => {
+      Advert.deleteOne({ _id: id }, function (err) {
+        if (!err) {
+          resolve({message: "Advert deleted"});
+        } else {
+          reject({message: "Error deleting advert"});
+        }
+      });
+    }).catch(err => {
+      reject(err);
     });
   });
 }
@@ -67,11 +71,19 @@ exports.modifyStateAdvert = function (id, state) {
     if (validValues.indexOf(state) == -1) {
       reject({ message: "state no válido" });
     } else {
-      Advert.findByIdAndUpdate(id, { $set: { state: state } }, function (err, advert) {
+      Advert.findByIdAndUpdate(id, { $set: { state: state } },{new: true}, function (err, advert) {
         if (err) {
           reject(err);
         }
-        resolve(advert);
+        if(state == 'closed'){
+          inscriptionDB.closeInscriptions(id).then(allInscriptions => {
+            resolve(advert);
+          }).catch(err => {
+            reject(err);
+          });
+        }else{
+          resolve(advert);
+        }
       });
     }
   });
@@ -125,6 +137,22 @@ exports.findAdvertById = function (idAdvert) {
   });
 }
 
+exports.getOneAdvert = function(advertId) {
+  return new Promise((resolve, reject) => {
+    Advert.findOne({_id: advertId},function (err, advert) {
+      if (err) {
+        reject(err)
+      }
+      addUserToOneAdvert(advert).then(advertFull => {
+        console.log(advertFull);
+        resolve(advertFull);
+      }).catch(err => {
+        reject(err);
+      })
+    });
+  })
+}
+
 exports.getAdvert = function (types) {
   return new Promise((resolve, reject) => {
     if (!Array.isArray(types)) {
@@ -142,9 +170,10 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          added.sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          });
+          // var addedCopy = JSON.parse(JSON.stringify(added));
+          // addedCopy.sort(function (a, b) {
+          //   return new Date(b.createdAt) - new Date(a.createdAt);
+          // });
           resolve(added);
         });
       });
@@ -155,13 +184,31 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          added.sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          });
+          // var sendForums = JSON.parse(JSON.stringify(added));
+          // sendForums.sort(function (a, b) {
+          //   return new Date(b.createdAt) - new Date(a.createdAt);
+          // });
+          // console.log("--> ", sendForums);
           resolve(added);
         });
       });
     }
+  })
+}
+
+
+addUserToOneAdvert = function (advert) {
+  return new Promise((resolve, reject) => {
+    var advertToSent = JSON.parse(JSON.stringify(advert));
+    usersDB.findUserById(advert.userId).then(user => {
+      advertToSent['user'] = JSON.parse(JSON.stringify(user));
+      if (user) {
+        advertToSent['user'].password = undefined;
+      }
+      resolve(advertToSent);
+    }).catch(err => {
+      reject(err);
+    });
   })
 }
 
@@ -180,6 +227,9 @@ addUsersToAdvert = function (adverts) {
           advertArray.push(advertToSent);
           itemsProcessed++;
           if (itemsProcessed === array.length) {
+            advertArray.sort(function (a, b) {
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            });
             resolve(advertArray);
           }
         }).catch(err => {
@@ -221,6 +271,18 @@ getRegistereds = function (advert) {
   });
 }
 
+exports.getOneFullAdvert = function (advert) {
+  return new Promise((resolve, reject) => {
+    var advertToSent = JSON.parse(JSON.stringify(advert));
+    getRegistereds(advert).then(regs => {
+      advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
+      resolve(advertToSent);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
+
 exports.getFullAdvert = function (adverts) {
   return new Promise((resolve, reject) => {
     if (adverts.length > 0) {
@@ -228,18 +290,18 @@ exports.getFullAdvert = function (adverts) {
       var itemsProcessed = 0;
       adverts.forEach((item, index, array) => {
         var advertToSent = JSON.parse(JSON.stringify(item));
-        reportDB.findNumReports(item._id, 'advert').then(numReports => {
-          advertToSent['numReports'] = numReports;
-        }).catch(err => {
-          reject({message: "ha habido un error al contar los reports: " + err.message});
-        });
         getRegistereds(item).then(regs => {
           advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
-          advertArray.push(advertToSent);
-          itemsProcessed++;
-          if (itemsProcessed === array.length) {
-            resolve(advertArray);
-          }
+          reportDB.findNumReports(item._id, 'advert').then(numReports => {
+            advertToSent['numReports'] = numReports;
+            advertArray.push(advertToSent);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              resolve(advertArray);
+            }
+          }).catch(err => {
+            reject({message: "ha habido un error al contar los reports: " + err.message});
+          });
         }).catch(err => {
           reject(err);
         });

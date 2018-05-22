@@ -32,37 +32,52 @@ exports.saveUser = function (userData) {
   });
 }
 
-exports.deleteUser = function (id) {
-  return new Promise(function (resolve, reject) {
-    User.findOneAndRemove({ _id: id }, function (err,doc) {
-      if(err){
+exports.findUsersByIds = function (ids) {
+  return new Promise((resolve, reject) => {
+    var findIds = [];
+    ids.forEach(element => {
+      findIds.push({ _id: element });
+    });
+    User.find({ $or: findIds }, (err, doc) => {
+      if (err) {
         reject(err);
       }
-      if(doc){
+      resolve(doc);
+    });
+  });
+}
+
+exports.deleteUser = function (id) {
+  return new Promise(function (resolve, reject) {
+    User.findOneAndRemove({ _id: id }, function (err, doc) {
+      if (err) {
+        reject(err);
+      }
+      if (doc) {
         resolve(doc);
-      }else{
-        reject({message: "Este usuario no existe."});
+      } else {
+        reject({ message: "Este usuario no existe." });
       }
     });
   });
 }
 
-exports.updateUser = function (userId, userData){
+exports.updateUser = function (userId, userData) {
   return new Promise((resolve, reject) => {
-    User.findById(userId, function(err, user){
+    User.findById(userId, function (err, user) {
       user["username"] = userData["username"];
       user["password"] = userData["password"];
       user["name"] = userData["name"];
       user["phone"] = userData["phone"];
       user["type"] = userData["type"];
       user["email"] = userData["email"];
-      if(userData['type'] == "association"){
+      if (userData['type'] == "association") {
         user["CIF"] = userData['CIF'];
-      }else{
+      } else {
         user["CIF"] = undefined;
       }
-      user.save(function(err, doc){
-        if(err){
+      user.save(function (err, doc) {
+        if (err) {
           reject(err);
         }
         resolve(doc);
@@ -71,7 +86,7 @@ exports.updateUser = function (userId, userData){
   });
 }
 
-exports.findAllUsers = function () { 
+exports.findAllUsers = function () {
   return new Promise(function (resolve, reject) {
     User.find({}, function (err, users) {
       if (err) {
@@ -84,18 +99,18 @@ exports.findAllUsers = function () {
         var currentUser = JSON.parse(JSON.stringify(item));
         reportDB.findNumReports(item._id, 'user').then(numReports => {
           currentUser['numReports'] = numReports;
+          this.findLikes(item._id).then(rate => {
+            currentUser['rate'] = rate;
+            usersToSent.push(currentUser);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              resolve(usersToSent);
+            }
+          }).catch(err => {
+            reject({ message: "ha habido un error al poner los likes :" + err.message });
+          });
         }).catch(err => {
-          reject({message: "ha habido un error al contar los reports: " + err.message});
-        });
-        this.findLikes(item._id).then(rate => {
-          currentUser['rate'] = rate;
-          usersToSent.push(currentUser);
-          itemsProcessed++;
-          if (itemsProcessed === array.length) {
-            resolve(usersToSent);
-          }
-        }).catch(err => {
-          reject({message: "ha habido un error al poner los likes :" + err.message});
+          reject({ message: "ha habido un error al contar los reports: " + err.message });
         });
       })
     });
@@ -115,11 +130,13 @@ exports.findUserByName = function (name) {
         var userToSend = JSON.parse(JSON.stringify(user));
         this.findLikes(user._id).then(rate => {
           userToSend['rate'] = rate;
-        });
-        reportDB.findNumReports(user._id, 'user').then(numReports => {
+          return reportDB.findNumReports(user._id, 'user');
+        }).then(numReports => {
           userToSend['numReports'] = numReports;
+          resolve(userToSend);
+        }).catch(err => {
+          reject(err);
         });
-        resolve(userToSend);
       } else {
         resolve(user);
       }
@@ -138,13 +155,15 @@ exports.findUserById = function (id) {
           var userToSend = JSON.parse(JSON.stringify(user));
           this.findLikes(user._id).then(rate => {
             userToSend['rate'] = rate;
-          });
-          reportDB.findNumReports(user._id, 'user').then(numReports => {
+            return reportDB.findNumReports(user._id, 'user');
+          }).then(numReports => {
             userToSend['numReports'] = numReports;
+            resolve(userToSend);
+          }).catch(err => {
+            reject(err);
           });
-          resolve(userToSend);
         } else {
-          resolve(user);
+          reject({ message: "Este usuario no existe" });
         }
       });
     } else {

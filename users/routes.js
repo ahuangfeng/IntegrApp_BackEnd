@@ -115,7 +115,7 @@ apiRoutes.post('/login', controller.login);
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserWithAdverts"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -149,7 +149,7 @@ apiRoutes.get('/user', tokenMiddleware.tokenCheck, controller.getUserByUsername)
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserWithAdverts"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:
@@ -183,7 +183,7 @@ apiRoutes.get('/userInfo/:username', tokenMiddleware.tokenCheck, controller.getU
  *       200:
  *         description: Operació executada amb éxit
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserWithAdverts"
  *       400:
  *         description: No s'ha trobat l'usuari
  *         schema:

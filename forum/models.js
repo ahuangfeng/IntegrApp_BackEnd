@@ -45,6 +45,17 @@ var mongoose = require('mongoose');
 *         enum: [documentation, entertainment, language, various]
 */
 
+/**
+* @swagger
+* definitions:
+*   ForumVotation:
+*     required:
+*       - rate
+*     properties:
+*       rate:
+*         type: number
+*/
+
 var ForumSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -55,7 +66,8 @@ var ForumSchema = new mongoose.Schema({
   },
   userId: String,
   createdAt: String,
-  rate: Number
+  rate: Number,
+  numberRates: Number
 });
 
 /**
@@ -69,8 +81,6 @@ var ForumSchema = new mongoose.Schema({
 *       - forumId
 *     properties:
 *       userId:
-*         type: string
-*       username:
 *         type: string
 *       createdAt:
 *         type: string
@@ -95,7 +105,6 @@ var ForumSchema = new mongoose.Schema({
 */
 var ForumEntrySchema = new mongoose.Schema({
   userId: String,
-  username: String,
   createdAt: String,
   content: String,
   forumId: String,

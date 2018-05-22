@@ -23,6 +23,10 @@ exports.createForum = function (req, res, next) {
   });
 }
 
+exports.modifyForum = function (req, res, next) {
+  notImplemented(req, res, next);
+}
+
 exports.getForums = function (req, res, next) {
   var types = req.query.type;
   var typesToGet = [];
@@ -36,12 +40,8 @@ exports.getForums = function (req, res, next) {
     }
   }
   forumDB.getForums(typesToGet).then(forums => {
-    if (forums && forums.length!=0) {
+    if (forums && forums.length > 0) {
       addUsers(forums).then(forumsWithUser => {
-        forumsWithUser.sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-
         var forumArray = [];
         var itemsProcessed = 0;
         forumsWithUser.forEach((item, index, array) => {
@@ -51,18 +51,21 @@ exports.getForums = function (req, res, next) {
             forumArray.push(forumToSent);
             itemsProcessed++;
             if (itemsProcessed === array.length) {
+              forumArray.sort(function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+              });
               res.send(forumArray);
             }
           }).catch(err => {
-            reject({message: "ha habido un error al contar los reports: " + err.message});
+            reject({ message: "ha habido un error al contar los reports: " + err.message });
           });
-            
-      });
+
+        });
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });
       // res.send(forums);
-    } else if (forums.length==0) {
+    } else if (forums.length == 0) {
       res.send(forums);
     } else {
       res.status(404).json({ message: "No se han encontrado forums." });
@@ -72,10 +75,10 @@ exports.getForums = function (req, res, next) {
   })
 }
 
-exports.deleteCommentforum = function(req, res, next){
-  if(!req.params.id){
-    res.status(400).json({ message: "Falta un id del comentario"});
-  }else{
+exports.deleteCommentforum = function (req, res, next) {
+  if (!req.params.id) {
+    res.status(400).json({ message: "Falta un id del comentario" });
+  } else {
     forumDB.deleteEntry(req.params.id, req.decoded.userID).then(result => {
       res.send(result);
     }).catch(err => {
@@ -84,12 +87,40 @@ exports.deleteCommentforum = function(req, res, next){
   }
 }
 
+exports.voteForum = function (req, res, next) {
+  if (!req.body.rate || req.body.rate > 5 || req.body.rate < 0) {
+    res.status(400).json({ message: "Necesita puntuar con un número entre 0 y 5." });
+  }
+  if (!req.params.id) {
+    res.status(400).json({ message: "Es necesita un id del forum." });
+  }
+  forumDB.findForumById(req.params.id).then(forum => {
+    if (forum.userId == req.decoded.userID) {
+      res.status(400).json({ message: "No pots votar al teu propi forum." });
+    }
+    else {
+      forumDB.voteForum(forum, req.body.rate).then(forumVoted => {
+        res.send(forumVoted);
+      }).catch(err => {
+        res.status(400).json({ message: err.message });
+      });
+    }
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  });
+}
+
 exports.commentForum = function (req, res, next) {
+  var entryCopy = {};
   verifyForumEntry(req.body, req.decoded).then(forum => {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
     return forumDB.saveForumEntry(forumEntryObj);
   }).then(entry => {
-    res.send(entry);
+    entryCopy = JSON.parse(JSON.stringify(entry));
+    return usersDB.findUserById(entry.userId);
+  }).then(user => {
+    entryCopy["username"] = user.username;
+    res.send(entryCopy);
   }).catch(err => {
     res.status(400).json({ message: err.message });
   });
@@ -104,20 +135,39 @@ exports.getFullForum = function (req, res, next) {
       if (forum == null) {
         res.status(404).json({ message: "El forum no ha pogut ser trobat." })
       } else {
+        responseToSend['forum'] = forum;
         reportDB.findNumReports(req.params.id, 'forum').then(numReports => {
           responseToSend['numReports'] = numReports;
-        }).catch(err => {
-          reject({message: "ha habido un error al contar los reports: " + err.message});
-        });
-        responseToSend['forum'] = forum;
-        forumDB.getForumEntries(forum.id).then(entries => {
-          responseToSend['entries'] = entries;
-          responseToSend['entries'].sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
+          forumDB.getForumEntries(forum.id).then(entries => {
+            responseToSend['entries'] = entries;
+            if (responseToSend['entries'].length > 0) {
+              var entriesArray = [];
+              var itemsProcessed = 0;
+              responseToSend['entries'].forEach((element, index, array) => {
+                usersDB.findUserById(element.userId).then(user => {
+                  itemsProcessed++;
+                  var elementCopy = JSON.parse(JSON.stringify(element));
+                  elementCopy['username'] = user.username;
+                  entriesArray.push(elementCopy);
+                  if (itemsProcessed == array.length) {
+                    responseToSend['entries'] = entriesArray;
+                    responseToSend['entries'].sort(function (a, b) {
+                      return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
+                    res.send(responseToSend);
+                  }
+                }).catch(err => {
+                  res.status(500).send(err);
+                });
+              });
+            } else {
+              res.send(responseToSend);
+            }
+          }).catch(err => {
+            res.status(400).json(err);
           });
-          res.send(responseToSend);
         }).catch(err => {
-          res.status(400).json(err);
+          res.status(500).json({ message: "ha habido un error al contar los reports: " + err.message });
         });
       }
     }).catch(err => {
@@ -125,6 +175,8 @@ exports.getFullForum = function (req, res, next) {
     });
   }
 }
+
+
 
 notImplemented = function (req, res, next) {
   res.status(501).json({ message: "Function not implemented" });
@@ -179,7 +231,10 @@ createForumDocument = function (forumData, decoded) {
   var forum = {};
   forum['title'] = forumData.title;
   forum['description'] = forumData.description;
-  forum['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours() + 2);
+  today = today.toLocaleString();
+  forum['createdAt'] = today;
   forum['type'] = forumData.type;
   forum['userId'] = decoded.userID;
   forum['rate'] = 0;
@@ -189,8 +244,11 @@ createForumDocument = function (forumData, decoded) {
 createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
-  forumEntry['username'] = decoded.username;
-  forumEntry['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours() + 2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  forumEntry['createdAt'] = today;
   forumEntry['content'] = entry.content;
   forumEntry['forumId'] = entry.forumId;
   return forumEntry;
@@ -209,9 +267,9 @@ verifyTypeForum = function (typesToVerify) {
   return result;
 }
 
-addUsers = function(forums){
+addUsers = function (forums) {
   return new Promise((resolve, reject) => {
-    if(forums.length > 0){
+    if (forums.length > 0) {
       var forumArray = [];
       var itemsProcessed = 0;
       forums.forEach((item, index, array) => {
@@ -231,7 +289,7 @@ addUsers = function(forums){
           reject(err);
         });
       });
-    }else{
+    } else {
       resolve(forums);
     }
   });
