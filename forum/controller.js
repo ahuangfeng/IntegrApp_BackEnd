@@ -41,10 +41,11 @@ exports.getForums = function (req, res, next) {
   forumDB.getForums(typesToGet).then(forums => {
     if (forums) {
       addUsers(forums).then(forumsWithUser => {
-        forumsWithUser.sort(function (a, b) {
+        var sendForums = JSON.parse(JSON.stringify(forumsWithUser));
+        sendForums.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
-        res.send(forumsWithUser);
+        res.send(sendForums);
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });

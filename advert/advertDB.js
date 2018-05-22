@@ -169,10 +169,11 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          added.sort(function (a, b) {
+          var addedCopy = JSON.parse(JSON.stringify(added));
+          addedCopy.sort(function (a, b) {
             return new Date(b.createdAt) - new Date(a.createdAt);
           });
-          resolve(added);
+          resolve(addedCopy);
         });
       });
     } else {
@@ -182,10 +183,11 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          added.sort(function (a, b) {
+          let sendForums = JSON.parse(JSON.stringify(added));
+          sendForums.sort(function (a, b) {
             return new Date(b.createdAt) - new Date(a.createdAt);
           });
-          resolve(added);
+          resolve(sendForums);
         });
       });
     }
