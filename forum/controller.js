@@ -230,7 +230,6 @@ createForumDocument = function (forumData, decoded) {
   forum['description'] = forumData.description;
   var today = new Date();
   today.setHours(today.getHours() + 2);
-  today.toLocaleString();
   today = today.toLocaleString();
   forum['createdAt'] = today;
   forum['type'] = forumData.type;
