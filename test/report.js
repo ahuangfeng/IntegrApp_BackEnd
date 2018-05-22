@@ -17,18 +17,46 @@ var advertDB = require('../advert/advertDB');
 describe('POST /report', () => {
 
   var allUsersIds = [];
+  var advertIds = [];
   before(done => {
-    usersDB.findAllUsers().then(users => {
-      // console.log("ALL users:", users);
-      users.forEach(element => {
-        if(element._id != configTest.userId){
-          allUsersIds.push(element._id);
-        }
+
+      usersDB.saveUser({
+        "username": "provaBis1",
+        "password": "prova1",
+        "type": "voluntary"
+      }).then(response1 => {
+        response1.should.be.an('object');
+        expect(response1.username, "provaBis1");
+        allUsersIds.push(response1._id);
+        return usersDB.saveUser({
+          "username": "provaBis2",
+          "password": "prova2",
+          "type": "voluntary"
+        });
+      }).then(response2 => {
+        response2.should.be.an('object');
+        expect(response2.username, "provaBis2");
+        allUsersIds.push(response2._id);
+        return usersDB.saveUser({
+          "username": "provaBis3",
+          "password": "prova3",
+          "type": "voluntary"
+        });
+      }).then(response3 => {
+        response3.should.be.an('object');
+        expect(response3.username, "provaBis3");
+        allUsersIds.push(response3._id);
+        allUsersIds.length.should.be.eql(3);
+        advertDB.Advert.find({}, (err, res) => {
+          res.forEach(element => {
+            advertIds.push(element._id);
+          });
+          advertIds.length.should.be.eql(5);
+          done();
+        });
+      }).catch(err => {
+        console.error("Error found in login tests", err);
       });
-      done();
-    }).catch(err => {
-      console.log("err:", err);
-    });
   });
 
   it('it should create a report from valid data', function (done) {
@@ -42,7 +70,6 @@ describe('POST /report', () => {
         "typeId": allUsersIds[0]
       })
       .end(function (err, res) {
-        // console.log("EOO:", res.body);
         res.should.have.status(200);
         res.should.be.an('object');
         res.body.should.have.property('description');
@@ -131,9 +158,9 @@ describe('POST /report', () => {
       .set('Accept', 'application/json')
       .set('x-access-token', configTest.token)
       .send({
-        "description": "Description report",
-        "type": "user",
-        "typeId": '5ae1943473e4601b81e1187f'
+        "description": 'Description report',
+        "type": 'user',
+        "typeId": advertIds[0]
       })
       .end(function (err, res) {
         res.should.have.status(400);

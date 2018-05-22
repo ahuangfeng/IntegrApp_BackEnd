@@ -31,13 +31,10 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-votacions forum --> arnau
-calcul de reports --> arnau
 
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
 GET forums/ --> si no existe forum, loop sin fin
-POST /vote User noo devuelve el user con el rate
 --> modificar forum PUT
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
