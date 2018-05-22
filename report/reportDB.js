@@ -19,11 +19,11 @@ exports.saveReport = function (reportData) {
     });
 }
 
-exports.findNumReports = function (userId) {
+exports.findNumReports = function (id, typeReport) {
     return new Promise((resolve, reject) => {
       Report.find({
-        type: 'user',
-        typeId: userId
+        type: typeReport,
+        typeId: id
       }, function (err, reports) {
         if (err) {
           reject(err);
