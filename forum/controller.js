@@ -94,13 +94,14 @@ exports.voteForum = function(req, res, next) {
 }
 
 exports.commentForum = function (req, res, next) {
+  var entryCopy = {};
   verifyForumEntry(req.body, req.decoded).then(forum => {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
     return forumDB.saveForumEntry(forumEntryObj);
   }).then(entry => {
+    entryCopy = JSON.parse(JSON.stringify(entry));
     return usersDB.findUserById(entry.userId);
   }).then(user => {
-    var entryCopy = JSON.parse(JSON.stringify(entry));
     entryCopy["username"] = user.username;
     res.send(entryCopy);
   }).catch(err => {
