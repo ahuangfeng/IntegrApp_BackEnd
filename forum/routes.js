@@ -237,15 +237,15 @@ apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumControlle
  *     produces:
  *       - "application/json"
  *     parameters: 
- *       - name: body
- *         in: body
- *         schema:
- *           $ref: "#/definitions/ForumVotation"
  *       - name: id
  *         in: path
  *         type: string
  *         required: true
  *         description: Id del forum
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ForumVotation"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit
