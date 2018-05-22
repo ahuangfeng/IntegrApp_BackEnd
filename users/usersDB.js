@@ -130,11 +130,13 @@ exports.findUserByName = function (name) {
         var userToSend = JSON.parse(JSON.stringify(user));
         this.findLikes(user._id).then(rate => {
           userToSend['rate'] = rate;
-        });
-        reportDB.findNumReports(user._id, 'user').then(numReports => {
+          return reportDB.findNumReports(user._id, 'user');
+        }).then(numReports => {
           userToSend['numReports'] = numReports;
+          resolve(userToSend);
+        }).catch(err => {
+          reject(err);
         });
-        resolve(userToSend);
       } else {
         resolve(user);
       }
@@ -153,11 +155,13 @@ exports.findUserById = function (id) {
           var userToSend = JSON.parse(JSON.stringify(user));
           this.findLikes(user._id).then(rate => {
             userToSend['rate'] = rate;
-          });
-          reportDB.findNumReports(user._id, 'user').then(numReports => {
+            return reportDB.findNumReports(user._id, 'user');
+          }).then(numReports => {
             userToSend['numReports'] = numReports;
+            resolve(userToSend);
+          }).catch(err => {
+            reject(err);
           });
-          resolve(userToSend);
         } else {
           resolve(user);
         }

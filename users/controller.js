@@ -71,16 +71,16 @@ exports.likeUser = function (req, res, next) {
   if (!req.params.userId) {
     res.status(400).json({ message: "Es necesita un userId per fer like" });
   } else {
+    var sendUser;
     usersDB.findUserById(req.params.userId).then(userFound => {
       if (userFound) {
         usersDB.likeUser("like", req.decoded.userID, req.params.userId).then(like => {
-          usersDB.findUserById(req.params.userId).then(user => {
-            var sendUser = JSON.parse(JSON.stringify(user));
-            sendUser['password'] = undefined;
-            res.send(sendUser);
-          }).catch(err => {
-            res.status(400).json(err);
-          });
+          sendUser = JSON.parse(JSON.stringify(userFound));
+          sendUser['password'] = undefined;
+          return usersDB.findLikes(req.params.userId);
+        }).then(rate => {
+          sendUser['rate'] = JSON.parse(JSON.stringify(rate));
+          res.send(sendUser);
         }).catch(err => {
           res.status(400).json({ message: err.message });
         });
@@ -97,16 +97,16 @@ exports.dislikeUser = function (req, res, next) {
   if (!req.params.userId) {
     res.status(400).json({ message: "Es necesita un userId per fer like" });
   } else {
+    var sendUser;
     usersDB.findUserById(req.params.userId).then(userFound => {
       if (userFound) {
         usersDB.likeUser("dislike", req.decoded.userID, req.params.userId).then(like => {
-          usersDB.findUserById(req.params.userId).then(user => {
-            var sendUser = JSON.parse(JSON.stringify(user));
-            sendUser['password'] = undefined;
-            res.send(sendUser);
-          }).catch(err => {
-            res.status(400).json(err);
-          });
+          sendUser = JSON.parse(JSON.stringify(userFound));
+          sendUser['password'] = undefined;
+          return usersDB.findLikes(req.params.userId);
+        }).then(rate => {
+          sendUser['rate'] = JSON.parse(JSON.stringify(rate));
+          res.send(sendUser);
         }).catch(err => {
           res.status(400).json({ message: err.message });
         });
