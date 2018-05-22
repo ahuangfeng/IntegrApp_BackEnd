@@ -141,6 +141,8 @@ var mongoose = require('mongoose');
 *         $ref: "#/definitions/UserRate"
 *       CIF:
 *         type: string
+*       numReports:
+*         type: number
 */
 
 /**
@@ -170,6 +172,8 @@ var mongoose = require('mongoose');
 *         $ref: "#/definitions/UserRate"
 *       CIF:
 *         type: string
+*       numReports:
+*         type: number
 */
 
 /**

@@ -4,6 +4,7 @@ var models = require('./models');
 var Advert = mongoose.model('Advert', models.AdvertSchema);
 var usersDB = require('../users/usersDB');
 var inscriptionDB = require('../inscription/inscriptionDB');
+var reportDB = require('../report/reportDB');
 
 exports.Advert = Advert;
 exports.saveAdvert = function (advertData) {
@@ -289,6 +290,11 @@ exports.getFullAdvert = function (adverts) {
       var itemsProcessed = 0;
       adverts.forEach((item, index, array) => {
         var advertToSent = JSON.parse(JSON.stringify(item));
+        reportDB.findNumReports(item._id, 'advert').then(numReports => {
+          advertToSent['numReports'] = numReports;
+        }).catch(err => {
+          reject({message: "ha habido un error al contar los reports: " + err.message});
+        });
         getRegistereds(item).then(regs => {
           advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
           advertArray.push(advertToSent);

@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var forumDB = require('./forumDB');
 var usersDB = require('../users/usersDB');
+var reportDB = require('../report/reportDB');
 
 exports.createForum = function (req, res, next) {
   verifyFieldForum(req.body, req.decoded).then(verif => {
@@ -40,16 +41,29 @@ exports.getForums = function (req, res, next) {
   }
   forumDB.getForums(typesToGet).then(forums => {
     if (forums) {
-      addUsers(forums).then(forumsWithUser => {
-        var sendForums = JSON.parse(JSON.stringify(forumsWithUser));
-        sendForums.sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        res.send(sendForums);
+      addUsers(forums).then(forumsWithUser => {        
+        var forumArray = [];
+        var itemsProcessed = 0;
+        forumsWithUser.forEach((item, index, array) => {
+          var forumToSent = JSON.parse(JSON.stringify(item));
+          reportDB.findNumReports(item._id, 'forum').then(numReports => {
+            forumToSent['numReports'] = numReports;
+            forumArray.push(forumToSent);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              forumArray.sort(function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+              });
+              res.send(forumArray);
+            }
+          }).catch(err => {
+            reject({message: "ha habido un error al contar los reports: " + err.message});
+          });
+            
+      });
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });
-      // res.send(forums);
     } else {
       res.status(404).json({ message: "No se han encontrado forums." });
     }
@@ -118,6 +132,11 @@ exports.getFullForum = function (req, res, next) {
       if (forum == null) {
         res.status(404).json({ message: "El forum no ha pogut ser trobat." })
       } else {
+        reportDB.findNumReports(req.params.id, 'forum').then(numReports => {
+          responseToSend['numReports'] = numReports;
+        }).catch(err => {
+          reject({message: "ha habido un error al contar los reports: " + err.message});
+        });
         responseToSend['forum'] = forum;
         forumDB.getForumEntries(forum.id).then(entries => {
           responseToSend['entries'] = entries;
