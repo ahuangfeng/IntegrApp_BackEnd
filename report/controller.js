@@ -39,9 +39,7 @@ exports.getReports = function (req, res, next) {
     }
 
     reportDB.getReports(typesToGet).then(reports => {
-        if (reports) {
-            res.send(reports);
-        }
+        res.send(reports);
     }).catch(err => {
         res.status(400).json({ message: err.message});
     });

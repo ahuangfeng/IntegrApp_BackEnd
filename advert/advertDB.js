@@ -290,18 +290,18 @@ exports.getFullAdvert = function (adverts) {
       var itemsProcessed = 0;
       adverts.forEach((item, index, array) => {
         var advertToSent = JSON.parse(JSON.stringify(item));
-        reportDB.findNumReports(item._id, 'advert').then(numReports => {
-          advertToSent['numReports'] = numReports;
-        }).catch(err => {
-          reject({message: "ha habido un error al contar los reports: " + err.message});
-        });
         getRegistereds(item).then(regs => {
           advertToSent['registered'] = JSON.parse(JSON.stringify(regs))
-          advertArray.push(advertToSent);
-          itemsProcessed++;
-          if (itemsProcessed === array.length) {
-            resolve(advertArray);
-          }
+          reportDB.findNumReports(item._id, 'advert').then(numReports => {
+            advertToSent['numReports'] = numReports;
+            advertArray.push(advertToSent);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              resolve(advertArray);
+            }
+          }).catch(err => {
+            reject({message: "ha habido un error al contar los reports: " + err.message});
+          });
         }).catch(err => {
           reject(err);
         });

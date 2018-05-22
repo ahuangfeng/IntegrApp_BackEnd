@@ -41,7 +41,7 @@ exports.getForums = function (req, res, next) {
   }
   forumDB.getForums(typesToGet).then(forums => {
     if (forums) {
-      addUsers(forums).then(forumsWithUser => {        
+      addUsers(forums).then(forumsWithUser => {
         var forumArray = [];
         var itemsProcessed = 0;
         forumsWithUser.forEach((item, index, array) => {
@@ -57,10 +57,10 @@ exports.getForums = function (req, res, next) {
               res.send(forumArray);
             }
           }).catch(err => {
-            reject({message: "ha habido un error al contar los reports: " + err.message});
+            reject({ message: "ha habido un error al contar los reports: " + err.message });
           });
-            
-      });
+
+        });
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });
@@ -84,15 +84,15 @@ exports.deleteCommentforum = function (req, res, next) {
   }
 }
 
-exports.voteForum = function(req, res, next) {
-  if(!req.body.rate || req.body.rate > 5 || req.body.rate < 0) {
+exports.voteForum = function (req, res, next) {
+  if (!req.body.rate || req.body.rate > 5 || req.body.rate < 0) {
     res.status(400).json({ message: "Necesita puntuar con un número entre 0 y 5." });
   }
-  if(!req.params.id) {
+  if (!req.params.id) {
     res.status(400).json({ message: "Es necesita un id del forum." });
   }
   forumDB.findForumById(req.params.id).then(forum => {
-    if(forum.userId == req.decoded.userID) {
+    if (forum.userId == req.decoded.userID) {
       res.status(400).json({ message: "No pots votar al teu propi forum." });
     }
     else {
@@ -132,39 +132,39 @@ exports.getFullForum = function (req, res, next) {
       if (forum == null) {
         res.status(404).json({ message: "El forum no ha pogut ser trobat." })
       } else {
+        responseToSend['forum'] = forum;
         reportDB.findNumReports(req.params.id, 'forum').then(numReports => {
           responseToSend['numReports'] = numReports;
-        }).catch(err => {
-          reject({message: "ha habido un error al contar los reports: " + err.message});
-        });
-        responseToSend['forum'] = forum;
-        forumDB.getForumEntries(forum.id).then(entries => {
-          responseToSend['entries'] = entries;
-          if (responseToSend['entries'].length > 0){
-            var entriesArray = [];
-            var itemsProcessed = 0;
-            responseToSend['entries'].forEach((element, index, array) => {
-              usersDB.findUserById(element.userId).then(user => {
-                itemsProcessed++;
-                var elementCopy = JSON.parse(JSON.stringify(element));
-                elementCopy['username'] = user.username;
-                entriesArray.push(elementCopy);
-                if(itemsProcessed == array.length){
-                  responseToSend['entries'] = entriesArray;
-                  responseToSend['entries'].sort(function (a, b) {
-                    return new Date(b.createdAt) - new Date(a.createdAt);
-                  });
-                  res.send(responseToSend);
-                }
-              }).catch(err => {
-                res.status(500).send(err);
+          forumDB.getForumEntries(forum.id).then(entries => {
+            responseToSend['entries'] = entries;
+            if (responseToSend['entries'].length > 0) {
+              var entriesArray = [];
+              var itemsProcessed = 0;
+              responseToSend['entries'].forEach((element, index, array) => {
+                usersDB.findUserById(element.userId).then(user => {
+                  itemsProcessed++;
+                  var elementCopy = JSON.parse(JSON.stringify(element));
+                  elementCopy['username'] = user.username;
+                  entriesArray.push(elementCopy);
+                  if (itemsProcessed == array.length) {
+                    responseToSend['entries'] = entriesArray;
+                    responseToSend['entries'].sort(function (a, b) {
+                      return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
+                    res.send(responseToSend);
+                  }
+                }).catch(err => {
+                  res.status(500).send(err);
+                });
               });
-            });
-          }else{
-            res.send(responseToSend);
-          }
+            } else {
+              res.send(responseToSend);
+            }
+          }).catch(err => {
+            res.status(400).json(err);
+          });
         }).catch(err => {
-          res.status(400).json(err);
+          res.status(500).json({ message: "ha habido un error al contar los reports: " + err.message });
         });
       }
     }).catch(err => {
@@ -229,7 +229,7 @@ createForumDocument = function (forumData, decoded) {
   forum['title'] = forumData.title;
   forum['description'] = forumData.description;
   var today = new Date();
-  today.setHours(today.getHours()+2);
+  today.setHours(today.getHours() + 2);
   today.toLocaleString();
   today = today.toLocaleString();
   forum['createdAt'] = today;
@@ -243,7 +243,7 @@ createForumEntry = function (entry, decoded) {
   var forumEntry = {};
   forumEntry['userId'] = decoded.userID;
   var today = new Date();
-  today.setHours(today.getHours()+2);
+  today.setHours(today.getHours() + 2);
   today.toLocaleString();
   today = today.toLocaleString();
   forumEntry['createdAt'] = today;
