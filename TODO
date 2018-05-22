@@ -31,13 +31,21 @@ GET /inscription/advertId --> fet
 GET /inscriptionUser/userId
 
 TODO:Alex
-DELETE /inscription
-borrar todos los forums de un user al borrar user
-cuando borrar advert --> borrar inscription
+votacions forum --> arnau
+calcul de reports --> arnau
+
+Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
+
+GET forums/ --> si no existe forum, loop sin fin
 GET /fullForum ordenar por createdAt --> done?
+borrar todos los forums de un user al borrar user --> no se implementa
+cuando borrar advert --> borrar inscription --> fet
+modificar forum
+Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
-hacer persistente en POST /commentForum
 
+//TODO: vendre la aplicació: presentació tecnica, vendreli com hem treballat, metodologia, demo, arquitectura... som nosaltres qui definim que presentem
+// per a que vegui que em treballat be entre nosaltres, 
 
-TODO: 
-Un tiu pot inscriures dos cops? ara si xD
+Android:
+https://socket.io/blog/native-socket-io-and-android/#

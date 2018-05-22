@@ -24,6 +24,28 @@ exports.createAdvert = function (req, res, next) {
   });
 }
 
+exports.getAdvertId = function(req, res, next) {
+  advertDB.findAdvertById(req.params.id).then(ad => {
+    if(ad!= null) {
+      advertDB.getOneAdvert(req.params.id).then(advert => {
+        advertDB.getOneFullAdvert(advert).then(fullAdd => {
+          res.send(fullAdd);
+        }).catch(err => {
+          res.status(400).json({ message: err.message});
+        });
+      }).catch(err => {
+        res.status(400).json({ message: err.message});
+      });
+    }
+    else {
+      res.status(400).json({ message: "No existe ningún advert con este ID"});
+    }
+  }).catch(err => {
+    res.status(400).json({ message: err.message});
+  });
+  
+}
+
 exports.getAdverts = function (req, res, next) { 
   var types = req.query.type;
   var typesToGet = [];
@@ -53,11 +75,11 @@ exports.getAdverts = function (req, res, next) {
 
 exports.deleteAdvert = function (req, res, next) {
   advertDB.findAdvertById(req.params.id).then(advert => {
-    advertDB.deleteAdvert(advert._id).then(deleted => {
-      res.send({ message: deleted });
+    advertDB.deleteAdvert(advert._id).then(deletedMessage => {
+      res.send({ message: deletedMessage.message });
     }).catch(err => {
       res.status(400).json({ message: err.message });
-    })
+    });
   }).catch(err => {
     res.status(400).json({ message: err.message });
   })
@@ -135,8 +157,11 @@ verifyFieldAdvert = function (advertData, decoded) {
     }
     var dataAux = new Date(advertData.date).toLocaleString();
     dataAux = new Date(dataAux).getTime();
+    
 
-    var today = new Date().toLocaleString();
+    var today = new Date();
+    today.setHours(today.getHours()+2);
+    today.toLocaleString();
     today = new Date(today).getTime();
 
 
@@ -170,7 +195,9 @@ verifyFieldAdvertModify = function (advertData, decoded) {
       var dataAux = new Date(advertData.date).toLocaleString();
       dataAux = new Date(dataAux).getTime();
   
-      var today = new Date().toLocaleString();
+      var today = new Date();
+      today.setHours(today.getHours()+2);
+      today.toLocaleString();
       today = new Date(today).getTime();
   
   
@@ -194,7 +221,11 @@ verifyFieldAdvertModify = function (advertData, decoded) {
 createAdvertDocument = function (advertData, user, decoded) {
   var advert = {};
   advert['userId'] = decoded.userID;
-  advert['createdAt'] = new Date().toLocaleString();
+  var today = new Date();
+  today.setHours(today.getHours()+2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  advert['createdAt'] = today;
   advert['date'] = new Date(advertData.date).toLocaleString();
   advert['state'] = "opened";
   advert['title'] = advertData.title;

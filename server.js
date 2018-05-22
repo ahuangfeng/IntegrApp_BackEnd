@@ -13,11 +13,10 @@ var morgan = require('morgan');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('config'); // get our config file
 var path = require('path');
+var http = require('http');
 
 // module.exports para que sea visible por todos los lados
 var app = module.exports = express();
-// use morgan to log requests to the console
-
 
 if (config.util.getEnv('NODE_ENV') !== 'test') {
   app.use(morgan('dev'));
@@ -40,6 +39,7 @@ db_tools.DBConnectMongoose()
     var inscriptions = require('./inscription');
     var reports = require('./report');
     var swagger = require('./swagger/swagger');
+    var chat = require('./chat');
 
     app.use('/', express.static(__dirname + '/mainPage'));
 
@@ -54,9 +54,15 @@ db_tools.DBConnectMongoose()
     adverts.assignRoutes(app);
     inscriptions.assignRoutes(app);
     reports.assignRoutes(app);
+    
+    app.use('/chat', express.static(__dirname + '/chat/public'));
+    
+    var server = http.createServer(app);
+    chat.assignRoutes(app,server);
+    
 
     var port = process.env.PORT || 8080;
-    app.listen(port);
+    server.listen(port);
 
     console.log('Server listening on port ' + port);
   }).catch(err => {

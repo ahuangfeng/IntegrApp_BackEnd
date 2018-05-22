@@ -61,6 +61,48 @@ var mongoose = require('mongoose');
 /**
 * @swagger
 * definitions:
+*   AdvertRegistered:
+*     required:
+*       - date
+*       - title
+*       - description
+*       - places
+*       - typeAdvert
+*     properties:
+*       id:
+*         type: string
+*       userId:
+*         type: string
+*       createdAt:
+*         type: string
+*       date:
+*         type: string
+*       state:
+*         type: string
+*         enum: [opened, closed]
+*       title:
+*         type: string
+*       description:
+*         type: string
+*       places:
+*         type: number
+*       premium:
+*         type: boolean
+*       typeUser:
+*         type: string
+*         enum: [voluntary, admin, newComer, association]
+*       typeAdvert:
+*         type: string
+*         enum: [lookFor, offer]
+*       registered:
+*         type: array
+*         items:
+*           $ref: "#/definitions/Inscription"
+*/
+
+/**
+* @swagger
+* definitions:
 *   AdvertResponse:
 *     required:
 *       - date
@@ -98,6 +140,10 @@ var mongoose = require('mongoose');
 *         $ref: "#/definitions/User"
 *       numReports:
 *         type: number
+*       registered:
+*         type: array
+*         items:
+*           $ref: "#/definitions/Inscription"
 */
 
 /**

@@ -32,6 +32,8 @@ var mongoose = require('mongoose');
 *         type: string
 *       userId:
 *         type: string
+*       username:
+*         type: string
 *       advertId:
 *         type: string
 *       status:
@@ -120,6 +122,7 @@ var mongoose = require('mongoose');
 var InscriptionSchema = new mongoose.Schema({
     inscriptionId: String,
     userId: String,
+    username: String,
     advertId: String,
     status: {
       type: String,
