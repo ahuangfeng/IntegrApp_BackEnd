@@ -40,7 +40,7 @@ exports.getForums = function (req, res, next) {
     }
   }
   forumDB.getForums(typesToGet).then(forums => {
-    if (forums) {
+    if (forums && forums.length > 0) {
       addUsers(forums).then(forumsWithUser => {
         var forumArray = [];
         var itemsProcessed = 0;
@@ -64,6 +64,9 @@ exports.getForums = function (req, res, next) {
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });
+      // res.send(forums);
+    } else if (forums.length == 0) {
+      res.send(forums);
     } else {
       res.status(404).json({ message: "No se han encontrado forums." });
     }
