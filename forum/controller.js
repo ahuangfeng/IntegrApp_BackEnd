@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var forumDB = require('./forumDB');
 var usersDB = require('../users/usersDB');
+var reportDB = require('../report/reportDB');
 
 exports.createForum = function (req, res, next) {
   verifyFieldForum(req.body, req.decoded).then(verif => {
@@ -40,7 +41,23 @@ exports.getForums = function (req, res, next) {
         forumsWithUser.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
-        res.send(forumsWithUser);
+
+        var forumArray = [];
+        var itemsProcessed = 0;
+        forumsWithUser.forEach((item, index, array) => {
+          var forumToSent = JSON.parse(JSON.stringify(item));
+          reportDB.findNumReports(item._id, 'forum').then(numReports => {
+            forumToSent['numReports'] = numReports;
+            forumArray.push(forumToSent);
+            itemsProcessed++;
+            if (itemsProcessed === array.length) {
+              res.send(forumArray);
+            }
+          }).catch(err => {
+            reject({message: "ha habido un error al contar los reports: " + err.message});
+          });
+            
+      });
       }).catch(err => {
         res.status(400).json({ message: err.message });
       });
@@ -85,6 +102,11 @@ exports.getFullForum = function (req, res, next) {
       if (forum == null) {
         res.status(404).json({ message: "El forum no ha pogut ser trobat." })
       } else {
+        reportDB.findNumReports(item._id, 'forum').then(numReports => {
+          responseToSent['numReports'] = numReports;
+        }).catch(err => {
+          reject({message: "ha habido un error al contar los reports: " + err.message});
+        });
         responseToSend['forum'] = forum;
         forumDB.getForumEntries(forum.id).then(entries => {
           responseToSend['entries'] = entries;
