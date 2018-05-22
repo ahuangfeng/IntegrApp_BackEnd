@@ -11,8 +11,25 @@ let should = chai.should();
 let expect = chai.expect;
 var reportDB = require('../report/reportDB');
 var configTest = require('./configTest');
+var usersDB = require('../users/usersDB');
+var advertDB = require('../advert/advertDB');
 
 describe('POST /report', () => {
+
+  var allUsersIds = [];
+  before(done => {
+    usersDB.findAllUsers().then(users => {
+      // console.log("ALL users:", users);
+      users.forEach(element => {
+        if(element._id != configTest.userId){
+          allUsersIds.push(element._id);
+        }
+      });
+      done();
+    }).catch(err => {
+      console.log("err:", err);
+    });
+  });
 
   it('it should create a report from valid data', function (done) {
     chai.request(server)
@@ -22,9 +39,10 @@ describe('POST /report', () => {
       .send({
         "description": "Description report",
         "type": "user",
-        "typeId": "5ae1943473e4601b81e1187f"
+        "typeId": allUsersIds[0]
       })
       .end(function (err, res) {
+        // console.log("EOO:", res.body);
         res.should.have.status(200);
         res.should.be.an('object');
         res.body.should.have.property('description');
@@ -43,7 +61,7 @@ describe('POST /report', () => {
       .send({
         "description": "Description report",
         "type": "user",
-        "typeId": "5ae1943473e4601b81e1187f"
+        "typeId": allUsersIds[1]
       })
       .end(function (err, res) {
         res.should.have.status(403);
@@ -79,7 +97,7 @@ describe('POST /report', () => {
       .send({
         "description": "Description report",
         "type": "caca",
-        "typeId": "5ae1943473e4601b81e1187f"
+        "typeId": allUsersIds[1]
       })
       .end(function (err, res) {
         res.should.have.status(400);
@@ -97,7 +115,7 @@ describe('POST /report', () => {
       .send({
         "description": "Description report",
         "type": "user",
-        "typeId": "5ae1943473e4601b81e118er"
+        "typeId": "invalidOne"
       })
       .end(function (err, res) {
         res.should.have.status(400);
@@ -107,7 +125,7 @@ describe('POST /report', () => {
       });
   });
 
-  it('it should not create a report from a type=user and typeId from an advert', function (done) {
+  it('it should not create a report from a type=user and typeId inexistant', function (done) {
     chai.request(server)
       .post('/api/report')
       .set('Accept', 'application/json')
@@ -115,7 +133,7 @@ describe('POST /report', () => {
       .send({
         "description": "Description report",
         "type": "user",
-        "typeId": "5aedb9ba76b8fb001442cd86"
+        "typeId": '5ae1943473e4601b81e1187f'
       })
       .end(function (err, res) {
         res.should.have.status(400);
