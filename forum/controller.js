@@ -92,9 +92,6 @@ exports.getFullForum = function (req, res, next) {
         responseToSend['forum'] = forum;
         forumDB.getForumEntries(forum.id).then(entries => {
           responseToSend['entries'] = entries;
-          responseToSend['entries'].sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          });
           if (responseToSend['entries'].length > 0){
             var entriesArray = [];
             var itemsProcessed = 0;
@@ -106,6 +103,9 @@ exports.getFullForum = function (req, res, next) {
                 entriesArray.push(elementCopy);
                 if(itemsProcessed == array.length){
                   responseToSend['entries'] = entriesArray;
+                  responseToSend['entries'].sort(function (a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                  });
                   res.send(responseToSend);
                 }
               }).catch(err => {
