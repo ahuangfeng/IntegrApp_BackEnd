@@ -169,11 +169,11 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          var addedCopy = JSON.parse(JSON.stringify(added));
-          addedCopy.sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          });
-          resolve(addedCopy);
+          // var addedCopy = JSON.parse(JSON.stringify(added));
+          // addedCopy.sort(function (a, b) {
+          //   return new Date(b.createdAt) - new Date(a.createdAt);
+          // });
+          resolve(added);
         });
       });
     } else {
@@ -183,16 +183,18 @@ exports.getAdvert = function (types) {
           reject(err);
         }
         addUsersToAdvert(advert).then(added => {
-          let sendForums = JSON.parse(JSON.stringify(added));
-          sendForums.sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          });
-          resolve(sendForums);
+          // var sendForums = JSON.parse(JSON.stringify(added));
+          // sendForums.sort(function (a, b) {
+          //   return new Date(b.createdAt) - new Date(a.createdAt);
+          // });
+          // console.log("--> ", sendForums);
+          resolve(added);
         });
       });
     }
   })
 }
+
 
 addUserToOneAdvert = function (advert) {
   return new Promise((resolve, reject) => {
@@ -224,6 +226,9 @@ addUsersToAdvert = function (adverts) {
           advertArray.push(advertToSent);
           itemsProcessed++;
           if (itemsProcessed === array.length) {
+            advertArray.sort(function (a, b) {
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            });
             resolve(advertArray);
           }
         }).catch(err => {

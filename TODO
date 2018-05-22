@@ -43,5 +43,9 @@ cuando borrar advert --> borrar inscription --> fet
 modificar forum
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
+
+//TODO: vendre la aplicació: presentació tecnica, vendreli com hem treballat, metodologia, demo, arquitectura... som nosaltres qui definim que presentem
+// per a que vegui que em treballat be entre nosaltres, 
+
 Android:
 https://socket.io/blog/native-socket-io-and-android/#
