@@ -141,12 +141,12 @@ exports.solveInscriptionUser = function (req, res, next) {
 
   var verify = verifyFieldsSolveInscription(inscriptionData, req.params.id).then(resultat => {
     userDB.findUserById(inscriptionData.userId).then(user => {
-      if (user.length == 0) {
+      if (user == null) {
         res.status(400).json({ message: "User doesn't exists" })
       }
       else {
         advertDB.findAdvertById(req.params.id).then(advert => {
-          if (advert.length == 0) {
+          if (advert == null) {
             res.status(400).json({ message: "Advert doesn't exists" })
           }
           else {
