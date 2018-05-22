@@ -25,6 +25,28 @@ exports.createReport = function (req, res, next) {
     });
 }
 
+exports.getReports = function (req, res, next) {
+    var types = req.query.type;
+    var typesToGet = [];
+    if (types != undefined) {
+        typesToGet = types.split(',');
+        typesToGet = typesToGet.filter(Boolean);
+        var typesb = verifyTypeReport(typesToGet);
+        if (!typesb) {
+            res.status(400).json({ message: "Tipo no válido." });
+            return;
+        }
+    }
+
+    reportDB.getReports(typesToGet).then(reports => {
+        if (reports) {
+            res.send(reports);
+        }
+    }).catch(err => {
+        res.status(400).json({ message: err.message});
+    });
+}
+
 createReportDocument = function (reportData, decoded) {
     var report = {};
     report['description'] = reportData.description;
@@ -78,3 +100,16 @@ verifyFieldsReport = function (reportData, decoded) {
         }
     });
 }
+
+verifyTypeReport = function (typesToVerify) {
+    var validTypes = ["user", "advert", "forum"];
+    var result = true;
+    if (typesToVerify.length > 0) {
+      typesToVerify.forEach(element => {
+        if (validTypes.indexOf(element) == -1) {
+          result = false;
+        }
+      });
+    }
+    return result;
+  }

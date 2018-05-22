@@ -45,4 +45,42 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/report', tokenMiddleware.tokenCheck, controller.createReport);
 
+/**
+ * @swagger
+ * /reports:
+ *   get:
+ *     summary: Retorna els reports
+ *     tags: [Report]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: type
+ *         in: query
+ *         type: array
+ *         description: Tipus de reports
+ *         items:
+ *           type: string
+ *           enum: [user, advert, forum]
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: "#/definitions/Report"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/reports', tokenMiddleware.tokenCheck, controller.getReports);
+
 exports.apiRoutes = apiRoutes;
