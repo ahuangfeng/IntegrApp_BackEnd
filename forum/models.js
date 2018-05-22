@@ -109,6 +109,8 @@ var ForumEntrySchema = new mongoose.Schema({
 *     properties:
 *       forum:
 *         $ref: "#/definitions/Forum"
+*       numReports:
+*         type: number
 *       comments:
 *         type: array
 *         items:

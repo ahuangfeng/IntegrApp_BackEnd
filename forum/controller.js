@@ -102,8 +102,8 @@ exports.getFullForum = function (req, res, next) {
       if (forum == null) {
         res.status(404).json({ message: "El forum no ha pogut ser trobat." })
       } else {
-        reportDB.findNumReports(item._id, 'forum').then(numReports => {
-          responseToSent['numReports'] = numReports;
+        reportDB.findNumReports(req.params.id, 'forum').then(numReports => {
+          responseToSend['numReports'] = numReports;
         }).catch(err => {
           reject({message: "ha habido un error al contar los reports: " + err.message});
         });
