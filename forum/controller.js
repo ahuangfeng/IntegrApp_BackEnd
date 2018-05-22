@@ -98,7 +98,11 @@ exports.commentForum = function (req, res, next) {
     var forumEntryObj = createForumEntry(req.body, req.decoded);
     return forumDB.saveForumEntry(forumEntryObj);
   }).then(entry => {
-    res.send(entry);
+    return usersDB.findUserById(entry.userId);
+  }).then(user => {
+    var entryCopy = JSON.parse(JSON.stringify(entry));
+    entryCopy["username"] = user.username;
+    res.send(entryCopy);
   }).catch(err => {
     res.status(400).json({ message: err.message });
   });
