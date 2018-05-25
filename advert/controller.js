@@ -62,11 +62,12 @@ exports.getAdverts = function (req, res, next) {
    
   advertDB.getAdvert(typesToGet).then(adverts => {
     advertDB.getFullAdvert(adverts).then(full => {
+      // console.log("FULL:", full);
       res.send(full);
     }).catch(err => {
+      // console.log("Primer err", err);
       res.status(400).json({ message: err.message});
     });
-    // console.log("adverts", adverts);
     
   }).catch(err => {
     res.status(400).json({ message: err.message });

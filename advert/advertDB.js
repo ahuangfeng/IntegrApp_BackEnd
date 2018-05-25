@@ -183,7 +183,9 @@ exports.getAdvert = function (types) {
           console.log("Error finding all adverts", err);
           reject(err);
         }
+        // console.log("Adverts:", advert);
         addUsersToAdvert(advert).then(added => {
+          // console.log("RESULTI:", added);
           // var sendForums = JSON.parse(JSON.stringify(added));
           // sendForums.sort(function (a, b) {
           //   return new Date(b.createdAt) - new Date(a.createdAt);
@@ -230,6 +232,7 @@ addUsersToAdvert = function (adverts) {
             advertArray.sort(function (a, b) {
               return new Date(b.createdAt) - new Date(a.createdAt);
             });
+            // console.log("EEOO:", advertArray);
             resolve(advertArray);
           }
         }).catch(err => {
