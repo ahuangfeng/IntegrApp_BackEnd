@@ -56,6 +56,17 @@ var mongoose = require('mongoose');
 *         type: number
 */
 
+/**
+* @swagger
+* definitions:
+*   ModifyForumBody:
+*     properties:
+*       title:
+*         type: string
+*       description:
+*         type: string
+*/
+
 var ForumSchema = new mongoose.Schema({
   title: String,
   description: String,
