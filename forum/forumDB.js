@@ -68,11 +68,11 @@ exports.voteForum = function(forumData, newRate) {
 exports.findForumById = function (id) {
   return new Promise(function (resolve, reject) {
     if (id.match(/^[0-9a-fA-F]{24}$/)) { //verifica que la id es vàlida
-      Forum.findById(id, function (err, user) {
+      Forum.findById(id, function (err, forum) {
         if (err) {
           reject(err);
         }
-        resolve(user);
+        resolve(forum);
       });
     } else {
       reject({ message: "forumId no vàlido." })
@@ -80,17 +80,18 @@ exports.findForumById = function (id) {
   });
 }
 
-exports.modifyForum = function (forum, content) {
+exports.modifyForum = function (forumId, content) {
   return new Promise(function (resolve, reject) {
-    if (!content.title) {
-      content.title = advert.title;
+    var modifTODO = {};
+    if (content.title) {
+      modifTODO.title = content.title;
     }
-    if (!content.description) {
-      content.description = advert.description;
+    if (content.description) {
+      modifTODO.description = content.description;
     }
     
-    Forum.findOneAndUpdate({ _id: forum._id }, {
-      $set: { title: content.title, description: content.description }
+    Forum.findOneAndUpdate({ _id: forumId }, {
+      $set: modifTODO
     }, { new: true },
       function (err, doc) {
         if (!err) resolve(doc);

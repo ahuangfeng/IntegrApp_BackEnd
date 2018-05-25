@@ -25,31 +25,27 @@ exports.createForum = function (req, res, next) {
 
 exports.modifyForum = function (req, res, next) {
   var forumData = req.body;
-  var verify = verifyOwner(req.params.id, req.decoded);
-  if (!verify.success) {
-    res.status(400).json({ message: verify.message });
-    return;
-  }
-  
-  forumDB.findForumById(req.params.id).then(forum => {
-    forumDB.modifyForum(forum, forumData).then(modifiedMessage => {
-      res.send({ message: modifiedMessage });
+  verifyOwner(req.params.id, req.decoded).then(forum => {
+    forumDB.modifyForum(req.params.id, forumData).then(modifiedForum => {
+      res.send(modifiedForum);
     }).catch(err => {
       res.status(400).json({ message: err.message });
     });
   }).catch(err => {
-    res.status(400).json({ message: err.message });
+    res.status(err.status).json({message: err.message});
   });
 }
 
-verifyOwner = function(forumId, decoded) {
-  forumDB.findForumById(forumId).then(forum => {
-    if (forum == null) reject({success: false, message: "forum not found"});
-    else if (decoded.userID != forum.userId) reject({success: false, message: "user is not the forum owner"});
-  }).catch(err => {
-    reject({message: "error: " + err.message});
+verifyOwner = function (forumId, decoded) {
+  return new Promise((resolve, reject) => {
+    forumDB.findForumById(forumId).then(forum => {
+      if (forum == null) reject({ message: "Forum not found", status: 404 });
+      else if (decoded.userID != forum.userId) reject({ message: "User is not the forum owner", status: 403 });
+      else resolve(forum);
+    }).catch(err => {
+      reject({ message: "error: " + err.message, status: 500 });
+    });
   });
-  return {success: true};
 }
 
 exports.getForums = function (req, res, next) {
@@ -200,7 +196,6 @@ exports.getFullForum = function (req, res, next) {
     });
   }
 }
-
 
 
 notImplemented = function (req, res, next) {
