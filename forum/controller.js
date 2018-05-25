@@ -24,7 +24,18 @@ exports.createForum = function (req, res, next) {
 }
 
 exports.modifyForum = function (req, res, next) {
-  notImplemented(req, res, next);
+  var forumData = req.body;
+  var verify = verifyOwner(req.params.id, req.decoded);
+}
+
+verifyOwner = function(forumId, decoded) {
+  forumDB.findForumById(forumId).then(forum => {
+    if (forum == null) reject({success: false, message: "forum not found"});
+    else if (decoded.userID != forum.userId) reject({success: false, message: "user is not the forum owner"});
+  }).catch(err => {
+    reject({message: "error: " + err.message});
+  });
+  return {success: true};
 }
 
 exports.getForums = function (req, res, next) {

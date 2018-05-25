@@ -262,4 +262,7 @@ apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumControlle
  */
 apiRoutes.put('/forum/:id/vote', tokenMiddleware.tokenCheck, forumController.voteForum);
 
+
+apiRoutes.put('/forum/:id', tokenMiddleware.tokenCheck, forumController.modifyForum);
+
 exports.apiRoutes = apiRoutes;
