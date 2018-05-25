@@ -258,7 +258,7 @@ getRegistereds = function (advert) {
         var itemsProcessed = 0;
         ins.forEach((item, index, array) => {
           usersDB.findUserById(item.userId).then(user => {
-            var aux = { "userId": item.userId, "username": user.username, "status": item.status };
+            var aux = { id: item._id, "userId": item.userId, "username": user.username, "status": item.status };
             arrayNew.push((aux));
             ++itemsProcessed;
             if (itemsProcessed === array.length) {

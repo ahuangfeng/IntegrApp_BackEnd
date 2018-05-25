@@ -35,7 +35,6 @@ TODO:Alex
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
 GET forums/ --> si no existe forum, loop sin fin --> fet??
---> modificar forum PUT
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
 
