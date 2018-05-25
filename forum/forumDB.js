@@ -80,6 +80,25 @@ exports.findForumById = function (id) {
   });
 }
 
+exports.modifyForum = function (forum, content) {
+  return new Promise(function (resolve, reject) {
+    if (!content.title) {
+      content.title = advert.title;
+    }
+    if (!content.description) {
+      content.description = advert.description;
+    }
+    
+    Forum.findOneAndUpdate({ _id: forum._id }, {
+      $set: { title: content.title, description: content.description }
+    }, { new: true },
+      function (err, doc) {
+        if (!err) resolve(doc);
+        else reject({ message: "Error modifying forum" });
+      });
+  });
+}
+
 exports.saveForumEntry = function (forumEntry) {
   var forumEntry = new ForumEntry(forumEntry);
   return new Promise((resolve, reject) => {

@@ -262,7 +262,42 @@ apiRoutes.delete('/commentForum/:id', tokenMiddleware.tokenCheck, forumControlle
  */
 apiRoutes.put('/forum/:id/vote', tokenMiddleware.tokenCheck, forumController.voteForum);
 
-
+/**
+ * @swagger
+ * /forum/{id}:
+ *   put:
+ *     summary: Modificar forum
+ *     tags: [Forum]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         type: string
+ *         required: true
+ *         description: Id del forum
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ModifyForumBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/Forum"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
 apiRoutes.put('/forum/:id', tokenMiddleware.tokenCheck, forumController.modifyForum);
 
 exports.apiRoutes = apiRoutes;

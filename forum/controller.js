@@ -26,6 +26,20 @@ exports.createForum = function (req, res, next) {
 exports.modifyForum = function (req, res, next) {
   var forumData = req.body;
   var verify = verifyOwner(req.params.id, req.decoded);
+  if (!verify.success) {
+    res.status(400).json({ message: verify.message });
+    return;
+  }
+  
+  forumDB.findForumById(req.params.id).then(forum => {
+    forumDB.modifyForum(forum, forumData).then(modifiedMessage => {
+      res.send({ message: modifiedMessage });
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    });
+  }).catch(err => {
+    res.status(400).json({ message: err.message });
+  });
 }
 
 verifyOwner = function(forumId, decoded) {
