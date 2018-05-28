@@ -6,6 +6,37 @@ var tokenMiddleware = require('../middleware/tokenVerification');
 // get an instance of the router for api routes
 var apiRoutes = express.Router();
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads')
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname )
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  };
+
+var upload = multer({
+    storage: storage,
+    limits: {
+        filesize: 1024 * 1024 * 8
+    },
+    fileFilter: fileFilter
+});
+
+apiRoutes.post('/fileUpload', upload.single('image'), controller.fileUpload);
+
+apiRoutes.get('/file/:userId', controller.getFiles);
+
 /**
  * @swagger
  * /register:

@@ -221,7 +221,8 @@ var UserSchema = new mongoose.Schema({
             if (this.type == "association") return true;
             else return false;
         }
-    }
+    },
+    imagePath: String
 });
 
 /**

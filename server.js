@@ -30,6 +30,7 @@ app.set('superSecret', config.secret); // secret variable
 // this will let us get the data from a POST
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: '10mb' }));
+app.use('/uploads',express.static('uploads'));
 
 db_tools.DBConnectMongoose()
   .then(() => {

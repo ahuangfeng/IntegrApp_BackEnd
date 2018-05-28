@@ -7,6 +7,22 @@ var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 
+exports.fileUpload = function (req, res, next) {
+  usersDB.uploadFile('./uploads/' + req.file.filename).then(result => {
+    res.send(result);
+  }).catch(err => {
+    res.status(400).json({message: err.message});
+  });
+}
+
+exports.getFiles = function (req, res, next) {
+  usersDB.getImage(req.params.userId).then(image => {
+    res.send(image);
+  }).catch(err => {
+    res.status(400).json({message: err.message});
+  })
+}
+
 exports.createUser = function (req, res, next) {
   var userData = req.body;
 
