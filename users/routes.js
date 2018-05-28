@@ -16,6 +16,7 @@ var storage = multer.diskStorage({
     }
 });
 
+
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -32,7 +33,7 @@ var upload = multer({
     },
     fileFilter: fileFilter
 });
-
+//image upload, get, and delete
 apiRoutes.post('/imageUpload', tokenMiddleware.tokenCheck, upload.single('image'), controller.fileUpload);
 
 apiRoutes.get('/image/:userId', tokenMiddleware.tokenCheck, controller.getFiles);
