@@ -16,9 +16,9 @@ var Like = mongoose.model('Like', models.LikesSchema);
 exports.Like = Like;
 exports.User = User;
 
-exports.uploadFile = function (path) {
+exports.uploadFile = function (idUser, path) {
   return new Promise(function (resolve, reject) {
-    User.findOneAndUpdate({username: "sergiaguilar"}, {
+    User.findOneAndUpdate({_id: idUser}, {
       $set: {
       imagePath: path
       }
@@ -26,9 +26,25 @@ exports.uploadFile = function (path) {
     if (!err) {
       resolve(doc);
     } else {
-      reject({ message: "Error solving inscription" });
+      reject({ message: "Error saving image" });
     }
     });
+  });
+}
+
+exports.deleteImage = function(id) {
+  return new Promise(function (resolve, reject) {
+    User.findOneAndUpdate({_id:id},  {
+      $set: {
+      imagePath: null
+      }
+    }, { new: true }, function (err, doc) {
+    if (!err) {
+      resolve(doc);
+    } else {
+      reject({ message: "Error deleting image" });
+    }
+  });
   });
 }
 

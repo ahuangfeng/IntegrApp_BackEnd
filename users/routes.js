@@ -9,7 +9,7 @@ var apiRoutes = express.Router();
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './uploads')
+      cb(null, './uploads/users')
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname )
@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
       cb(null, true);
     } else {
-      cb(null, false);
+      cb("Only accepted jpeg and png formats", false);
     }
   };
 
@@ -33,9 +33,11 @@ var upload = multer({
     fileFilter: fileFilter
 });
 
-apiRoutes.post('/fileUpload', upload.single('image'), controller.fileUpload);
+apiRoutes.post('/imageUpload', tokenMiddleware.tokenCheck, upload.single('image'), controller.fileUpload);
 
-apiRoutes.get('/file/:userId', controller.getFiles);
+apiRoutes.get('/image/:userId', tokenMiddleware.tokenCheck, controller.getFiles);
+
+apiRoutes.delete('/image/:userId', tokenMiddleware.tokenCheck, controller.deleteFile);
 
 /**
  * @swagger

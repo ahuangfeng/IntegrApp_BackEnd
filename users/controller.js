@@ -6,18 +6,74 @@ var advertDB = require('../advert/advertDB');
 var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
+var fs = require('fs');
+
 
 exports.fileUpload = function (req, res, next) {
-  usersDB.uploadFile('./uploads/' + req.file.filename).then(result => {
-    res.send(result);
+  if(!req.file) {
+    res.status(400).json({message: "Falta la imagen"});
+  }
+  else {
+    usersDB.getImage(req.decoded.userID).then(image=> {
+      if(image != null) {
+        fs.unlink(image, function(error) {
+          if(error) {
+            res.status(400).json({message: error});
+          }
+          else {
+            usersDB.uploadFile(req.decoded.userID, './uploads/users/' + req.file.filename).then(result => {
+              res.send(result);
+            }).catch(err => {
+              res.status(400).json({message: err.message});
+            });
+          }
+        });
+        
+      }
+      else {
+        usersDB.uploadFile(req.decoded.userID, './uploads/users/' + req.file.filename).then(result => {
+          res.send(result);
+        }).catch(err => {
+          res.status(400).json({message: err.message});
+        });
+      }
+    })
+  }  
+}
+
+exports.deleteFile = function (req, res, next) {
+  if(!req.params.userId) {
+    res.status(400).json({message: "Falta el userId"});
+  }
+  usersDB.getImage(req.params.userId).then(image => {
+    if(image == null) {
+      res.status(400).json({message: "The user has no image."});
+    }
+    else {
+      usersDB.deleteImage(req.params.userId).then(del => {
+        fs.unlink(image, function(error) {
+          if(error) {
+            res.status(400).json({message: error});
+          }
+          else res.send("Deleted the image");
+        })
+      }).catch(err => {
+        res.status(400).json({message: err.message});
+      }) 
+    }
   }).catch(err => {
     res.status(400).json({message: err.message});
-  });
+  })
 }
 
 exports.getFiles = function (req, res, next) {
   usersDB.getImage(req.params.userId).then(image => {
-    res.send(image);
+    if(image == null) {
+      res.status(400).json({message: "The user has no image."});
+    }
+    else {
+      res.send(image);
+    }
   }).catch(err => {
     res.status(400).json({message: err.message});
   })
