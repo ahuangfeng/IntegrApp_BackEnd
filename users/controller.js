@@ -10,9 +10,9 @@ var fs = require('fs');
 var cloudinary = require('cloudinary')
 
 cloudinary.config({ 
-    cloud_name: 'integrapp', 
-    api_key: '677457881439552', 
-    api_secret: 'nqBInLgOw8ohZrI_1YX3nWmIYjM' 
+    cloud_name: 'hlcivcine', 
+    api_key: '158434689396546', 
+    api_secret: 'LfgGuWmq3OGj-2HmYTo0p7Xa5CE' 
 })
 
 exports.fileUpload = function (req, res, next) {
