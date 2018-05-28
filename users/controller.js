@@ -9,6 +9,7 @@ var config = require('config'); // get our config file
 var fs = require('fs');
 var cloudinary = require('cloudinary')
 
+
 cloudinary.config({ 
     cloud_name: 'hlcivcine', 
     api_key: '158434689396546', 
@@ -16,6 +17,7 @@ cloudinary.config({
 })
 
 exports.fileUpload = function (req, res, next) {
+  
   if(!req.body.path) {
     res.status(400).json({message: "Falta la imagen"});
   }
