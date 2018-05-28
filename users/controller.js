@@ -7,55 +7,75 @@ var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var fs = require('fs');
+var cloudinary = require('cloudinary')
 
+cloudinary.config({ 
+    cloud_name: 'integrapp', 
+    api_key: '677457881439552', 
+    api_secret: 'nqBInLgOw8ohZrI_1YX3nWmIYjM' 
+})
 
 exports.fileUpload = function (req, res, next) {
-  if(!req.file) {
+  if(!req.body.path) {
     res.status(400).json({message: "Falta la imagen"});
   }
+
   else {
-    usersDB.getImage(req.decoded.userID).then(image=> {
-      if(image != null) {
-        fs.unlink(image, function(error) {
-          if(error) {
-            res.status(400).json({message: error});
-          }
-          else {
-            usersDB.uploadFile(req.decoded.userID, './uploads/users/' + req.file.filename).then(result => {
-              res.send(result);
+    usersDB.findUserById(req.decoded.userID).then(user => {
+      usersDB.getImageName(req.decoded.userID).then(image=> {
+        if(image != null) {
+          cloudinary.v2.uploader.destroy(image, function(error, result) {
+            if(error) {
+              res.status(400).json({error});
+            }
+            console.log(result);
+          })
+          cloudinary.v2.uploader.upload(req.body.path ,function(error, result) {
+            if(error) {
+              res.status(400).json({error});
+            }
+            usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+              res.send(userFile);
             }).catch(err => {
               res.status(400).json({message: err.message});
             });
-          }
-        });
-        
-      }
-      else {
-        usersDB.uploadFile(req.decoded.userID, './uploads/users/' + req.file.filename).then(result => {
-          res.send(result);
-        }).catch(err => {
-          res.status(400).json({message: err.message});
-        });
-      }
+          });  
+                  
+        }
+        else {
+          cloudinary.v2.uploader.upload(req.body.path ,function(error, result) {
+            if(error) {
+              res.status(400).json({error});
+            }
+            usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+              res.send(userFile);
+            }).catch(err => {
+              res.status(400).json({message: err.message});
+            });
+          });  
+        }
+      })
     })
-  }  
+  }
+     
 }
 
 exports.deleteFile = function (req, res, next) {
   if(!req.params.userId) {
     res.status(400).json({message: "Falta el userId"});
   }
-  usersDB.getImage(req.params.userId).then(image => {
+  usersDB.getImageName(req.params.userId).then(image => {
     if(image == null) {
       res.status(400).json({message: "The user has no image."});
     }
     else {
+      console.log(image);
       usersDB.deleteImage(req.params.userId).then(del => {
-        fs.unlink(image, function(error) {
+        cloudinary.v2.uploader.destroy(image, function(error, result) {
           if(error) {
-            res.status(400).json({message: error});
+            res.status(400).json({error});
           }
-          else res.send("Deleted the image");
+          else res.send("Image deleted");
         })
       }).catch(err => {
         res.status(400).json({message: err.message});
@@ -67,7 +87,7 @@ exports.deleteFile = function (req, res, next) {
 }
 
 exports.getFiles = function (req, res, next) {
-  usersDB.getImage(req.params.userId).then(image => {
+  usersDB.getImagePath(req.params.userId).then(image => {
     if(image == null) {
       res.status(400).json({message: "The user has no image."});
     }

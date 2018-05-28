@@ -222,7 +222,8 @@ var UserSchema = new mongoose.Schema({
             else return false;
         }
     },
-    imagePath: String
+    imagePath: String,
+    imageName: String
 });
 
 /**

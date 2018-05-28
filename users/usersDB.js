@@ -16,11 +16,12 @@ var Like = mongoose.model('Like', models.LikesSchema);
 exports.Like = Like;
 exports.User = User;
 
-exports.uploadFile = function (idUser, path) {
+exports.uploadFile = function (idUser, path, idPhoto) {
   return new Promise(function (resolve, reject) {
     User.findOneAndUpdate({_id: idUser}, {
       $set: {
-      imagePath: path
+      imagePath: path,
+      imageName: idPhoto
       }
     }, { new: true }, function (err, doc) {
     if (!err) {
@@ -36,7 +37,8 @@ exports.deleteImage = function(id) {
   return new Promise(function (resolve, reject) {
     User.findOneAndUpdate({_id:id},  {
       $set: {
-      imagePath: null
+      imagePath: null,
+      imageName: null
       }
     }, { new: true }, function (err, doc) {
     if (!err) {
@@ -48,7 +50,7 @@ exports.deleteImage = function(id) {
   });
 }
 
-exports.getImage = function(id) {
+exports.getImagePath = function(id) {
   return new Promise(function (resolve, reject) {
     User.findOne({_id:id}, function (err, user) {
       if (err) {
@@ -57,6 +59,20 @@ exports.getImage = function(id) {
       }
       else {
         resolve(user.imagePath);
+      }
+    })
+  });
+}
+
+exports.getImageName = function(id) {
+  return new Promise(function (resolve, reject) {
+    User.findOne({_id:id}, function (err, user) {
+      if (err) {
+        console.log("Error finding user", name);
+        reject(err);
+      }
+      else {
+        resolve(user.imageName);
       }
     })
   });

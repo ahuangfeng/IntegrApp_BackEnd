@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ahuangfeng/IntegrApp_BackEnd#readme",
   "dependencies": {
     "body-parser": "1.18.2",
+    "cloudinary": "^1.11.0",
     "config": "1.30.0",
     "express": "4.16.3",
     "jsonwebtoken": "8.2.0",
