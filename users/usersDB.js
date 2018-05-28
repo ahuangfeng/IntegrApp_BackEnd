@@ -9,7 +9,7 @@ var reportDB = require('../report/reportDB');
  *   description: Usuario del sistema
  */
 
-// Register the schema
+
 var User = mongoose.model('User', models.UserSchema);
 var Like = mongoose.model('Like', models.LikesSchema);
 
