@@ -207,6 +207,10 @@ var mongoose = require('mongoose');
 *         type: array
 *         items:
 *           $ref: "#/definitions/Advert"
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
 */
 var UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, dropDups: true },

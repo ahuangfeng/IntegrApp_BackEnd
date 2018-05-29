@@ -54,7 +54,7 @@ exports.getImagePath = function(id) {
   return new Promise(function (resolve, reject) {
     User.findOne({_id:id}, function (err, user) {
       if (err) {
-        console.log("Error finding user", name);
+        console.log("Error finding user", id);
         reject(err);
       }
       else {
@@ -68,7 +68,7 @@ exports.getImageName = function(id) {
   return new Promise(function (resolve, reject) {
     User.findOne({_id:id}, function (err, user) {
       if (err) {
-        console.log("Error finding user", name);
+        console.log("Error finding user", id);
         reject(err);
       }
       else {

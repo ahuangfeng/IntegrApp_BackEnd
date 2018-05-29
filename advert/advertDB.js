@@ -7,6 +7,69 @@ var inscriptionDB = require('../inscription/inscriptionDB');
 var reportDB = require('../report/reportDB');
 
 exports.Advert = Advert;
+
+exports.uploadImageAdvert = function (idAdvert, path, idPhoto) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOneAndUpdate({_id: idAdvert}, {
+      $set: {
+      imagePath: path,
+      imageName: idPhoto
+      }
+    }, { new: true }, function (err, doc) {
+    if (!err) {
+      resolve(doc);
+    } else {
+      reject({ message: "Error saving image" });
+    }
+    });
+  });
+}
+
+exports.deleteImageAdvert = function(id) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOneAndUpdate({_id:id},  {
+      $set: {
+      imagePath: null,
+      imageName: null
+      }
+    }, { new: true }, function (err, doc) {
+    if (!err) {
+      resolve(doc);
+    } else {
+      reject({ message: "Error deleting image" });
+    }
+  });
+  });
+}
+
+exports.getImagePathAdvert = function(id) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOne({_id:id}, function (err, advert) {
+      if (err) {
+        console.log("Error finding advert", id);
+        reject(err);
+      }
+      else {
+        resolve(advert.imagePath);
+      }
+    })
+  });
+}
+
+exports.getImageNameAdvert = function(id) {
+  return new Promise(function (resolve, reject) {
+    Advert.findOne({_id:id}, function (err, advert) {
+      if (err) {
+        console.log("Error finding advert", id);
+        reject(err);
+      }
+      else {
+        resolve(advert.imageName);
+      }
+    })
+  });
+}
+
 exports.saveAdvert = function (advertData) {
   var advert = new Advert(advertData);
   return new Promise((resolve, reject) => {

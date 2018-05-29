@@ -5,6 +5,140 @@ var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var advertDB = require('./advertDB');
 var userDB = require('../users/usersDB');
+var fs = require('fs');
+var cloudinary = require('cloudinary');
+var upload = require('express-fileupload');
+
+cloudinary.config({ 
+    cloud_name: 'hlcivcine', 
+    api_key: '158434689396546', 
+    api_secret: 'LfgGuWmq3OGj-2HmYTo0p7Xa5CE' 
+})
+
+exports.advertImage = function (req, res, next) {
+  if(!req.files.file) {
+    res.status(400).json({message : "Falta la imagen"});
+  }
+  
+  else {
+    advertDB.findAdvertById(req.body.advertId).then(advert => {
+      if(advert.userId != req.decoded.userID) {
+        res.status(400).json({message:"L'usuari no és el propietari de l'anunci!"});
+      }
+      else {
+        advertDB.getImageNameAdvert(req.body.advertId).then(image=> {
+          if(image != null) {
+            cloudinary.v2.uploader.destroy(image, {folder:"adverts"}, function(error, result) {
+              if(error) {
+                res.status(400).json({error});
+              }
+              console.log(result);
+            })
+            let sampleFile = req.files.file;
+            sampleFile.mv('./images/'+ sampleFile.name, function(err) {
+              if(err) {
+                res.status(400).json({err});
+              }
+              else {
+                cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"adverts"}, function(error, result){
+                  if(error) {
+                    res.status(400).json({error});
+                  }
+                  else {
+                    advertDB.uploadImageAdvert(req.body.advertId, result.url, result.public_id).then(advertFile => {
+                      fs.unlink('./images/' + sampleFile.name, function(error) {
+                        if (error) {
+                            throw error;
+                        }
+                        else {
+                          res.send(advertFile);
+                        }
+                      })
+                    }).catch(err => {
+                      res.status(400).json({message: err.message});
+                    });
+                  }
+                })
+              }
+            });
+          }              
+    
+          else {
+            let sampleFile = req.files.file;
+              sampleFile.mv('./images/'+ sampleFile.name, function(err) {
+              if(err) {
+                res.status(400).json({err});
+              }
+              else {
+                cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"adverts"}, function(error, result){
+                  if(error) {
+                    res.status(400).json({error});
+                  }
+                  else {
+                    advertDB.uploadImageAdvert(req.body.advertId, result.url, result.public_id).then(advertFile => {
+                      fs.unlink('./images/' + sampleFile.name, function(error) {
+                        if (error) {
+                            throw error;
+                        }
+                        else {
+                          res.send(advertFile);
+                        }
+                      });
+                      
+                    }).catch(err => {
+                      res.status(400).json({message: err.message});
+                    }); 
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+}
+
+exports.advertDeleteImage = function (req, res, next) {
+  if(!req.params.advertId) {
+    res.status(400).json({message: "Falta el advertId"});
+  }
+  else {
+    advertDB.getImageNameAdvert(req.params.advertId).then(image => {
+      if(image == null) {
+        res.status(400).json({message: "The advert has no image."});
+      }
+      else {
+        console.log(image);
+        advertDB.deleteImageAdvert(req.params.advertId).then(del => {
+          cloudinary.v2.uploader.destroy(image, {folder:"adverts"}, function(error, result) {
+            if(error) {
+              res.status(400).json({error});
+            }
+            else res.send("Image deleted");
+          })
+        }).catch(err => {
+          res.status(400).json({message: err.message});
+        }) 
+      }
+    }).catch(err => {
+      res.status(400).json({message: err.message});
+    })
+  }
+}
+
+exports.advertGetImage = function (req, res, next) {
+  advertDB.getImagePathAdvert(req.params.advertId).then(image => {
+    if(image == null) {
+      res.status(400).json({message: "The advert has no image."});
+    }
+    else {
+      res.send(image);
+    }
+  }).catch(err => {
+    res.status(400).json({message: err.message});
+  })
+}
 
 exports.createAdvert = function (req, res, next) {
   var verifyFields = verifyFieldAdvert(req.body, req.decoded);

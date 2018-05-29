@@ -19,6 +19,13 @@ var apiRoutes = express.Router();
 *   description: Funció no implementada encara
 */
 
+//image upload, get, and delete
+apiRoutes.post('/advert/imageUpload', tokenMiddleware.tokenCheck, advertController.advertImage);
+
+apiRoutes.get('/advert/image/:advertId', tokenMiddleware.tokenCheck, advertController.advertGetImage);
+
+apiRoutes.delete('/advert/image/:advertId', tokenMiddleware.tokenCheck, advertController.advertDeleteImage);
+
 /**
  * @swagger
  * /advert:

@@ -56,6 +56,10 @@ var mongoose = require('mongoose');
 *       typeAdvert:
 *         type: string
 *         enum: [lookFor, offer]
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
 */
 
 /**
@@ -94,6 +98,10 @@ var mongoose = require('mongoose');
 *       typeAdvert:
 *         type: string
 *         enum: [lookFor, offer]
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
 *       registered:
 *         type: array
 *         items:
@@ -144,6 +152,10 @@ var mongoose = require('mongoose');
 *         type: array
 *         items:
 *           $ref: "#/definitions/Inscription"
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
 */
 
 /**
@@ -217,7 +229,9 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
-  }
+  },
+  imagePath: String,
+  imageName: String
 });
 
 exports.AdvertSchema = AdvertSchema;

@@ -22,69 +22,77 @@ exports.fileUpload = function (req, res, next) {
   }
   
   else {
-    let sampleFile = req.files.file;
-    sampleFile.mv('./images/'+ sampleFile.name, function(err) {
-      if(err) {
-        res.status(400).json({err});
-      }
-      else {
-        usersDB.findUserById(req.decoded.userID).then(user => {
-          usersDB.getImageName(req.decoded.userID).then(image=> {
-            if(image != null) {
-              cloudinary.v2.uploader.destroy(image, {folder:"users"}, function(error, result) {
-                if(error) {
-                  res.status(400).json({error});
-                }
-                console.log(result);
-              })
-              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
-                if(error) {
-                  res.status(400).json({error});
-                }
-                else {
-                  usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-                    fs.unlink('./images/' + sampleFile.name, function(error) {
-                      if (error) {
-                          throw error;
-                      }
-                      else {
-                        res.send(userFile);
-                      }
-                    })
-                  }).catch(err => {
-                    res.status(400).json({message: err.message});
-                  });
-                }
-              })
-            }
-    
-            else {
-              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
-                if(error) {
-                  res.status(400).json({error});
-                }
-                else {
-                  usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-                    fs.unlink('./images/' + sampleFile.name, function(error) {
-                      if (error) {
-                          throw error;
-                      }
-                      else {
-                        res.send(userFile);
-                      }
+    usersDB.findUserById(req.decoded.userID).then(user => {
+        usersDB.getImageName(req.decoded.userID).then(image=> {
+          if(image != null) {
+            cloudinary.v2.uploader.destroy(image, {folder:"users"}, function(error, result) {
+              if(error) {
+                res.status(400).json({error});
+              }
+              console.log(result);
+            })
+            let sampleFile = req.files.file;
+            sampleFile.mv('./images/'+ sampleFile.name, function(err) {
+              if(err) {
+                res.status(400).json({err});
+              }
+              else {
+                cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
+                  if(error) {
+                    res.status(400).json({error});
+                  }
+                  else {
+                    usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                      fs.unlink('./images/' + sampleFile.name, function(error) {
+                        if (error) {
+                            throw error;
+                        }
+                        else {
+                          res.send(userFile);
+                        }
+                      })
+                    }).catch(err => {
+                      res.status(400).json({message: err.message});
                     });
-                    
-                  }).catch(err => {
-                    res.status(400).json({message: err.message});
-                  }); 
-                }
-              });
-              
-            }
-          })
-        })
-      }
-    })
+                  }
+                })
+              }
+            });
+          }              
+    
+          else {
+            let sampleFile = req.files.file;
+              sampleFile.mv('./images/'+ sampleFile.name, function(err) {
+              if(err) {
+                res.status(400).json({err});
+              }
+              else {
+                cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
+                  if(error) {
+                    res.status(400).json({error});
+                  }
+                  else {
+                    usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                      fs.unlink('./images/' + sampleFile.name, function(error) {
+                        if (error) {
+                            throw error;
+                        }
+                        else {
+                          res.send(userFile);
+                        }
+                      });
+                      
+                    }).catch(err => {
+                      res.status(400).json({message: err.message});
+                    }); 
+                  }
+                });
+              }
+            });
+          }
+        });
+      
+    });
   }
 }
 
