@@ -22,11 +22,19 @@ exports.saveChat = function (content, fromId, toId, newTo, newFrom) {
 exports.seenChats = function (from, to, userId) {
   return new Promise((resolve, reject) => {
     if(userId == to){
-      Chat.update({ from: from, to: to }, { newTo: false }, { multi: true }, function (err, raw) {
-        if (err) reject(err);
-        resolve(raw);
-        // console.log('The raw response from Mongo was ', raw);
+      Chat.find({ from: from, to: to },(err,res) => {
+        console.log("RES:", res);
+        res.forEach(element => {
+          element.newTo = false;
+          element.save();
+        });
+        resolve(res);
       });
+      // Chat.update({ from: from, to: to }, { newTo: false }, { multi: true }, function (err, raw) {
+      //   if (err) reject(err);
+      //   resolve(raw);
+      //   // console.log('The raw response from Mongo was ', raw);
+      // });
     }else{
       resolve("nothing to update");
     }
