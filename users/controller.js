@@ -20,6 +20,7 @@ exports.fileUpload = function (req, res, next) {
   if(!req.files.file) {
     res.status(400).json({message : "Falta la imagen"});
   }
+  
   else {
     let sampleFile = req.files.file;
     sampleFile.mv('./images/'+ sampleFile.name, function(err) {
@@ -30,13 +31,13 @@ exports.fileUpload = function (req, res, next) {
         usersDB.findUserById(req.decoded.userID).then(user => {
           usersDB.getImageName(req.decoded.userID).then(image=> {
             if(image != null) {
-              cloudinary.v2.uploader.destroy(image, function(error, result) {
+              cloudinary.v2.uploader.destroy(image, {folder:"users"}, function(error, result) {
                 if(error) {
                   res.status(400).json({error});
                 }
                 console.log(result);
               })
-              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, function(error, result){
+              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
                 if(error) {
                   res.status(400).json({error});
                 }
@@ -58,7 +59,7 @@ exports.fileUpload = function (req, res, next) {
             }
     
             else {
-              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, function(error, result){
+              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, {folder:"users"}, function(error, result){
                 if(error) {
                   res.status(400).json({error});
                 }
@@ -98,7 +99,7 @@ exports.deleteFile = function (req, res, next) {
     else {
       console.log(image);
       usersDB.deleteImage(req.params.userId).then(del => {
-        cloudinary.v2.uploader.destroy(image, function(error, result) {
+        cloudinary.v2.uploader.destroy(image, {folder:"users"}, function(error, result) {
           if(error) {
             res.status(400).json({error});
           }
