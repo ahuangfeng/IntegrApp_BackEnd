@@ -41,8 +41,8 @@ exports.assignRoutes = function (app, server) {
                 socket.username = user.username;
                 socket.userId = user._id;
                 connectedUsers[socket.userId] = { 'username': socket.username, 'socketId': socket.id };
-                console.log("Socket:", from, to, socket.userId);
-                chatDB.seenChats(from,to, socket.userId).then(result => {
+                // console.log("Socket:", from, to, socket.userId);
+                chatDB.seenChats(from,to).then(result => {
                   console.log("Seen chats", result);
                 }).catch(err => {
                   console.log("Error on seenChats", err);
