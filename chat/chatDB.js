@@ -19,6 +19,16 @@ exports.saveChat = function (content, fromId, toId, newFlag) {
   });
 }
 
+exports.seenChats = function(from, to) {
+  return new Promise((resolve, reject) => {
+    Chat.update({ $or: [{ from: userId }, { to: userId }] }, { new: false }, { multi: true }, function (err, raw) {
+      if (err) reject(err);
+      resolve(raw);
+      // console.log('The raw response from Mongo was ', raw);
+    });
+  });
+}
+
 exports.getChatByUserId = function(userId){
   return new Promise((resolve, reject) => {
     var allChats = [];
