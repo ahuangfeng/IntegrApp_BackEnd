@@ -18,7 +18,7 @@ cloudinary.config({
 
 exports.fileUpload = function (req, res, next) {
   
-  if(!req.body.path) {
+  if(!req.body.direccion) {
     res.status(400).json({message: "Falta la imagen"});
   }
 
@@ -44,7 +44,7 @@ exports.fileUpload = function (req, res, next) {
               });
             }
           });
-          var file_reader = fs.createReadStream(req.body.path).pipe(stream);
+          var file_reader = fs.createReadStream(req.body.direccion).pipe(stream);
                   
         }
         else {
@@ -60,7 +60,7 @@ exports.fileUpload = function (req, res, next) {
               }); 
             }
           });
-          var file_reader = fs.createReadStream(req.body.path).pipe(stream);
+          var file_reader = fs.createReadStream(req.body.direccion).pipe(stream);
           
         }
       })
