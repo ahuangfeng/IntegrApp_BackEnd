@@ -14,6 +14,7 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('config'); // get our config file
 var path = require('path');
 var http = require('http');
+var cloudinary = require('cloudinary')
 
 // module.exports para que sea visible por todos los lados
 var app = module.exports = express();

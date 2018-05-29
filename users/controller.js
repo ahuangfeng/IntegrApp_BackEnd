@@ -32,33 +32,42 @@ exports.fileUpload = function (req, res, next) {
             }
             console.log(result);
           })
-          cloudinary.v2.uploader.upload(req.body.path ,function(error, result) {
+          var stream = cloudinary.v2.uploader.upload_stream(function(error, result){
             if(error) {
               res.status(400).json({error});
             }
-            usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-              res.send(userFile);
-            }).catch(err => {
-              res.status(400).json({message: err.message});
-            });
-          });  
+            else {
+              usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                res.send(userFile);
+              }).catch(err => {
+                res.status(400).json({message: err.message});
+              });
+            }
+          });
+          var file_reader = fs.createReadStream(req.body.path).pipe(stream);
                   
         }
         else {
-          cloudinary.v2.uploader.upload(req.body.path ,function(error, result) {
+          var stream = cloudinary.v2.uploader.upload_stream(function(error, result){
             if(error) {
               res.status(400).json({error});
             }
-            usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-              res.send(userFile);
-            }).catch(err => {
-              res.status(400).json({message: err.message});
-            });
-          });  
+            else {
+              usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                res.send(userFile);
+              }).catch(err => {
+                res.status(400).json({message: err.message});
+              }); 
+            }
+          });
+          var file_reader = fs.createReadStream(req.body.path).pipe(stream);
+          
         }
       })
     })
   }
+
+  
      
 }
 
