@@ -48,6 +48,25 @@ exports.getChatByUserId = function(userId){
   });
 }
 
+exports.getNewChat = function(userId){
+  return new Promise((resolve, reject) => {
+    var newChats = 0;
+    Chat.find({ $or: [{ from: userId }, { to: userId }]}, function(err, res){
+      if(err) reject(err);
+      if(res.length > 0){
+        res.forEach((element, index,array)=> {
+          if(element.new){
+            newChats++;
+          }
+        });
+        resolve({new: newChats});
+      }else{
+        resolve({new: 0});
+      }
+    });
+  });
+}
+
 exports.getChat = function (from, to) {
   return new Promise((resolve, reject) => {
     Chat.find({ $or: [{ from: from, to: to }, { from: to, to: from }] }, function (err, res) {

@@ -20,7 +20,18 @@ exports.getChatByUserId = function (req, res, next) {
   }).catch(err => {
     res.status(400).send(err);
   });
-  // notImplemented(res, res, next);
+}
+
+exports.getNewChats = function (req, res, next) {
+  if(req.params.id == undefined){
+    res.status(400).json({message: "Id necesario"});
+    return;
+  }
+  chatDB.getNewChat(req.params.id).then(newChats =>{
+    res.send(newChats);
+  }).catch(err => {
+    res.status(400).send(err);
+  });
 }
 
 exports.getChat = function (req, res, next) {

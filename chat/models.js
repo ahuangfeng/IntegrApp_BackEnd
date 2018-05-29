@@ -27,6 +27,18 @@ var mongoose = require('mongoose');
 *         type: string
 */
 
+
+/**
+* @swagger
+* definitions:
+*   NewMessages:
+*     required:
+*       - new
+*     properties:
+*       new:
+*         type: number
+*/
+
 var ChatSchema = new mongoose.Schema({
   new: Boolean,
   content: String,

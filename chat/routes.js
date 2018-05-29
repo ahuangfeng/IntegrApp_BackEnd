@@ -88,4 +88,38 @@ apiRoutes.get('/chat', tokenMiddleware.tokenCheck, chatController.getChat);
  */
 apiRoutes.get('/chat/:id', tokenMiddleware.tokenCheck, chatController.getChatByUserId);
 
+
+/**
+ * @swagger
+ * /newChats/{userId}:
+ *   get:
+ *     summary: Retorna els usuaris amb qui ha contactat un usuari
+ *     tags: [Chat]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: userId
+ *         in: path
+ *         type: string
+ *         description: userId del usuari remitent
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/NewMessages"
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: No porta el token en la request
+ *         schema:
+ *           $ref: "#/definitions/LoginFailed"
+ */
+apiRoutes.get('/newChats/:id', tokenMiddleware.tokenCheck, chatController.getNewChats);
+
 exports.apiRoutes = apiRoutes;
