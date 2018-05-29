@@ -14,7 +14,8 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('config'); // get our config file
 var path = require('path');
 var http = require('http');
-var cloudinary = require('cloudinary')
+var cloudinary = require('cloudinary');
+var upload = require('express-fileupload');
 
 // module.exports para que sea visible por todos los lados
 var app = module.exports = express();
@@ -24,7 +25,7 @@ if (config.util.getEnv('NODE_ENV') !== 'test') {
 }
 
 // app.use(morgan('dev'));
-
+app.use(upload());
 app.set('superSecret', config.secret); // secret variable
 
 // configure app to use bodyParser()

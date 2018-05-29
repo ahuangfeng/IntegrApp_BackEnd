@@ -7,8 +7,8 @@ var inscriptionDB = require('../inscription/inscriptionDB');
 var jwt = require('jsonwebtoken');
 var config = require('config'); // get our config file
 var fs = require('fs');
-var cloudinary = require('cloudinary')
-
+var cloudinary = require('cloudinary');
+var upload = require('express-fileupload');
 
 cloudinary.config({ 
     cloud_name: 'hlcivcine', 
@@ -17,58 +17,74 @@ cloudinary.config({
 })
 
 exports.fileUpload = function (req, res, next) {
-  
-  if(!req.body.direccion) {
-    res.status(400).json({message: "Falta la imagen"});
+  if(!req.files.file) {
+    res.status(400).json({message : "Falta la imagen"});
   }
-
   else {
-    usersDB.findUserById(req.decoded.userID).then(user => {
-      usersDB.getImageName(req.decoded.userID).then(image=> {
-        if(image != null) {
-          cloudinary.v2.uploader.destroy(image, function(error, result) {
-            if(error) {
-              res.status(400).json({error});
+    let sampleFile = req.files.file;
+    sampleFile.mv('./images/'+ sampleFile.name, function(err) {
+      if(err) {
+        res.status(400).json({err});
+      }
+      else {
+        usersDB.findUserById(req.decoded.userID).then(user => {
+          usersDB.getImageName(req.decoded.userID).then(image=> {
+            if(image != null) {
+              cloudinary.v2.uploader.destroy(image, function(error, result) {
+                if(error) {
+                  res.status(400).json({error});
+                }
+                console.log(result);
+              })
+              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, function(error, result){
+                if(error) {
+                  res.status(400).json({error});
+                }
+                else {
+                  usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                    fs.unlink('./images/' + sampleFile.name, function(error) {
+                      if (error) {
+                          throw error;
+                      }
+                      else {
+                        res.send(userFile);
+                      }
+                    })
+                  }).catch(err => {
+                    res.status(400).json({message: err.message});
+                  });
+                }
+              })
             }
-            console.log(result);
-          })
-          var stream = cloudinary.v2.uploader.upload_stream(function(error, result){
-            if(error) {
-              res.status(400).json({error});
-            }
+    
             else {
-              usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-                res.send(userFile);
-              }).catch(err => {
-                res.status(400).json({message: err.message});
+              cloudinary.v2.uploader.upload('./images/' + sampleFile.name, function(error, result){
+                if(error) {
+                  res.status(400).json({error});
+                }
+                else {
+                  usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
+                    fs.unlink('./images/' + sampleFile.name, function(error) {
+                      if (error) {
+                          throw error;
+                      }
+                      else {
+                        res.send(userFile);
+                      }
+                    });
+                    
+                  }).catch(err => {
+                    res.status(400).json({message: err.message});
+                  }); 
+                }
               });
+              
             }
-          });
-          var file_reader = fs.createReadStream(req.body.direccion).pipe(stream);
-                  
-        }
-        else {
-          var stream = cloudinary.v2.uploader.upload_stream(function(error, result){
-            if(error) {
-              res.status(400).json({error});
-            }
-            else {
-              usersDB.uploadFile(req.decoded.userID, result.url, result.public_id).then(userFile => {
-                res.send(userFile);
-              }).catch(err => {
-                res.status(400).json({message: err.message});
-              }); 
-            }
-          });
-          var file_reader = fs.createReadStream(req.body.direccion).pipe(stream);
-          
-        }
-      })
+          })
+        })
+      }
     })
   }
-
-  
-     
 }
 
 exports.deleteFile = function (req, res, next) {
