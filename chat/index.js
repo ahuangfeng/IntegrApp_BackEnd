@@ -16,7 +16,7 @@ exports.assignRoutes = function (app, server) {
       if (connectedUsers[to] != undefined) {
         isNew = false;
       }
-      chatDB.saveChat(message, socket.userId, to, isNew).then(chatCreated => {
+      chatDB.saveChat(message, socket.userId, to, isNew, false).then(chatCreated => {
         if (connectedUsers[to] != undefined) {
           io.sockets.connected[connectedUsers[to].socketId].emit('new message', chatCreated);
         }

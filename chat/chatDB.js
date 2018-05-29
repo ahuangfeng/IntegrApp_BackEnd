@@ -6,9 +6,9 @@ var usersDB = require('../users/usersDB');
 
 exports.Chat = Chat;
 
-exports.saveChat = function (content, fromId, toId, newFlag) {
+exports.saveChat = function (content, fromId, toId, newTo, newFrom) {
   return new Promise((resolve, reject) => {
-    createObjChat(content, fromId, toId, newFlag).then(obj => {
+    createObjChat(content, fromId, toId, newTo, newFrom).then(obj => {
       var chat = new Chat(obj);
       return chat.save();
     }).then(chatCreated => {
@@ -19,9 +19,9 @@ exports.saveChat = function (content, fromId, toId, newFlag) {
   });
 }
 
-exports.seenChats = function(from, to) {
+exports.seenChats = function (from, to) {
   return new Promise((resolve, reject) => {
-    Chat.update({ $or: [{ from: userId }, { to: userId }] }, { new: false }, { multi: true }, function (err, raw) {
+    Chat.update({ from: from, to: to }, { new: false }, { multi: true }, function (err, raw) {
       if (err) reject(err);
       resolve(raw);
       // console.log('The raw response from Mongo was ', raw);
@@ -29,19 +29,19 @@ exports.seenChats = function(from, to) {
   });
 }
 
-exports.getChatByUserId = function(userId){
+exports.getChatByUserId = function (userId) {
   return new Promise((resolve, reject) => {
     var allChats = [];
-    Chat.find({ $or: [{ from: userId }, { to: userId }]}, function(err, res){
-      if(err) reject(err);
-      if(res.length > 0){
-        res.forEach((element, index,array)=> {
-          if(element.from == userId){
-            if(allChats.find(x => x._id == element.to) == undefined){
+    Chat.find({ $or: [{ from: userId }, { to: userId }] }, function (err, res) {
+      if (err) reject(err);
+      if (res.length > 0) {
+        res.forEach((element, index, array) => {
+          if (element.from == userId) {
+            if (allChats.find(x => x._id == element.to) == undefined) {
               allChats.push(element.to);
             }
-          }else{
-            if(allChats.find( x => x._id == element.from) == undefined){
+          } else {
+            if (allChats.find(x => x._id == element.from) == undefined) {
               allChats.push(element.from);
             }
           }
@@ -51,27 +51,27 @@ exports.getChatByUserId = function(userId){
         }).catch(err => {
           reject(err);
         });
-      }else{
+      } else {
         resolve(res);
       }
     });
   });
 }
 
-exports.getNewChat = function(userId){
+exports.getNewChat = function (userId) {
   return new Promise((resolve, reject) => {
     var newChats = 0;
-    Chat.find({ $or: [{ from: userId }, { to: userId }]}, function(err, res){
-      if(err) reject(err);
-      if(res.length > 0){
-        res.forEach((element, index,array)=> {
-          if(element.new){
+    Chat.find({ $or: [{ from: userId }, { to: userId }] }, function (err, res) {
+      if (err) reject(err);
+      if (res.length > 0) {
+        res.forEach((element, index, array) => {
+          if (element.to == userId && element.newTo) {
             newChats++;
           }
         });
-        resolve({new: newChats});
-      }else{
-        resolve({new: 0});
+        resolve({ new: newChats });
+      } else {
+        resolve({ new: 0 });
       }
     });
   });
@@ -88,10 +88,11 @@ exports.getChat = function (from, to) {
   });
 }
 
-createObjChat = function (content, fromId, toId, newFlag) {
+createObjChat = function (content, fromId, toId, newTo, newFrom) {
   return new Promise((resolve, reject) => {
     var objSave = {
-      new: newFlag,
+      newFrom: newFrom,
+      newTo: newTo,
       content: content,
       from: fromId,
       to: toId,

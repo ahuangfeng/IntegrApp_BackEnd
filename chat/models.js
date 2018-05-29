@@ -6,7 +6,8 @@ var mongoose = require('mongoose');
 *   Chat:
 *     required:
 *       - content
-*       - new
+*       - newTo
+*       - newFrom
 *       - from
 *       - to
 *       - createdAt
@@ -15,7 +16,9 @@ var mongoose = require('mongoose');
 *         type: string
 *       content:
 *         type: string
-*       new:
+*       newTo:
+*         type: boolean
+*       newFrom:
 *         type: boolean
 *       from:
 *         type: string
@@ -40,7 +43,8 @@ var mongoose = require('mongoose');
 */
 
 var ChatSchema = new mongoose.Schema({
-  new: Boolean,
+  newFrom: Boolean,
+  newTo: Boolean,
   content: String,
   fromUsername: String,
   from: String,
