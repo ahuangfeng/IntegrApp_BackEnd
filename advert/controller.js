@@ -9,6 +9,8 @@ var fs = require('fs');
 var cloudinary = require('cloudinary');
 var upload = require('express-fileupload');
 
+var array = ["image/jpeg","image/png"];
+
 cloudinary.config({ 
     cloud_name: 'hlcivcine', 
     api_key: '158434689396546', 
@@ -18,6 +20,10 @@ cloudinary.config({
 exports.advertImage = function (req, res, next) {
   if(!req.files.file) {
     res.status(400).json({message : "Falta la imagen"});
+  }
+
+  else if(array.indexOf(req.files.file.mimetype) < 0) {
+    res.status(400).json({message : "Imagen tiene que ser en formato JPEG o PNG."});
   }
   
   else {
