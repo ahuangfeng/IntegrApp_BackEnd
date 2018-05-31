@@ -38,9 +38,28 @@ GET forums/ --> si no existe forum, loop sin fin --> fet??
 Gamificación: poner una puntuacion al userSchema i cada vez que haga un advert, sumar puntos, hace forum, puntos, etc...
 
 
-//TODO: vendre la aplicació: presentació tecnica, vendreli com hem treballat, metodologia, demo, arquitectura... som nosaltres qui definim que presentem
+
+//TODO: vendre la aplicació! no la idea: presentació tecnica, vendreli com hem treballat, metodologia (com hem treballat en el equip), explicar les lliçons apreses a partir de lo que hem fet
+, demo, arquitectura... som nosaltres qui definim que presentem
 // per a que vegui que em treballat be entre nosaltres, 
 Document final: fer retrospectiva del projecte, qué canviariem, que ha anat be, que ha anat malament.... La ultima entrega ha de tenir la 4a iteratio i el ultim Document
+
+TODO: presentacio
+explicar la solucio tecnicament, orientat a gestio de projecte.
+explicar arquitectura, front/back/...
+explicar les proves que hem fet, com, etc...
+20/25 min max
+
+demo de la app, amb projector per tal de que es vegui desde la pantlla gran, sera en una aula 
+que no peti
+som nosaltres qui definim que es el que mostrem, podem explicar que esta fet.
+BD: reset i posar dades netes
+hem de venir tots
+
+coses obligatories:
+- backend: arquitectura i tecnos asociades, explicar el xk hem utilitzat aquestes tecnos
+- xk hem utilitzat el cloud, ...
+- justificar qué i com hem escollit 
 
 
 Android:

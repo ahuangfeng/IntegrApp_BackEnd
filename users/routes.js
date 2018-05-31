@@ -7,11 +7,126 @@ var tokenMiddleware = require('../middleware/tokenVerification');
 var apiRoutes = express.Router();
 
 
-//image upload, get, and delete
+/**
+* @swagger
+* definitions:
+*   ResponseUpload:
+*     properties:
+*       _id:
+*         type: string
+*       username:
+*         type: string
+*       password:
+*         type: string
+*       name:
+*         type: string
+*       type:
+*         type: string
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
+*/
+
+/**
+ * @swagger
+ * /imageUpload:
+ *   post:
+ *     summary: Puja o actualitza una imatge a un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "multipart/form-data"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "file"
+ *         type: "file"
+ *         in: "formData"
+ *         required: true
+ *         description: "Imatge que es vol estudiar"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ResponseUpload"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.post('/imageUpload', tokenMiddleware.tokenCheck, controller.fileUpload);
 
+/**
+ * @swagger
+ * /image/{userId}:
+ *   get:
+ *     summary: Puja o actualitza una imatge a un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "userId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del usuari"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         type: string
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.get('/image/:userId', tokenMiddleware.tokenCheck, controller.getFiles);
 
+
+/**
+ * @swagger
+ * /image/{userId}:
+ *   delete:
+ *     summary: Elimina una imatge d'un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "userId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del usuari"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         type: string
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.delete('/image/:userId', tokenMiddleware.tokenCheck, controller.deleteFile);
 
 /**
