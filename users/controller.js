@@ -35,7 +35,6 @@ exports.fileUpload = function (req, res, next) {
               if(error) {
                 res.status(400).json({error});
               }
-              console.log(result);
             })
             let sampleFile = req.files.file;
             sampleFile.mv('./images/'+ sampleFile.name, function(err) {
