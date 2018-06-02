@@ -45,7 +45,7 @@ var apiRoutes = express.Router();
  *         type: "file"
  *         in: "formData"
  *         required: true
- *         description: "Imatge que es vol estudiar"
+ *         description: "Imatge que es vol pujar"
  *     responses:
  *       200:
  *         description: Operació executada amb éxit

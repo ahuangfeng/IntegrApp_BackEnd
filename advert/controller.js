@@ -20,19 +20,22 @@ cloudinary.config({
 exports.advertImage = function (req, res, next) {
   if(!req.files.file) {
     res.status(400).json({message : "Falta la imagen"});
+    return;
   }
 
   else if(array.indexOf(req.files.file.mimetype) < 0) {
     res.status(400).json({message : "Imagen tiene que ser en formato JPEG o PNG."});
+    return;
   }
   
   else {
-    advertDB.findAdvertById(req.body.advertId).then(advert => {
+    console.log("req.:", req.body);
+    advertDB.findAdvertById(req.params.advertId).then(advert => {
       if(advert.userId != req.decoded.userID) {
         res.status(400).json({message:"L'usuari no és el propietari de l'anunci!"});
       }
       else {
-        advertDB.getImageNameAdvert(req.body.advertId).then(image=> {
+        advertDB.getImageNameAdvert(req.params.advertId).then(image=> {
           if(image != null) {
             cloudinary.v2.uploader.destroy(image, {folder:"adverts"}, function(error, result) {
               if(error) {
@@ -51,7 +54,7 @@ exports.advertImage = function (req, res, next) {
                     res.status(400).json({error});
                   }
                   else {
-                    advertDB.uploadImageAdvert(req.body.advertId, result.url, result.public_id).then(advertFile => {
+                    advertDB.uploadImageAdvert(req.params.advertId, result.url, result.public_id).then(advertFile => {
                       fs.unlink('./images/' + sampleFile.name, function(error) {
                         if (error) {
                             throw error;
@@ -81,7 +84,7 @@ exports.advertImage = function (req, res, next) {
                     res.status(400).json({error});
                   }
                   else {
-                    advertDB.uploadImageAdvert(req.body.advertId, result.url, result.public_id).then(advertFile => {
+                    advertDB.uploadImageAdvert(req.params.advertId, result.url, result.public_id).then(advertFile => {
                       fs.unlink('./images/' + sampleFile.name, function(error) {
                         if (error) {
                             throw error;

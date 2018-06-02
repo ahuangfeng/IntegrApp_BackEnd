@@ -207,6 +207,17 @@ var mongoose = require('mongoose');
 *         enum: [opened, closed]
 */
 
+/**
+* @swagger
+* definitions:
+*   Location:
+*     properties:
+*       lat:
+*         type: number
+*       lng:
+*         type: number
+*/
+
 
 var AdvertSchema = new mongoose.Schema({
   userId: String,
@@ -229,6 +240,10 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
+  },
+  location: {
+    lat: Number,
+    lng:  Number
   },
   imagePath: String,
   imageName: String
