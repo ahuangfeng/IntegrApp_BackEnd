@@ -166,9 +166,12 @@ exports.modifyAdvert = function (advert, content) {
     if (!content.places) {
       content.places = advert.places;
     }
+    if (!content.location) {
+      content.location = advert.location;
+    }
     Advert.findOneAndUpdate({ _id: advert._id }, {
       $set: {
-        date: content.date, title: content.title,
+        date: content.date, title: content.title, location: content.location,
         description: content.description, places: content.places, state: "opened"
       }
     }, { new: true },
