@@ -93,7 +93,7 @@ apiRoutes.get('/chat/:id', tokenMiddleware.tokenCheck, chatController.getChatByU
  * @swagger
  * /newChats/{userId}:
  *   get:
- *     summary: Retorna els usuaris amb qui ha contactat un usuari
+ *     summary: Retorna el número de chats nous que té l'usuari
  *     tags: [Chat]
  *     security:
  *       - user: []
