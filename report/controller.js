@@ -49,8 +49,10 @@ createReportDocument = function (reportData, decoded) {
   report['userId'] = decoded.userID;
   report['type'] = reportData.type;
   var today = new Date();
-  today.setHours(today + 2);
-  report['createdAt'] = today.toLocaleString();
+  today.setHours(today.getHours() + 2);
+  today.toLocaleString();
+  today = today.toLocaleString();
+  report['createdAt'] = today;
   report['typeId'] = reportData.typeId;
   return report;
 }
