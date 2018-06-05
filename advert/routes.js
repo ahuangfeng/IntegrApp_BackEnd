@@ -19,11 +19,143 @@ var apiRoutes = express.Router();
 *   description: Funció no implementada encara
 */
 
-//image upload, get, and delete
-apiRoutes.post('/advert/imageUpload', tokenMiddleware.tokenCheck, advertController.advertImage);
 
+/**
+* @swagger
+* definitions:
+*   ResponseImageUpload:
+*     properties:
+*       state:
+*         type: string
+*       typeAdvert:
+*         type: string
+*       _id:
+*         type: string
+*       userId:
+*         type: string
+*       createdAt:
+*         type: string
+*       title:
+*         type: string
+*       description:
+*         type: string
+*       places:
+*         type: string
+*       premium:
+*         type: string
+*       typeUser:
+*         type: string
+*       imagePath:
+*         type: string
+*       imageName:
+*         type: string
+*/
+
+/**
+ * @swagger
+ * /advert/imageUpload/{advertId}:
+ *   post:
+ *     summary: Puja o actualitza una imatge a un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "multipart/form-data"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "file"
+ *         type: "file"
+ *         in: "formData"
+ *         required: true
+ *         description: "Imatge que es vol pujar"
+ *       - name: "advertId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del anunci"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ResponseImageUpload"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
+apiRoutes.post('/advert/imageUpload/:advertId', tokenMiddleware.tokenCheck, advertController.advertImage);
+
+
+/**
+ * @swagger
+ * /advert/image/{advertId}:
+ *   get:
+ *     summary: Puja o actualitza una imatge a un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "advertId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del anunci"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         type: string
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.get('/advert/image/:advertId', tokenMiddleware.tokenCheck, advertController.advertGetImage);
 
+
+/**
+ * @swagger
+ * /advert/image/{advertId}:
+ *   delete:
+ *     summary: Elimina una imatge d'un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: "advertId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del anunci"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         type: string
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
 apiRoutes.delete('/advert/image/:advertId', tokenMiddleware.tokenCheck, advertController.advertDeleteImage);
 
 /**

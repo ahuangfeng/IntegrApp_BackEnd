@@ -48,6 +48,8 @@ var mongoose = require('mongoose');
 *         type: string
 *       places:
 *         type: number
+*       location:
+*         $ref: "#/definitions/Location"
 *       premium:
 *         type: boolean
 *       typeUser:
@@ -90,6 +92,8 @@ var mongoose = require('mongoose');
 *         type: string
 *       places:
 *         type: number
+*       location:
+*         $ref: "#/definitions/Location"
 *       premium:
 *         type: boolean
 *       typeUser:
@@ -138,6 +142,8 @@ var mongoose = require('mongoose');
 *         type: number
 *       premium:
 *         type: boolean
+*       location:
+*         $ref: "#/definitions/Location"
 *       typeUser:
 *         type: string
 *         enum: [voluntary, admin, newComer, association]
@@ -175,6 +181,8 @@ var mongoose = require('mongoose');
 *         type: string
 *       description:
 *         type: string
+*       location:
+*         $ref: "#/definitions/Location"
 *       places:
 *         type: number
 *       typeAdvert:
@@ -195,6 +203,8 @@ var mongoose = require('mongoose');
 *         type: string
 *       places:
 *         type: number
+*       location:
+*         $ref: "#/definitions/Location"
 */
 
 /**
@@ -205,6 +215,17 @@ var mongoose = require('mongoose');
 *       state:
 *         type: string
 *         enum: [opened, closed]
+*/
+
+/**
+* @swagger
+* definitions:
+*   Location:
+*     properties:
+*       lat:
+*         type: number
+*       lng:
+*         type: number
 */
 
 
@@ -229,6 +250,10 @@ var AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ['lookFor', 'offer'],
     default: 'offer'
+  },
+  location: {
+    lat: Number,
+    lng:  Number
   },
   imagePath: String,
   imageName: String
