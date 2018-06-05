@@ -42,14 +42,14 @@ exports.assignRoutes = function (app, server) {
                 socket.userId = user._id;
                 connectedUsers[socket.userId] = { 'username': socket.username, 'socketId': socket.id };
                 // console.log("Socket:", from, to, socket.userId);
-                chatDB.seenChats(from,to).then(result => {
-                  console.log("Seen chats", result);
-                }).catch(err => {
-                  console.log("Error on seenChats", err);
-                });
                 chatDB.getChat(from, to).then(chats => {
-                  console.log("Sending old chats:", chats);
-                  callback({ success: true, userId: socket.userId,username: socket.username, chats: chats });
+                  chatDB.seenChats(from,to).then(result => {
+                    console.log("Seen chats", result);
+                    console.log("Sending old chats:", chats);
+                    callback({ success: true, userId: socket.userId,username: socket.username, chats: chats });
+                  }).catch(err => {
+                    console.log("Error on seenChats", err);
+                  });
                 }).catch(err => {
                   console.log("Error ocurred:", err);
                 });
