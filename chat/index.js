@@ -11,7 +11,7 @@ exports.assignRoutes = function (app, server) {
   io.sockets.on('connection', function (socket) {
 
     socket.on('send message', function (message, to) {
-      console.log("Sending message: ", socket.id + ' to ' + to + ': ' + message);
+      console.log("Sending message: ", socket.userId + ' to ' + to + ': ' + message);
       var isNew = true;
       if (connectedUsers[to] != undefined) {
         isNew = false;
@@ -48,6 +48,7 @@ exports.assignRoutes = function (app, server) {
                   console.log("Error on seenChats", err);
                 });
                 chatDB.getChat(from, to).then(chats => {
+                  console.log("Sending old chats:", chats);
                   callback({ success: true, userId: socket.userId,username: socket.username, chats: chats });
                 }).catch(err => {
                   console.log("Error ocurred:", err);
