@@ -95,7 +95,7 @@ createObjChat = function (content, fromId, toId, newTo, newFrom) {
       content: content,
       from: fromId,
       to: toId,
-      createdAt: new Date().toDateString()
+      createdAt: new Date().toLocaleString()
     };
     usersDB.findUserById(fromId).then(user => {
       objSave['fromUsername'] = user.username;

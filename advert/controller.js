@@ -381,7 +381,7 @@ createAdvertDocument = function (advertData, user, decoded) {
   advert['userId'] = decoded.userID;
   var today = new Date();
   today.setHours(today.getHours() + 2);
-  today.toLocaleString();
+  // today.toLocaleString();
   today = today.toLocaleString();
   advert['createdAt'] = today;
   advert['date'] = new Date(advertData.date).toLocaleString();
