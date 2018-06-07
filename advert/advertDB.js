@@ -428,23 +428,7 @@ exports.solveInscriptionAdvertUser = function (idAdvert, idUser, newStatus) {
       });
   })
 }
-// addRegisteredUserToAdvert = function(adverts){
-//   return new Promise((resolve,reject) => {
-//     if(adverts > 0){
-//       var copyAdverts = JSON.parse(JSON.stringify(adverts));
-//       copyAdverts.forEach(element => {
-//         inscriptionDB.findInscriptionsAdvert(element._id).then(inscriptions => {
-//           var inscr = {}
-//           element['registered'] = inscriptions
-//         }).catch(err => {
-//           console.error("Got an error getting registered user To adverts", err);
-//         });
-//       });
-//     }else{
-//       resolve(adverts);
-//     }
-//   });
-// }
+
 
 exports.findAdvertByIdUser = function (userId) {
   return new Promise(function (resolve, reject) {
