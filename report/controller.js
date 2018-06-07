@@ -17,7 +17,7 @@ exports.createReport = function (req, res, next) {
       res.send(report);
     }).catch(err => {
       res.status(400).json({ message: "error en saving report: " + err.message });
-    })
+    });
   }).catch(err => {
     res.status(400).json({ message: err.message });
   });
@@ -50,7 +50,7 @@ createReportDocument = function (reportData, decoded) {
   report['type'] = reportData.type;
   var today = new Date();
   today.setHours(today.getHours() + 2);
-  today.toLocaleString();
+  // today.toLocaleString();
   today = today.toLocaleString();
   report['createdAt'] = today;
   report['typeId'] = reportData.typeId;
@@ -65,39 +65,42 @@ verifyFieldsReport = function (reportData, decoded) {
       reject({ message: "faltan datos obligatorios: description, type" });
     }
 
-    if (validTypes.indexOf(reportData.type) == -1) {
+    if (validTypes.indexOf(reportData.type) < 0) {
       reject({ message: "type tiene que ser uno de estos valores: [user, advert, forum]" });
     }
 
     userDB.findUserById(decoded.userID).then(res => {
-      if (res == null) reject({ message: "el usuario no existe" });
-      else resolve({ user: res });
+      if (res == null) {
+        reject({ message: "el usuario no existe" });
+      } else {
+        if (reportData.type == "advert") {
+          advertDB.findAdvertById(reportData.typeId).then(res => {
+            if (res == null) reject({ message: "el advert con id=typeId no existe" });
+            else resolve({ advert: res });
+          }).catch(err => {
+            reject({ message: "Ha habido un error: " + err.message });
+          });
+        } else if (reportData.type == "forum") {
+          forumDB.findForumById(reportData.typeId).then(res => {
+            if (res == null) reject({ message: "el forum con id=typeId no existe" })
+            else resolve({ forum: res });
+          }).catch(err => {
+            reject({ message: "Ha habido un error: " + err.message });
+          });
+        } else if (reportData.type == "user") {
+          userDB.findUserById(reportData.typeId).then(res => {
+            if (res == null) reject({ message: "el user con id=typeId no existe" });
+            else resolve({ user: res });
+          }).catch(err => {
+            reject({ message: "Ha habido un error: " + err.message });
+          });
+        } else {
+          reject({ message: "No se ha encontrado este type." });
+        }
+      }
     }).catch(err => {
       reject({ message: "Ha habido un error: " + err.message });
     })
-
-    if (reportData.type == "advert") {
-      advertDB.findAdvertById(reportData.typeId).then(res => {
-        if (res == null) reject({ message: "el advert con id=typeId no existe" });
-        else resolve({ advert: res });
-      }).catch(err => {
-        reject({ message: "Ha habido un error: " + err.message });
-      })
-    } else if (reportData.type == "forum") {
-      forumDB.findForumById(reportData.typeId).then(res => {
-        if (res == null) reject({ message: "el forum con id=typeId no existe" })
-        else resolve({ user: res });
-      }).catch(err => {
-        reject({ message: "Ha habido un error: " + err.message });
-      })
-    } else if (reportData.type == "user") {
-      userDB.findUserById(reportData.typeId).then(res => {
-        if (res == null) reject({ message: "el user con id=typeId no existe" });
-        else resolve({ user: res });
-      }).catch(err => {
-        reject({ message: "Ha habido un error: " + err.message });
-      });
-    }
   });
 }
 
