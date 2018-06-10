@@ -18,6 +18,49 @@ cloudinary.config({
 })
 
 exports.advertImage = function (req, res, next) {
+  if (!req.body.url || !req.body.public_id) {
+    res.status(400).json({ message: "Debes enviar url y public_id de la imagen en cloudinary" });
+    return;
+  }
+
+  else {
+    advertDB.findAdvertById(req.params.advertId).then(advert => {
+      if (advert.userId != req.decoded.userID) {
+        res.status(400).json({ message: "L'usuari no és el propietari de l'anunci!" });
+      }
+      else {
+        advertDB.getImageNameAdvert(req.params.advertId).then(image => {
+          if (image != null) {
+            cloudinary.v2.uploader.destroy(image, { folder: "adverts" }, function (error, result) {
+              if (error) {
+                res.status(400).json({ error });
+              }
+            })
+            advertDB.uploadImageAdvert(req.params.advertId, req.body.url, req.body.public_id).then(advertFile => {
+                  res.send(advertFile);
+            }).catch(err => {
+              res.status(400).json({ message: err.message });
+            });
+          }
+
+          else {
+            advertDB.uploadImageAdvert(req.params.advertId, req.body.url, req.body.public_id).then(advertFile => {
+              res.send(advertFile);
+            }).catch(err => {
+              res.status(400).json({ message: err.message });
+            });
+          }
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      }
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
+    });
+  }
+}
+
+exports.advertImageFromBack = function (req, res, next) {
   if (!req.files.file) {
     res.status(400).json({ message: "Falta la imagen" });
     return;
@@ -101,8 +144,12 @@ exports.advertImage = function (req, res, next) {
               }
             });
           }
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
         });
       }
+    }).catch(err => {
+      res.status(400).json({ message: err.message });
     });
   }
 }
@@ -381,7 +428,6 @@ createAdvertDocument = function (advertData, user, decoded) {
   advert['userId'] = decoded.userID;
   var today = new Date();
   today.setHours(today.getHours() + 2);
-  // today.toLocaleString();
   today = today.toLocaleString();
   advert['createdAt'] = today;
   advert['date'] = new Date(advertData.date).toLocaleString();

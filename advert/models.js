@@ -165,6 +165,17 @@ var mongoose = require('mongoose');
 */
 
 /**
+ * @swagger
+ * definitions:
+ *   ImageBodyAdvert:
+ *     properties:
+ *       url:
+ *         type: string
+ *       public_id:
+ *         type: string
+ */
+
+/**
 * @swagger
 * definitions:
 *   AdvertBody:

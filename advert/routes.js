@@ -59,6 +59,42 @@ var apiRoutes = express.Router();
  *     tags: [Advert]
  *     security:
  *       - user: []
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ImageBodyAdvert"
+ *       - name: "advertId"
+ *         type: string
+ *         in: path
+ *         required: true
+ *         description: "Id del anunci"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ResponseImageUpload"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
+apiRoutes.post('/advert/imageUpload/:advertId', tokenMiddleware.tokenCheck, advertController.advertImage);
+
+/**
+ * @swagger
+ * /advert/imageUploadFromBack/{advertId}:
+ *   post:
+ *     summary: Puja o actualitza una imatge a un anunci
+ *     tags: [Advert]
+ *     security:
+ *       - user: []
  *     consumes:
  *       - "multipart/form-data"
  *     produces:
@@ -88,7 +124,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.post('/advert/imageUpload/:advertId', tokenMiddleware.tokenCheck, advertController.advertImage);
+apiRoutes.post('/advert/imageUploadFromBack/:advertId', tokenMiddleware.tokenCheck, advertController.advertImageFromBack);
 
 
 /**
