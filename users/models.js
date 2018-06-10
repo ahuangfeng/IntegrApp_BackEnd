@@ -92,6 +92,17 @@ var mongoose = require('mongoose');
  *         type: string
  */
 
+ /**
+ * @swagger
+ * definitions:
+ *   ImageBody:
+ *     properties:
+ *       url:
+ *         type: string
+ *       public_id:
+ *         type: string
+ */
+
 /**
 * @swagger
 * definitions:

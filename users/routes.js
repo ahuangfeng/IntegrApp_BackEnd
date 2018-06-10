@@ -30,7 +30,40 @@ var apiRoutes = express.Router();
 
 /**
  * @swagger
- * /imageUpload:
+ * /imageUploadFromBack:
+ *   post:
+ *     summary: Puja o actualitza una imatge a un usuari
+ *     tags: [User]
+ *     security:
+ *       - user: []
+ *     consumes:
+ *       - "multipart/form-data"
+ *     produces:
+ *       - "application/json"
+ *     parameters: 
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           $ref: "#/definitions/ImageBody"
+ *     responses:
+ *       200:
+ *         description: Operació executada amb éxit
+ *         schema:
+ *           $ref: "#/definitions/ResponseUpload"
+ *       400:
+ *         description: Ha hagut un error amb la operació
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ *       403:
+ *         description: Falta incloure el token
+ *         schema:
+ *           $ref: "#/definitions/Error"
+ */
+apiRoutes.post('/imageUpload', tokenMiddleware.tokenCheck, controller.imageUpload);
+
+/**
+ * @swagger
+ * /imageUploadFromBack:
  *   post:
  *     summary: Puja o actualitza una imatge a un usuari
  *     tags: [User]
@@ -60,7 +93,7 @@ var apiRoutes = express.Router();
  *         schema:
  *           $ref: "#/definitions/Error"
  */
-apiRoutes.post('/imageUpload', tokenMiddleware.tokenCheck, controller.fileUpload);
+apiRoutes.post('/imageUploadFromBack', tokenMiddleware.tokenCheck, controller.fileUploadFromBack);
 
 /**
  * @swagger

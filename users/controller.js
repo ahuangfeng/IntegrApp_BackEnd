@@ -18,7 +18,45 @@ cloudinary.config({
     api_secret: 'LfgGuWmq3OGj-2HmYTo0p7Xa5CE' 
 })
 
-exports.fileUpload = function (req, res, next) {
+exports.imageUpload = function (req, res, next) {
+
+  if(!req.body.url || !req.body.public_id) {
+    res.status(400).json({message : "Debes pasar la URL y public_id de la imagen en cloudinary"});
+  }
+  
+  else {
+    usersDB.findUserById(req.decoded.userID).then(user => {
+        usersDB.getImageName(req.decoded.userID).then(image=> {
+          if(image != null) {
+            cloudinary.v2.uploader.destroy(image, {folder:"users"}, function(error, result) {
+              if(error) {
+                res.status(400).json({error});
+              }
+            })
+            usersDB.uploadFile(req.decoded.userID, req.body.url, req.body.public_id).then(userFile => {
+                  res.send(userFile);
+            }).catch(err => {
+              res.status(400).json({message: err.message});
+            });
+          }              
+    
+          else {
+            usersDB.uploadFile(req.decoded.userID, req.body.url, req.body.public_id).then(userFile => {
+                  res.send(userFile);              
+            }).catch(err => {
+              res.status(400).json({message: err.message});
+            });
+          }
+        }).catch(err => {
+          res.status(400).json({message: err.message});
+        });
+    }).catch(err => {
+      res.status(400).json({message: err.message});
+    });
+  }
+}
+
+exports.fileUploadFromBack = function (req, res, next) {
   if(!req.files.file) {
     res.status(400).json({message : "Falta la imagen"});
   }
@@ -93,10 +131,14 @@ exports.fileUpload = function (req, res, next) {
                   }
                 });
               }
-            });
+            })
           }
+        }).catch(err => {
+          res.status(400).json({message: err.message});
         });
       
+    }).catch(err => {
+      res.status(400).json({message: err.message});
     });
   }
 }
