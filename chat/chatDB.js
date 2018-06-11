@@ -82,7 +82,11 @@ exports.getChat = function (from, to) {
       if (err) {
         reject(err);
       }
-      resolve(res);
+      var response = JSON.parse(JSON.stringify(res));
+      response.sort(function (a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      resolve(response);
     });
   });
 }
