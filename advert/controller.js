@@ -196,9 +196,7 @@ exports.advertGetImage = function (req, res, next) {
 }
 
 exports.createAdvert = function (req, res, next) {
-  var verifyFields = verifyFieldAdvert(req.body, req.decoded);
-  verifyFields.then(verif => {
-
+  verifyFieldAdvert(req.body, req.decoded).then(verif => {
     var advertDocument = createAdvertDocument(req.body, verif, req.decoded);
 
     advertDB.saveAdvert(advertDocument)
@@ -337,7 +335,7 @@ verifyFieldAdvert = function (advertData, decoded) {
     }
 
     if (advertData.hasOwnProperty('location')) {
-      if (!advertData.location.hasOwnProperty.hasOwnProperty('lat') || !advertData.location.hasOwnProperty.hasOwnProperty('lng')) {
+      if (!advertData.location.hasOwnProperty('lat') || !advertData.location.hasOwnProperty('lng')) {
         reject({ message: "La localización tiene que tener 'lat' y 'lng'" })
       }
     }
